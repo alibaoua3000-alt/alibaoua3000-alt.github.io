@@ -1,0 +1,1785 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="مكتبتي الصوتية">
+<meta name="theme-color" content="#0f766e">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<title>مكتبتي الصوتية</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f3ee; --card:#ffffff; --card2:#faf9f6; --text:#1b1f1e; --muted:#69716e; --line:#e5e1d8;
+  --accent:#0f766e; --accent-ink:#ffffff; --accent-soft:#e2f0ed; --gold:#b7892e; --danger:#b42318;
+  --shadow:0 1px 2px rgba(20,30,28,.05),0 6px 20px rgba(20,30,28,.06);
+  --r:16px; --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+  color-scheme:light;
+}
+[data-theme=dark]{
+  --bg:#0d1211; --card:#161d1c; --card2:#1b2423; --text:#eaeeed; --muted:#93a09c; --line:#26302e;
+  --accent:#2fb3a2; --accent-ink:#06201d; --accent-soft:#163230; --gold:#dcae4c; --danger:#f97066;
+  --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:"IBM Plex Sans Arabic",-apple-system,system-ui,"Geeza Pro",sans-serif;font-size:16px;line-height:1.55;
+  padding:calc(var(--safe-t) + 6px) 0 calc(var(--safe-b) + 150px);-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+input,select,textarea{font-size:16px}
+img{display:block}
+.hidden{display:none!important}
+.wrap{max-width:680px;margin:0 auto;padding:0 16px}
+.ic{flex:none;display:block}
+
+/* header */
+.top{display:flex;align-items:center;gap:10px;padding:10px 0 14px}
+.top h1{font-size:24px;margin:0;font-weight:700;letter-spacing:0}
+.top .grow{flex:1;min-width:0}
+.top .sub{color:var(--muted);font-size:14px}
+.t-ellip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:var(--text);background:var(--card);box-shadow:var(--shadow);border:1px solid var(--line);flex:none}
+.icon-btn.sm{width:36px;height:36px;background:transparent;box-shadow:none;border:0;color:var(--muted)}
+.icon-btn:active{transform:scale(.94)}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:14px}
+.section-h{display:flex;align-items:center;justify-content:space-between;margin:22px 2px 10px;font-weight:700;font-size:17px}
+.section-h small{color:var(--muted);font-weight:500;font-size:14px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:15px;min-height:44px}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn.danger{background:var(--danger);color:#fff;border-color:transparent}
+.btn.block{width:100%}
+.btn:active{opacity:.85}
+.hint{color:var(--muted);font-size:13.5px;margin:6px 0 0}
+
+/* banners */
+.banner{border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:14px;background:#fff4e0;color:#7a4b00;border:1px solid #f1d7a5}
+[data-theme=dark] .banner{background:#2d2310;color:#f3d18e;border-color:#4a3a18}
+
+/* continue */
+.cont{display:flex;gap:12px;align-items:center;cursor:pointer}
+.cont .th{width:110px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--line);flex:none;position:relative}
+.cont .th img{width:100%;height:100%;object-fit:cover}
+.cont .meta{flex:1;min-width:0}
+.cont .lbl{font-size:12.5px;color:var(--accent);font-weight:700}
+.cont .tt{font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px}
+.cont .ss{font-size:13px;color:var(--muted)}
+.play-fab{width:48px;height:48px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+
+/* stats */
+.stats{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:8px;align-items:center;text-align:center}
+.stats .goal{display:flex;align-items:center;gap:10px;text-align:start}
+.ring{--p:0;width:50px;height:50px;border-radius:50%;flex:none;display:grid;place-items:center;
+  background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--line) 0)}
+.ring::after{content:"";width:38px;height:38px;border-radius:50%;background:var(--card)}
+.stats b{display:block;font-size:17px;line-height:1.2}
+.stats small{color:var(--muted);font-size:12px;line-height:1.3;display:block}
+.goal-done{color:var(--accent)}
+
+.shortcuts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px}
+.shortcut{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow);text-align:start}
+.shortcut .si{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);flex:none}
+.shortcut b{display:block;font-size:15px}
+.shortcut small{color:var(--muted);font-size:12.5px}
+
+/* series cards */
+.series-card{display:flex;gap:12px;align-items:stretch;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:12px;margin-bottom:10px;cursor:pointer;position:relative;overflow:hidden}
+.series-card .stripe{position:absolute;inset-inline-start:0;top:0;bottom:0;width:5px}
+.series-card .main{flex:1;min-width:0;padding-inline-start:4px}
+.series-card .ttl{font-weight:700;font-size:16.5px}
+.series-card .mt{color:var(--muted);font-size:13px;margin:2px 0 6px}
+.series-card .nx{color:var(--muted);font-size:13px;margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.series-card .th{width:92px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;background:var(--line);align-self:center;flex:none}
+.series-card .th img{width:100%;height:100%;object-fit:cover}
+.bar{height:6px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:6px;background:var(--accent)}
+
+.empty{text-align:center;padding:30px 18px}
+.empty .big{width:76px;height:76px;margin:0 auto 12px;border-radius:22px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center}
+.empty h2{margin:0 0 6px;font-size:20px}
+.empty p{color:var(--muted);margin:0 0 16px}
+.steps{text-align:start;margin:14px 0 18px;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:10px;margin-bottom:10px;font-size:15px}
+.steps li::before{content:counter(s);width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+
+/* series view */
+.s-head .row{display:flex;gap:8px;margin-top:12px}
+.s-head .row .btn{flex:1}
+.s-head .nums{display:flex;justify-content:space-between;color:var(--muted);font-size:13.5px;margin-bottom:6px}
+.chips{display:flex;gap:8px;margin:4px 0 12px;overflow-x:auto;scrollbar-width:none}
+.chip{padding:7px 14px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:14px;white-space:nowrap;font-weight:500}
+.chip.on{background:var(--text);color:var(--bg);border-color:transparent}
+
+.lesson{display:flex;gap:11px;align-items:center;padding:9px;border-radius:14px;background:var(--card);border:1px solid var(--line);margin-bottom:8px;cursor:pointer}
+.lesson.playing{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.l-th{width:108px;aspect-ratio:16/9;border-radius:9px;overflow:hidden;position:relative;background:var(--line);flex:none}
+.l-th img{width:100%;height:100%;object-fit:cover}
+.l-num{position:absolute;top:4px;inset-inline-start:4px;background:rgba(0,0,0,.65);color:#fff;font-size:12px;font-weight:700;border-radius:6px;padding:0 6px;line-height:20px}
+.l-dur{position:absolute;bottom:6px;inset-inline-end:4px;background:rgba(0,0,0,.72);color:#fff;font-size:11.5px;border-radius:5px;padding:0 5px;line-height:18px;direction:ltr}
+.l-prog{position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.35)}
+.l-prog i{display:block;height:100%;background:#e53935}
+.lesson.done .l-th::after{content:"";position:absolute;inset:0;background:rgba(15,118,110,.45)}
+.l-ok{position:absolute;z-index:2;inset:0;display:grid;place-items:center;color:#0f766e}
+.l-main{flex:1;min-width:0}
+.l-title{font-weight:600;font-size:14.5px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lesson.done .l-title{color:var(--muted)}
+.l-meta{font-size:12.5px;color:var(--muted);margin-top:3px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.l-meta .ok{color:var(--accent);font-weight:700}
+.l-meta .tag{display:inline-flex;align-items:center;gap:3px}
+.now-badge{color:var(--accent);font-weight:700}
+
+/* FAB */
+.fab{position:fixed;z-index:30;inset-inline-end:18px;bottom:calc(var(--safe-b) + 18px);width:58px;height:58px;border-radius:18px;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 8px 24px rgba(15,118,110,.4)}
+body.has-mini .fab{bottom:calc(var(--safe-b) + 92px)}
+.fab:active{transform:scale(.95)}
+
+/* mini player */
+.mini{position:fixed;z-index:35;left:10px;right:10px;bottom:calc(var(--safe-b) + 10px);max-width:660px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.18);display:flex;align-items:center;gap:10px;padding:8px;overflow:hidden;cursor:pointer}
+.mini img{width:62px;aspect-ratio:16/9;border-radius:8px;object-fit:cover;background:var(--line)}
+.mini .mt{flex:1;min-width:0}
+.mini .mt b{display:block;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mini .mt small{color:var(--muted);font-size:12px;direction:ltr;display:inline-block}
+.mini .mp{width:44px;height:44px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.mini .mprog{position:absolute;left:0;right:0;bottom:0;height:3px;direction:ltr}
+.mini .mprog i{display:block;height:100%;background:var(--accent)}
+
+/* player overlay */
+.player{position:fixed;inset:0;z-index:50;background:var(--bg);transform:translateY(105%);transition:transform .32s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;pointer-events:none}
+.player.open{transform:none;pointer-events:auto}
+.p-top{display:flex;align-items:center;gap:8px;padding:calc(var(--safe-t) + 8px) 14px 8px}
+.p-top .ttl{flex:1;text-align:center;font-size:13.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 16px calc(var(--safe-b) + 40px)}
+.p-inner{max-width:680px;margin:0 auto}
+.stage{position:relative;width:100%;aspect-ratio:16/9;border-radius:16px;overflow:hidden;background:#000}
+#yt-host,#yt-host iframe,#yt{position:absolute;inset:0;width:100%;height:100%;border:0}
+.cover{position:absolute;inset:0;z-index:2;display:grid;place-items:center;cursor:pointer;overflow:hidden;background:#111}
+.cover-bg{position:absolute;inset:-20px;background-size:cover;background-position:center;filter:blur(18px) brightness(.55);transform:scale(1.1)}
+.cover img{position:relative;width:62%;aspect-ratio:16/9;object-fit:cover;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.45)}
+.cover-badge{position:absolute;bottom:10px;inset-inline-start:10px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;padding:3px 9px;border-radius:20px;display:flex;align-items:center;gap:5px}
+.stage.video .cover{display:none}
+.stage-msg{position:absolute;inset:0;z-index:3;background:rgba(0,0,0,.82);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px;gap:10px;font-size:15px}
+.stage-msg a{color:#fff;background:#c4302b;padding:8px 14px;border-radius:10px;text-decoration:none;font-weight:600}
+.tapnote{margin-top:10px;background:var(--accent-soft);color:var(--accent);border-radius:12px;padding:10px 12px;font-size:14px;font-weight:600;text-align:center}
+.p-title{font-size:19px;font-weight:700;margin:14px 0 2px;line-height:1.45}
+.p-author{color:var(--muted);font-size:14px}
+.seek{margin-top:12px}
+.seek input{width:100%;accent-color:var(--accent);height:28px}
+.times{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:-2px;font-variant-numeric:tabular-nums}
+.ctrls{display:flex;align-items:center;justify-content:space-between;margin:8px 0 6px;padding:0 4px}
+.ctrls button{display:grid;place-items:center;color:var(--text);position:relative}
+.c-sm{width:46px;height:46px}
+.c-md{width:56px;height:56px}
+.c-md small{position:absolute;font-size:10.5px;font-weight:700;top:50%;left:50%;transform:translate(-50%,-42%)}
+.c-play{width:76px;height:76px;border-radius:50%;background:var(--accent);color:var(--accent-ink)!important;box-shadow:0 8px 22px rgba(15,118,110,.35)}
+.c-play:active,.c-md:active,.c-sm:active{transform:scale(.93)}
+.tools{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0 16px}
+.tools>*{display:flex;flex-direction:column;align-items:center;gap:3px;padding:9px 2px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:11.5px;color:var(--muted);text-decoration:none;min-height:62px;justify-content:center}
+.tools b{font-size:15px;color:var(--text);line-height:22px}
+.tools .on{background:var(--accent-soft);color:var(--accent);border-color:transparent}
+.tools .on b{color:var(--accent)}
+.tools svg{color:var(--text)}
+.tools .on svg{color:var(--accent)}
+
+.tabs{display:flex;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px;margin-bottom:12px}
+.tabs button{flex:1;padding:9px;border-radius:9px;font-weight:600;font-size:15px;color:var(--muted)}
+.tabs button.on{background:var(--accent);color:var(--accent-ink)}
+.tabs i{font-style:normal;opacity:.85;font-size:13px}
+
+.maker{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px}
+.maker textarea,.fld input,.fld select,.fld textarea,.maker input{width:100%;border:1px solid var(--line);background:var(--card2);border-radius:10px;padding:10px 12px;outline:none;resize:vertical}
+.maker textarea{font-family:"Noto Naskh Arabic","IBM Plex Sans Arabic",serif;line-height:1.8;font-size:17px}
+.maker textarea:focus,.maker input:focus,.fld input:focus,.fld textarea:focus,.fld select:focus{border-color:var(--accent)}
+.maker-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chk{display:flex;align-items:center;gap:7px;font-size:14px;color:var(--muted)}
+.chk input{width:20px;height:20px;accent-color:var(--accent)}
+.chk b{color:var(--accent);direction:ltr;cursor:pointer;border-bottom:1px dashed}
+
+.note{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+.note .nh{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.tchip{display:inline-flex;align-items:center;gap:4px;background:var(--accent-soft);color:var(--accent);font-weight:700;font-size:13px;padding:2px 9px;border-radius:20px;direction:ltr;font-variant-numeric:tabular-nums}
+.note .nh .sp{flex:1}
+.note .tx{font-family:"Noto Naskh Arabic","IBM Plex Sans Arabic",serif;font-size:17px;line-height:1.85;white-space:pre-wrap;word-wrap:break-word}
+.note textarea{width:100%;min-height:90px;border:1px solid var(--accent);border-radius:10px;padding:8px 10px;font-family:"Noto Naskh Arabic",serif;font-size:17px;line-height:1.8;background:var(--card2)}
+.empty-s{color:var(--muted);text-align:center;font-size:14px;padding:14px}
+
+.ab{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ab-btn{width:100%;border-radius:12px;padding:10px;background:var(--card2);border:1px dashed var(--accent);display:flex;flex-direction:column;align-items:center}
+.ab-btn small{color:var(--muted);font-size:12.5px}
+.ab-btn b{font-size:20px;direction:ltr;font-variant-numeric:tabular-nums;color:var(--accent)}
+.ab-btn.set{border-style:solid;background:var(--accent-soft)}
+.adj{display:flex;gap:4px;margin-top:6px}
+.adj button{flex:1;font-size:12.5px;padding:5px 0;border-radius:8px;background:var(--card2);border:1px solid var(--line);font-variant-numeric:tabular-nums}
+.maker input#clipName{margin-top:10px}
+
+.clip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 10px;margin-bottom:8px}
+.clip.active{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.clip .cp{width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;flex:none}
+.clip .cm{flex:1;min-width:0}
+.clip .cm b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clip .cm small{color:var(--muted);font-size:12.5px;direction:ltr;display:inline-block;font-variant-numeric:tabular-nums}
+.clip .cm .ls{display:block;color:var(--muted);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clip .icon-btn.sm.on{color:var(--accent);background:var(--accent-soft)}
+
+.group-h{font-weight:700;font-size:14.5px;margin:16px 2px 8px;display:flex;align-items:center;gap:8px;cursor:pointer}
+.group-h .dot{width:9px;height:9px;border-radius:50%;flex:none}
+.group-h small{color:var(--muted);font-weight:500}
+
+.search-in{width:100%;border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px;outline:none;margin-bottom:12px}
+.search-in:focus{border-color:var(--accent)}
+mark{background:#ffe49a;color:inherit;border-radius:3px;padding:0 1px}
+[data-theme=dark] mark{background:#6b5410}
+
+/* sheets */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s}
+.backdrop.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;z-index:81;left:0;right:0;bottom:0;max-width:680px;margin:0 auto;background:var(--card);border-radius:22px 22px 0 0;padding:8px 18px calc(var(--safe-b) + 18px);max-height:88vh;overflow-y:auto;transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1)}
+.sheet.open{transform:none}
+.sheet .grab{width:42px;height:5px;border-radius:5px;background:var(--line);margin:4px auto 10px}
+.sheet h3{margin:4px 0 12px;font-size:18px}
+.sheet-actions{display:flex;gap:10px;margin-top:16px}
+.sheet-actions .btn{flex:1}
+.fld{display:block;margin-bottom:12px}
+.fld>span{display:block;font-size:13.5px;color:var(--muted);margin-bottom:5px;font-weight:600}
+.menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:13px 6px;border-bottom:1px solid var(--line);font-size:16px;text-align:start;color:var(--text);text-decoration:none}
+.menu-item:last-child{border-bottom:0}
+.menu-item.danger{color:var(--danger)}
+.menu-item svg{color:var(--muted)}
+.menu-item.danger svg{color:var(--danger)}
+.opt-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.opt{padding:12px 4px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-weight:600;text-align:center;font-variant-numeric:tabular-nums}
+.opt.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.colors{display:flex;gap:10px;flex-wrap:wrap;padding:8px 0}
+.colors button{width:36px;height:36px;border-radius:50%;border:3px solid transparent}
+.colors button.on{border-color:var(--text)}
+.set-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}
+.set-row .lab{font-weight:600}
+.set-row .lab small{display:block;color:var(--muted);font-weight:400;font-size:13px}
+.seg{display:flex;background:var(--card2);border:1px solid var(--line);border-radius:10px;padding:3px;gap:3px}
+.seg button{padding:6px 10px;border-radius:8px;font-size:14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--accent);color:var(--accent-ink)}
+.switch{width:50px;height:30px;border-radius:30px;background:var(--line);position:relative;flex:none;transition:background .2s}
+.switch::after{content:"";position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.3);transition:right .2s}
+.switch.on{background:var(--accent)}
+.switch.on::after{right:23px}
+.help{font-size:14.5px;line-height:1.8}
+.help h4{margin:16px 0 4px;font-size:15.5px}
+.help ol,.help ul{margin:0;padding-inline-start:20px}
+
+.toast{position:fixed;z-index:95;left:50%;bottom:calc(var(--safe-b) + 100px);transform:translate(-50%,20px);background:#1b1f1e;color:#fff;padding:10px 16px;border-radius:12px;font-size:14.5px;opacity:0;pointer-events:none;transition:all .25s;max-width:88vw;text-align:center}
+[data-theme=dark] .toast{background:#eaeeed;color:#0d1211}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.spin{width:18px;height:18px;border:2.5px solid currentColor;border-top-color:transparent;border-radius:50%;animation:sp .8s linear infinite;display:inline-block;vertical-align:middle}
+@keyframes sp{to{transform:rotate(360deg)}}
+.ai-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px;border-radius:14px;margin-bottom:12px;font-weight:700;font-size:15.5px;color:#fff;background:linear-gradient(135deg,#0f766e,#6d28d9)}
+.ai-btn small{font-weight:500;opacity:.9;font-size:12.5px}
+.ntag{font-size:11.5px;padding:1px 8px;border-radius:20px;background:var(--card2);border:1px solid var(--line);color:var(--muted);white-space:nowrap;font-weight:600}
+.ntag.ai{color:#6d28d9;border-color:rgba(109,40,217,.3);background:rgba(109,40,217,.08)}
+[data-theme=dark] .ntag.ai{color:#c4b5fd}
+.note.summary{border-color:var(--gold)}
+.ai-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.ai-item>input{width:22px;height:22px;accent-color:var(--accent);flex:none;margin-top:4px}
+.ai-item .body{flex:1;min-width:0}
+.ai-item .tx{display:block;font-family:"Noto Naskh Arabic",serif;font-size:16.5px;line-height:1.8}
+.ai-wait{text-align:center;padding:22px 8px}
+.ai-wait .spin{width:36px;height:36px;border-width:3px;color:var(--accent);margin-bottom:12px}
+details{margin:10px 0}summary{cursor:pointer;color:var(--accent);font-weight:600}
+.help a{color:var(--accent);font-weight:600}
+.batch{display:flex;align-items:center;gap:10px;background:rgba(109,40,217,.08);border:1px solid rgba(109,40,217,.25);border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:14px}
+.batch .spin{color:#6d28d9}
+#ytf-wrap{position:fixed;left:-10000px;top:0;width:320px;height:180px;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="view"></div>
+
+<button class="fab" id="fab" data-act="addOpen" aria-label="إضافة"></button>
+
+<div class="mini hidden" id="mini" data-act="openPlayer">
+  <img id="miniImg" alt="">
+  <div class="mt"><b id="miniTitle"></b><small id="miniTime"></small></div>
+  <button class="mp" data-act="toggle" id="miniBtn" aria-label="تشغيل/إيقاف"></button>
+  <div class="mprog"><i id="miniProg" style="width:0"></i></div>
+</div>
+
+<section class="player" id="player" aria-hidden="true">
+  <div class="p-top">
+    <button class="icon-btn" data-act="closePlayer" aria-label="تصغير" id="pClose"></button>
+    <div class="ttl" id="pSeries"></div>
+    <button class="icon-btn" data-act="lessonMenuCur" aria-label="خيارات" id="pMore"></button>
+  </div>
+  <div class="p-body" id="pBody"><div class="p-inner">
+    <div class="stage" id="stage">
+      <div id="yt-host"><div id="yt"></div></div>
+      <div class="cover" id="cover" data-act="toggle">
+        <div class="cover-bg" id="coverBg"></div>
+        <img id="coverImg" alt="">
+        <div class="cover-badge" id="coverBadge"></div>
+      </div>
+      <div class="stage-msg hidden" id="stageMsg"></div>
+    </div>
+    <div class="tapnote hidden" id="tapNote">اضغط زر التشغيل ▶ داخل الفيديو مرة واحدة لبدء التشغيل (هذا شرط من آيفون في أول مرة)</div>
+    <h2 class="p-title" id="pTitle"></h2>
+    <div class="p-author" id="pAuthor"></div>
+    <div class="seek" dir="ltr">
+      <input type="range" id="seek" min="0" max="100" step="1" value="0" aria-label="التقدم">
+      <div class="times"><span id="tCur">0:00</span><span id="tDur">0:00</span></div>
+    </div>
+    <div class="ctrls" dir="ltr">
+      <button class="c-sm" data-act="prev" aria-label="السابق" id="bPrev"></button>
+      <button class="c-md" data-act="back" aria-label="رجوع" id="bBack"></button>
+      <button class="c-play" data-act="toggle" aria-label="تشغيل" id="playBtn"></button>
+      <button class="c-md" data-act="fwd" aria-label="تقديم" id="bFwd"></button>
+      <button class="c-sm" data-act="next" aria-label="التالي" id="bNext"></button>
+    </div>
+    <div class="tools">
+      <button data-act="speed" id="spdBtn"></button>
+      <button data-act="sleep" id="slpBtn"></button>
+      <button data-act="videoToggle" id="vidBtn"></button>
+      <button data-act="doneCur" id="doneBtn"></button>
+      <a id="ytLink" target="_blank" rel="noopener"></a>
+    </div>
+    <div class="tabs">
+      <button data-act="tab" data-tab="notes" class="on" id="tabNotes">الفوائد <i id="nCount"></i></button>
+      <button data-act="tab" data-tab="clips" id="tabClips">المقاطع <i id="cCount"></i></button>
+    </div>
+    <div id="paneNotes">
+      <button class="ai-btn" data-act="aiExtract" id="aiBtn"></button>
+      <div class="maker">
+        <textarea id="noteText" rows="3" placeholder="اكتب فائدة من هذا الدرس…"></textarea>
+        <div class="maker-row">
+          <label class="chk"><input type="checkbox" id="noteAtTime" checked> عند الدقيقة <b id="noteTime" data-act="noteRetime">0:00</b></label>
+          <button class="btn primary" data-act="noteAdd">حفظ الفائدة</button>
+        </div>
+      </div>
+      <div id="notesList"></div>
+    </div>
+    <div id="paneClips" class="hidden">
+      <div class="maker">
+        <div class="ab">
+          <div>
+            <button class="ab-btn" data-act="clipMark" data-w="a" id="abA"><small>بداية المقطع</small><b id="clipA">—</b></button>
+            <div class="adj" dir="ltr"><button data-act="clipAdj" data-w="a" data-d="-5">-5</button><button data-act="clipAdj" data-w="a" data-d="-1">-1</button><button data-act="clipAdj" data-w="a" data-d="1">+1</button><button data-act="clipAdj" data-w="a" data-d="5">+5</button></div>
+          </div>
+          <div>
+            <button class="ab-btn" data-act="clipMark" data-w="b" id="abB"><small>نهاية المقطع</small><b id="clipB">—</b></button>
+            <div class="adj" dir="ltr"><button data-act="clipAdj" data-w="b" data-d="-5">-5</button><button data-act="clipAdj" data-w="b" data-d="-1">-1</button><button data-act="clipAdj" data-w="b" data-d="1">+1</button><button data-act="clipAdj" data-w="b" data-d="5">+5</button></div>
+          </div>
+        </div>
+        <input id="clipName" placeholder="عنوان المقطع (اختياري)">
+        <div class="maker-row">
+          <button class="btn" data-act="clipPreview">معاينة</button>
+          <button class="btn primary" data-act="clipSave" id="clipSaveBtn">حفظ المقطع</button>
+        </div>
+        <p class="hint">اضغط «بداية المقطع» عند اللحظة التي تريدها أثناء الاستماع، ثم «نهاية المقطع». الأزرار الصغيرة لضبط الثواني.</p>
+      </div>
+      <div id="clipsList"></div>
+    </div>
+  </div></div>
+</section>
+
+<div class="backdrop" id="backdrop"></div>
+<div class="sheet" id="sheet" role="dialog"></div>
+<div class="toast" id="toast"></div>
+<div id="ytf-wrap"><div id="ytf"></div></div>
+
+<script>
+'use strict';
+/* ============ أدوات عامة ============ */
+const KEY = 'maktabati_sawtiya_v1';
+const COLORS = ['#0f766e','#b45309','#7c3aed','#be123c','#1d4ed8','#4d7c0f','#a16207','#0e7490','#9d174d','#475569'];
+const SPEEDS = [0.5,0.75,1,1.25,1.5,1.75,2];
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+const ICONS = {
+  play:'<path d="M7 4.6v14.8a.8.8 0 0 0 1.2.7l12-7.4a.8.8 0 0 0 0-1.4l-12-7.4A.8.8 0 0 0 7 4.6z" fill="currentColor" stroke="none"/>',
+  pause:'<rect x="6" y="4.5" width="4.2" height="15" rx="1.2" fill="currentColor" stroke="none"/><rect x="13.8" y="4.5" width="4.2" height="15" rx="1.2" fill="currentColor" stroke="none"/>',
+  prev:'<path d="M6 5v14"/><path d="M19 5.8v12.4a.6.6 0 0 1-.95.5L9.5 12.5a.6.6 0 0 1 0-1l8.55-6.2a.6.6 0 0 1 .95.5z" fill="currentColor"/>',
+  next:'<path d="M18 5v14"/><path d="M5 5.8v12.4a.6.6 0 0 0 .95.5l8.55-6.2a.6.6 0 0 0 0-1L5.95 5.3a.6.6 0 0 0-.95.5z" fill="currentColor"/>',
+  rew:'<path d="M3.5 12a8.5 8.5 0 1 0 2.6-6.1"/><path d="M3.5 4v4.5H8"/>',
+  fwd:'<path d="M20.5 12a8.5 8.5 0 1 1-2.6-6.1"/><path d="M20.5 4v4.5H16"/>',
+  moon:'<path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/>',
+  video:'<rect x="3" y="6" width="13" height="12" rx="2.5"/><path d="M16 10.2l5-3v9.6l-5-3z"/>',
+  head:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4.5" height="6.5" rx="1.6"/><rect x="16.5" y="14" width="4.5" height="6.5" rx="1.6"/>',
+  check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+  checkc:'<circle cx="12" cy="12" r="9.5" fill="currentColor" stroke="none"/><path d="M7.5 12.3l3 3 6-6.3" stroke="#fff"/>',
+  ext:'<path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+  gear:'<path d="M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1"/><circle cx="15" cy="6" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="17" cy="18" r="2"/>',
+  back:'<path d="M9 5l7 7-7 7"/>',
+  down:'<path d="M6 9l6 6 6-6"/>',
+  more:'<circle cx="5" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="19" cy="12" r="1.6" fill="currentColor"/>',
+  scissors:'<circle cx="6" cy="7" r="2.8"/><circle cx="6" cy="17" r="2.8"/><path d="M8.3 8.6L20 18.5M8.3 15.4L20 5.5"/>',
+  note:'<path d="M6 3.5h9l4 4V20a.5.5 0 0 1-.5.5h-12A.5.5 0 0 1 6 20z"/><path d="M9 11.5h7M9 15h5"/>',
+  trash:'<path d="M4 7h16"/><path d="M9 7V4.5h6V7"/><path d="M6 7l1 13h10l1-13"/>',
+  edit:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
+  loop:'<path d="M17 2.5l3 3-3 3"/><path d="M4 11.5v-2a4 4 0 0 1 4-4h12"/><path d="M7 21.5l-3-3 3-3"/><path d="M20 12.5v2a4 4 0 0 1-4 4H4"/>',
+  copy:'<rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/>',
+  flame:'<path d="M12 3c.8 3 5 5.2 5 10a5 5 0 0 1-10 0c0-2.2 1-3.6 2.2-4.6.1 2 1 3.1 2.2 3.3C11 9 10.2 6 12 3z"/>',
+  dl:'<path d="M12 4v11"/><path d="M7 10.5l5 5 5-5"/><path d="M5 20h14"/>',
+  ul:'<path d="M12 20V9"/><path d="M7 13.5l5-5 5 5"/><path d="M5 4h14"/>',
+  paste:'<rect x="6" y="4.5" width="12" height="16" rx="2"/><path d="M9.5 4.5V3h5v1.5"/><path d="M9 11h6M9 15h4"/>',
+  up:'<path d="M12 19V5M6 11l6-6 6 6"/>',
+  dn:'<path d="M12 5v14M6 13l6 6 6-6"/>',
+  move:'<path d="M4 8h13l-3-3M20 16H7l3 3"/>',
+  reset:'<path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4.5V9h4.5"/>',
+  list:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1" fill="currentColor"/><circle cx="4.5" cy="12" r="1" fill="currentColor"/><circle cx="4.5" cy="18" r="1" fill="currentColor"/>',
+  palette:'<path d="M12 3a9 9 0 1 0 0 18c1.2 0 1.8-.8 1.8-1.7 0-1.2-1-1.6-1-2.6 0-.9.7-1.6 1.6-1.6H17a4 4 0 0 0 4-4c0-4.4-4-8.1-9-8.1z"/><circle cx="7.5" cy="11" r="1.2" fill="currentColor"/><circle cx="10.5" cy="7" r="1.2" fill="currentColor"/><circle cx="15" cy="7.5" r="1.2" fill="currentColor"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/>'
+};
+function ic(n, s = 22, sw = 2) {
+  return `<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n] || ''}</svg>`;
+}
+function fmt(t) {
+  t = Math.max(0, Math.floor(t || 0));
+  const h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), s = t % 60;
+  return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0');
+}
+function human(sec) {
+  const m = Math.round((sec || 0) / 60);
+  if (m < 60) return m + ' د';
+  const h = Math.floor(m / 60), r = m % 60;
+  return h + ' س' + (r ? ' ' + r + ' د' : '');
+}
+function lessonsWord(n) {
+  if (n === 1) return 'درس واحد'; if (n === 2) return 'درسان';
+  if (n >= 3 && n <= 10) return n + ' دروس'; return n + ' درسًا';
+}
+function dayKey(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+const todayKey = () => dayKey(new Date());
+function norm(s) {
+  return String(s || '').toLowerCase()
+    .replace(/[ً-ٰٟـ]/g, '')
+    .replace(/[إأآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي');
+}
+function hl(text, q) {
+  const t = String(text || '');
+  if (!q) return esc(t);
+  const nq = norm(q); if (!nq) return esc(t);
+  // نبني خريطة بين النص المطبَّع والأصل لتظليل الكلمة رغم التشكيل
+  let normStr = '', map = [];
+  for (let i = 0; i < t.length; i++) { const n = norm(t[i]); for (let k = 0; k < n.length; k++) { normStr += n[k]; map.push(i); } }
+  const out = []; let last = 0, idx = normStr.indexOf(nq);
+  while (idx !== -1) {
+    const s = map[idx], e = map[idx + nq.length - 1] + 1;
+    if (s >= last) { out.push(esc(t.slice(last, s)), '<mark>', esc(t.slice(s, e)), '</mark>'); last = e; }
+    idx = normStr.indexOf(nq, idx + nq.length);
+  }
+  out.push(esc(t.slice(last)));
+  return out.join('');
+}
+const thumb = (vid, q = 'mqdefault') => `https://i.ytimg.com/vi/${vid}/${q}.jpg`;
+const ytUrl = (vid, t) => `https://www.youtube.com/watch?v=${vid}` + (t ? `&t=${Math.floor(t)}s` : '');
+
+/* ============ البيانات ============ */
+function defaults() {
+  return { v: 1, series: [], lessons: [], settings: { rate: 1, autoNext: true, showVideo: false, theme: 'auto', skip: 10, goal: 30, pauseOnNote: false, aiKey: '', aiModel: 'gemini-flash-latest', aiCount: 'auto' }, stats: { days: {} }, last: null };
+}
+function migrate(d) {
+  const def = defaults();
+  d.settings = Object.assign(def.settings, d.settings || {});
+  d.series = Array.isArray(d.series) ? d.series : [];
+  d.lessons = Array.isArray(d.lessons) ? d.lessons : [];
+  d.stats = d.stats || { days: {} }; d.stats.days = d.stats.days || {};
+  d.lessons.forEach(l => { l.notes = l.notes || []; l.clips = l.clips || []; l.pos = l.pos || 0; });
+  return d;
+}
+function load() {
+  try { const raw = localStorage.getItem(KEY); if (raw) return migrate(JSON.parse(raw)); } catch (e) {}
+  return defaults();
+}
+let S = load();
+let storageOK = true, saveT = null, lastSave = 0;
+function save(now) {
+  clearTimeout(saveT);
+  const f = () => {
+    try { localStorage.setItem(KEY, JSON.stringify(S)); storageOK = true; }
+    catch (e) { if (storageOK) toast('تعذّر الحفظ على هذا الجهاز — صدّر نسخة احتياطية من الإعدادات'); storageOK = false; }
+    lastSave = Date.now();
+  };
+  if (now) f(); else saveT = setTimeout(f, 350);
+}
+const L = id => S.lessons.find(l => l.id === id);
+const SR = id => S.series.find(s => s.id === id);
+const lessonsOf = sid => S.lessons.filter(l => l.seriesId === sid).sort((a, b) => a.order - b.order);
+function seriesProgress(sid) {
+  const ls = lessonsOf(sid), n = ls.length, done = ls.filter(l => l.done).length;
+  let remain = 0, known = true;
+  ls.forEach(l => { if (!l.done) { if (l.duration) remain += Math.max(0, l.duration - (l.pos || 0)); else known = false; } });
+  return { n, done, pct: n ? Math.round(done / n * 100) : 0, remain, known };
+}
+function nextUp(sid) {
+  const ls = lessonsOf(sid); if (!ls.length) return null;
+  const recent = ls.filter(l => l.lastPlayed).sort((a, b) => b.lastPlayed - a.lastPlayed)[0];
+  if (recent && !recent.done) return recent;
+  if (recent) { const i = ls.indexOf(recent); const n = ls.slice(i + 1).find(l => !l.done); if (n) return n; }
+  return ls.find(l => !l.done) || null;
+}
+function lessonPct(l) { return l.duration ? clamp(Math.round((l.pos || 0) / l.duration * 100), 0, 100) : 0; }
+
+/* ============ روابط يوتيوب ============ */
+function parseT(t) {
+  if (!t) return 0;
+  if (/^\d+$/.test(t)) return +t;
+  const m = String(t).match(/(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s)?/);
+  return m ? (+m[1] || 0) * 3600 + (+m[2] || 0) * 60 + (+m[3] || 0) : 0;
+}
+function parseYT(str) {
+  str = String(str || '').trim().replace(/[)\]،,.]+$/, '');
+  if (!str) return null;
+  if (/^[\w-]{11}$/.test(str)) return { v: str, list: null, t: 0 };
+  let u;
+  try { u = new URL(/^https?:\/\//i.test(str) ? str : 'https://' + str); } catch (e) { return null; }
+  const host = u.hostname.toLowerCase().replace(/^(www|m|music)\./, '');
+  let v = null; const list = u.searchParams.get('list');
+  if (host === 'youtu.be') v = u.pathname.split('/')[1] || null;
+  else if (host === 'youtube.com' || host === 'youtube-nocookie.com') {
+    v = u.searchParams.get('v');
+    const m = u.pathname.match(/^\/(?:shorts|live|embed|v)\/([\w-]{11})/); if (m) v = m[1];
+  } else return null;
+  if (v && !/^[\w-]{11}$/.test(v)) v = v.slice(0, 11);
+  if (v && !/^[\w-]{11}$/.test(v)) v = null;
+  if (list && /^(WL|LL)$/.test(list) && !v) return null;
+  if (!v && !list) return null;
+  return { v, list: list || null, t: parseT(u.searchParams.get('t') || u.searchParams.get('start')) };
+}
+function extractLinks(text) {
+  const tokens = String(text || '').split(/[\s\n]+/).filter(Boolean);
+  const out = [], seen = new Set();
+  tokens.forEach(tok => {
+    const p = parseYT(tok); if (!p) return;
+    const k = (p.v || '') + '|' + (p.list || '');
+    if (!seen.has(k)) { seen.add(k); out.push(p); }
+  });
+  return out;
+}
+
+/* ============ مشغّل يوتيوب ============ */
+let YTP = null, playerReady = false, loadedVid = null, ytState = -1, pending = null;
+let cur = S.last && L(S.last) ? S.last : null;
+let activeClip = null, sleep = null, needTap = false, wdT = null, ytErr = null, lastTick = 0;
+let ytApiOk = false, ytApiFailed = false;
+const ytReadyP = new Promise(res => { window.onYouTubeIframeAPIReady = () => { ytApiOk = true; res(); render(); }; });
+(function loadApi() {
+  const s = document.createElement('script');
+  s.src = 'https://www.youtube.com/iframe_api';
+  s.onerror = () => { ytApiFailed = true; render(); };
+  document.head.appendChild(s);
+  setTimeout(() => { if (!ytApiOk) { ytApiFailed = true; render(); } }, 15000);
+})();
+
+function playerVars(st, autoplay) {
+  const pv = { playsinline: 1, rel: 0, modestbranding: 1, iv_load_policy: 3, autoplay: autoplay ? 1 : 0, start: Math.floor(st || 0), hl: 'ar' };
+  if (/^https?:$/.test(location.protocol)) pv.origin = location.origin;
+  return pv;
+}
+function createPlayer(vid, st, autoplay) {
+  playerReady = false; loadedVid = vid;
+  YTP = new YT.Player('yt', {
+    width: '100%', height: '100%', videoId: vid, playerVars: playerVars(st, autoplay),
+    events: {
+      onReady: () => {
+        playerReady = true;
+        try { YTP.setPlaybackRate(S.settings.rate); } catch (e) {}
+        if (pending) { const p = pending; pending = null; ensurePlayer(p.vid, p.st, p.autoplay); }
+        else if (autoplay) { try { YTP.playVideo(); } catch (e) {} armWatchdog(); }
+      },
+      onStateChange: onState,
+      onError: onYtError,
+      onPlaybackRateChange: e => { if (e.data && e.data !== S.settings.rate) { S.settings.rate = e.data; save(); renderTools(); } }
+    }
+  });
+  if (autoplay) armWatchdog();
+}
+function ensurePlayer(vid, st, autoplay) {
+  ytErr = null; renderStageMsg();
+  if (!window.YT || !YT.Player) {
+    pending = { vid, st, autoplay };
+    ytReadyP.then(() => { if (pending && !YTP) { const p = pending; pending = null; ensurePlayer(p.vid, p.st, p.autoplay); } });
+    return;
+  }
+  if (!YTP) { createPlayer(vid, st, autoplay); return; }
+  if (!playerReady) { pending = { vid, st, autoplay }; return; }
+  try {
+    if (loadedVid === vid) { YTP.seekTo(st, true); if (autoplay) YTP.playVideo(); }
+    else if (autoplay) YTP.loadVideoById({ videoId: vid, startSeconds: st });
+    else YTP.cueVideoById({ videoId: vid, startSeconds: st });
+  } catch (e) {}
+  loadedVid = vid;
+  if (autoplay) armWatchdog();
+}
+function armWatchdog() {
+  clearTimeout(wdT);
+  wdT = setTimeout(() => {
+    if (ytState !== 1 && ytState !== 3 && !ytErr && cur) { needTap = true; renderStage(); openPlayer(); }
+  }, 3200);
+}
+function onState(e) {
+  ytState = e.data;
+  const l = L(cur);
+  if (ytState === 1) {
+    needTap = false; lastTick = Date.now(); clearTimeout(wdT);
+    try { if (YTP.getPlaybackRate() !== S.settings.rate) YTP.setPlaybackRate(S.settings.rate); } catch (er) {}
+    if (l) {
+      try {
+        const vd = YTP.getVideoData();
+        if (vd && vd.title && l.titleAuto && !l.metaOk) { l.title = vd.title; l.author = vd.author || ''; l.metaOk = true; renderPlayerHead(); render(); }
+        const d = YTP.getDuration(); if (d > 0) l.duration = Math.round(d);
+      } catch (er) {}
+    }
+    renderStage();
+  }
+  if (ytState === 0 && l) {
+    if (activeClip) { activeClip = null; renderClips(); }
+    l.pos = 0;
+    if (!l.done) markDone(l, true, true); else save(true);
+    if (sleep && sleep.end) { sleep = null; renderTools(); toast('توقّف التشغيل بنهاية الدرس'); renderPlayState(); return; }
+    if (S.settings.autoNext) {
+      const n = nextAfter(l);
+      if (n) { toast('الدرس التالي: ' + n.title); setTimeout(() => playLesson(n.id, { open: false }), 900); }
+    }
+  }
+  if (ytState === 2) save(true);
+  renderPlayState();
+}
+function onYtError(e) {
+  const c = e.data;
+  ytErr = (c === 101 || c === 150 || c === 153)
+    ? 'صاحب هذا الفيديو لا يسمح بتشغيله خارج يوتيوب.'
+    : (c === 100 ? 'الفيديو غير موجود أو أصبح خاصًّا.' : (c === 2 ? 'رابط الفيديو غير صالح.' : 'تعذّر تشغيل الفيديو.'));
+  needTap = false; clearTimeout(wdT); renderStage(); renderStageMsg();
+}
+const curTime = () => { try { return YTP && YTP.getCurrentTime ? (YTP.getCurrentTime() || 0) : 0; } catch (e) { return 0; } };
+const curDur = () => { try { return YTP && YTP.getDuration ? (YTP.getDuration() || 0) : 0; } catch (e) { return 0; } };
+
+function playLesson(id, opt = {}) {
+  const l = L(id); if (!l) return;
+  const same = cur === id && loadedVid === l.videoId && playerReady;
+  if (cur !== id) { activeClip = null; clipDraft = { a: null, b: null }; noteT = null; }
+  cur = id; S.last = id; l.lastPlayed = Date.now(); save();
+  if (opt.clip) {
+    activeClip = Object.assign({}, opt.clip);
+    ensurePlayer(l.videoId, activeClip.start, true);
+  } else if (opt.start != null) {
+    ensurePlayer(l.videoId, opt.start, true);
+  } else if (same) {
+    if (ytState !== 1) { try { YTP.playVideo(); } catch (e) {} armWatchdog(); }
+  } else {
+    let st = l.pos || 0;
+    if (l.duration && st > l.duration - 8) st = 0;
+    ensurePlayer(l.videoId, st, true);
+  }
+  if (opt.open !== false) openPlayer();
+  renderPlayerAll(); render();
+}
+function togglePlay() {
+  if (!cur) return;
+  if (!YTP || !playerReady) { const l = L(cur); if (l) playLesson(l.id); return; }
+  if (ytState === 1 || ytState === 3) YTP.pauseVideo();
+  else {
+    const l = L(cur);
+    if (loadedVid !== l.videoId) { playLesson(l.id, { open: false }); return; }
+    YTP.playVideo(); armWatchdog();
+  }
+}
+function userSeek(t) {
+  if (!YTP || !playerReady) return;
+  const d = curDur(); t = clamp(t, 0, d ? d - 0.5 : t);
+  if (activeClip && (t < activeClip.start - 0.5 || t > activeClip.end)) { activeClip = null; renderClips(); }
+  YTP.seekTo(t, true);
+  const l = L(cur); if (l) { l.pos = t; save(); }
+  updateProgress();
+}
+function nextAfter(l) {
+  const ls = lessonsOf(l.seriesId), i = ls.findIndex(x => x.id === l.id);
+  return ls.slice(i + 1).find(x => !x.done) || null;
+}
+function neighbor(dir) {
+  const l = L(cur); if (!l) return null;
+  const ls = lessonsOf(l.seriesId), i = ls.findIndex(x => x.id === l.id);
+  return ls[i + dir] || null;
+}
+function markDone(l, val, auto) {
+  l.done = !!val; l.doneAt = val ? Date.now() : null;
+  if (val && auto) toast('✓ انتهى الدرس — بارك الله فيك');
+  save(true); render(); if (l.id === cur) renderTools();
+}
+
+/* المؤقِّت الرئيسي: حفظ الموضع، الإحصاءات، المقاطع، مؤقت النوم */
+function addListen(sec) { const k = todayKey(); S.stats.days[k] = (S.stats.days[k] || 0) + sec; }
+setInterval(() => {
+  if (!YTP || !playerReady || !cur) return;
+  const l = L(cur); if (!l) return;
+  const now = Date.now();
+  if (ytState === 1 && loadedVid === l.videoId) {
+    const t = curTime(), d = curDur();
+    if (d > 0) l.duration = Math.round(d);
+    l.pos = t;
+    if (lastTick) addListen(Math.min(2, (now - lastTick) / 1000));
+    if (!l.done && d > 60 && t / d >= 0.97) markDone(l, true, true);
+    if (activeClip) {
+      if (t >= activeClip.end - 0.12) {
+        if (activeClip.loop) YTP.seekTo(activeClip.start, true);
+        else { YTP.pauseVideo(); activeClip = null; renderClips(); }
+      }
+    }
+    if (sleep && sleep.until && now >= sleep.until) { YTP.pauseVideo(); sleep = null; toast('انتهى مؤقّت النوم'); renderTools(); }
+    if (now - lastSave > 5000) save();
+  }
+  lastTick = ytState === 1 ? now : 0;
+  updateProgress();
+  if (sleep && sleep.until) renderSleepBtn();
+}, 250);
+document.addEventListener('visibilitychange', () => { if (document.hidden) save(true); });
+window.addEventListener('pagehide', () => save(true));
+
+/* ============ الواجهة: المشغّل ============ */
+const player = $('#player');
+let clipDraft = { a: null, b: null }, noteT = null, seeking = false, tab = 'notes';
+function openPlayer() {
+  if (!cur) return;
+  player.classList.add('open'); player.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  renderMini();
+}
+function closePlayer() {
+  player.classList.remove('open'); player.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  renderMini();
+}
+function renderPlayerAll() { renderPlayerHead(); renderStage(); renderStageMsg(); renderPlayState(); renderTools(); renderNotes(); renderClips(); updateProgress(); renderMini(); }
+function renderPlayerHead() {
+  const l = L(cur); if (!l) return;
+  const s = SR(l.seriesId), ls = lessonsOf(l.seriesId), i = ls.findIndex(x => x.id === l.id);
+  $('#pSeries').textContent = (s ? s.title : '') + '  •  الدرس ' + (i + 1) + ' من ' + ls.length;
+  $('#pTitle').textContent = l.title;
+  $('#pAuthor').textContent = l.author || '';
+  $('#coverImg').src = thumb(l.videoId, 'hqdefault');
+  $('#coverBg').style.backgroundImage = `url(${thumb(l.videoId, 'mqdefault')})`;
+  $('#ytLink').href = ytUrl(l.videoId, curTime() || l.pos);
+}
+function renderStage() {
+  const showVid = S.settings.showVideo || needTap;
+  $('#stage').classList.toggle('video', showVid);
+  $('#tapNote').classList.toggle('hidden', !needTap);
+  $('#coverBadge').innerHTML = ic('head', 14) + ' وضع الصوت';
+}
+function renderStageMsg() {
+  const m = $('#stageMsg'), l = L(cur);
+  if (ytErr && l) {
+    m.innerHTML = `<div>${esc(ytErr)}</div><a href="${ytUrl(l.videoId, l.pos)}" target="_blank" rel="noopener">افتحه في يوتيوب</a>`;
+    m.classList.remove('hidden');
+  } else if (ytApiFailed && !ytApiOk) {
+    m.innerHTML = `<div>تعذّر تحميل مشغّل يوتيوب.<br>تأكد من اتصال الإنترنت ثم أعد فتح التطبيق.</div>`;
+    m.classList.remove('hidden');
+  } else m.classList.add('hidden');
+}
+function renderPlayState() {
+  const playing = ytState === 1 || ytState === 3;
+  $('#playBtn').innerHTML = ic(playing ? 'pause' : 'play', 34);
+  $('#miniBtn').innerHTML = ic(playing ? 'pause' : 'play', 22);
+  $('#playBtn').setAttribute('aria-label', playing ? 'إيقاف مؤقت' : 'تشغيل');
+}
+function renderSleepBtn() {
+  const b = $('#slpBtn');
+  let lab = 'مؤقّت النوم', val = ic('moon', 20);
+  if (sleep && sleep.until) { const r = Math.max(0, Math.ceil((sleep.until - Date.now()) / 1000)); val = `<b dir="ltr">${fmt(r)}</b>`; }
+  else if (sleep && sleep.end) { val = `<b>نهاية</b>`; lab = 'نهاية الدرس'; }
+  b.innerHTML = val + `<span>${lab}</span>`;
+  b.classList.toggle('on', !!sleep);
+}
+function renderTools() {
+  const l = L(cur);
+  $('#spdBtn').innerHTML = `<b dir="ltr">${S.settings.rate}×</b><span>السرعة</span>`;
+  $('#spdBtn').classList.toggle('on', S.settings.rate !== 1);
+  renderSleepBtn();
+  $('#vidBtn').innerHTML = S.settings.showVideo ? ic('video', 20) + '<span>فيديو</span>' : ic('head', 20) + '<span>صوت فقط</span>';
+  $('#doneBtn').innerHTML = ic('check', 20, 2.6) + `<span>${l && l.done ? 'منتهٍ ✓' : 'انتهى'}</span>`;
+  $('#doneBtn').classList.toggle('on', !!(l && l.done));
+  $('#ytLink').innerHTML = ic('ext', 20) + '<span>يوتيوب</span>';
+  const sk = S.settings.skip;
+  $('#bBack').innerHTML = ic('rew', 40, 1.7) + `<small>${sk}</small>`;
+  $('#bFwd').innerHTML = ic('fwd', 40, 1.7) + `<small>${sk}</small>`;
+}
+function updateProgress() {
+  const l = L(cur); if (!l) return;
+  const live = YTP && playerReady && loadedVid === l.videoId;
+  const t = live ? curTime() : (l.pos || 0), d = (live && curDur()) || l.duration || 0;
+  const sk = $('#seek');
+  if (!seeking) { sk.max = Math.max(1, Math.floor(d)); sk.value = Math.floor(t); $('#tCur').textContent = fmt(t); }
+  $('#tDur').textContent = d ? fmt(d) : '--:--';
+  $('#miniTime').textContent = fmt(t) + (d ? ' / ' + fmt(d) : '');
+  $('#miniProg').style.width = (d ? clamp(t / d * 100, 0, 100) : 0) + '%';
+  if (document.activeElement !== $('#noteText') && !$('#noteText').value) $('#noteTime').textContent = fmt(t);
+}
+function renderNotes() {
+  const l = L(cur); if (!l) return;
+  $('#nCount').textContent = l.notes.length ? '(' + l.notes.length + ')' : '';
+  const busy = batch && batch.ids[batch.i] === l.id;
+  $('#aiBtn').innerHTML = busy ? '<span class="spin"></span> جارٍ استخراج فوائد هذا الدرس…' : ('✨ ' + (l.aiAt ? 'إعادة استخراج الفوائد' : 'استخراج الفوائد تلقائيًا') + (S.settings.aiKey ? '' : ' <small>(إعداد لمرة واحدة)</small>'));
+  const ns = sortedNotes(l);
+  $('#notesList').innerHTML = ns.length ? ns.map(n => noteHTML(l, n)).join('') :
+    `<div class="empty-s">لا توجد فوائد بعد. اكتب أول فائدة من هذا الدرس، وستُربط بالدقيقة الحالية لتعود إليها بلمسة.</div>`;
+}
+const noteKey = n => n.kind === 'summary' ? -1 : (n.t ?? 1e9);
+function sortedNotes(l) { return l.notes.slice().sort((a, b) => noteKey(a) - noteKey(b) || a.createdAt - b.createdAt); }
+function noteHTML(l, n, q, showLesson) {
+  return `<div class="note ${n.kind === 'summary' ? 'summary' : ''}" data-note="${n.id}">
+    <div class="nh">
+      ${n.kind === 'summary' ? '<span class="ntag">📌 ملخص الدرس</span>' : ''}
+      ${n.t != null ? `<button class="tchip" data-act="noteSeek" data-l="${l.id}" data-t="${n.t}">${ic('play', 12)} ${fmt(n.t)}</button>` : ''}
+      ${n.type ? `<span class="ntag">${esc(n.type)}</span>` : ''}
+      ${n.ai ? '<span class="ntag ai">✨ آلي</span>' : ''}
+      ${showLesson ? `<small class="t-ellip" style="color:var(--muted);font-size:12.5px;min-width:0">${esc(l.title)}</small>` : ''}
+      <span class="sp"></span>
+      <button class="icon-btn sm" data-act="noteEdit" data-l="${l.id}" data-id="${n.id}" aria-label="تعديل">${ic('edit', 18)}</button>
+      <button class="icon-btn sm" data-act="noteDel" data-l="${l.id}" data-id="${n.id}" aria-label="حذف">${ic('trash', 18)}</button>
+    </div>
+    <div class="tx">${q ? hl(n.text, q) : esc(n.text)}</div>
+  </div>`;
+}
+function renderClips() {
+  const l = L(cur); if (!l) return;
+  $('#cCount').textContent = l.clips.length ? '(' + l.clips.length + ')' : '';
+  $('#clipA').textContent = clipDraft.a != null ? fmt(clipDraft.a) : '—';
+  $('#clipB').textContent = clipDraft.b != null ? fmt(clipDraft.b) : '—';
+  $('#abA').classList.toggle('set', clipDraft.a != null);
+  $('#abB').classList.toggle('set', clipDraft.b != null);
+  $('#clipSaveBtn').innerHTML = ic('scissors', 18) + ' حفظ المقطع';
+  const cs = l.clips.slice().sort((a, b) => a.start - b.start);
+  $('#clipsList').innerHTML = cs.length ? cs.map(c => clipHTML(l, c)).join('') :
+    `<div class="empty-s">لم تحفظ مقاطع من هذا الدرس بعد.</div>`;
+}
+function clipHTML(l, c, showLesson) {
+  const act = activeClip && activeClip.id === c.id && cur === l.id;
+  return `<div class="clip ${act ? 'active' : ''}">
+    <button class="cp" data-act="clipPlay" data-l="${l.id}" data-id="${c.id}" aria-label="تشغيل المقطع">${ic('play', 18)}</button>
+    <div class="cm"><b>${esc(c.title || 'مقطع')}</b>
+      ${showLesson ? `<span class="ls">${esc(l.title)}</span>` : ''}
+      <small>${fmt(c.start)} → ${fmt(c.end)}  (${fmt(c.end - c.start)})</small></div>
+    <button class="icon-btn sm ${act && activeClip.loop ? 'on' : ''}" data-act="clipLoop" data-l="${l.id}" data-id="${c.id}" aria-label="تكرار">${ic('loop', 18)}</button>
+    <button class="icon-btn sm" data-act="clipMenu" data-l="${l.id}" data-id="${c.id}" aria-label="خيارات">${ic('more', 18)}</button>
+  </div>`;
+}
+function renderMini() {
+  const l = L(cur), show = !!l && !player.classList.contains('open');
+  $('#mini').classList.toggle('hidden', !show);
+  document.body.classList.toggle('has-mini', show);
+  if (!l) return;
+  $('#miniImg').src = thumb(l.videoId);
+  $('#miniTitle').textContent = l.title;
+}
+
+/* أحداث المشغّل الخاصة */
+const seekEl = $('#seek');
+seekEl.addEventListener('input', () => { seeking = true; $('#tCur').textContent = fmt(+seekEl.value); });
+seekEl.addEventListener('change', () => { seeking = false; userSeek(+seekEl.value); });
+$('#ytLink').addEventListener('click', () => { const l = L(cur); if (!l) return; $('#ytLink').href = ytUrl(l.videoId, curTime() || l.pos); try { if (YTP && ytState === 1) YTP.pauseVideo(); } catch (e) {} });
+$('#noteText').addEventListener('focus', () => {
+  if (noteT == null) noteT = curTime();
+  $('#noteTime').textContent = fmt(noteT);
+  if (S.settings.pauseOnNote && ytState === 1 && YTP) YTP.pauseVideo();
+});
+
+/* ============ الواجهة: الصفحات ============ */
+let view = { name: 'home' }, filter = 'all', searchQ = '', notesQ = '';
+function route() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h.startsWith('s-') && SR(h.slice(2))) view = { name: 'series', id: h.slice(2) };
+  else if (h === 'notes') view = { name: 'notes' };
+  else if (h === 'clips') view = { name: 'clips' };
+  else if (h === 'search') view = { name: 'search' };
+  else view = { name: 'home' };
+  filter = 'all';
+  render(); window.scrollTo(0, 0);
+  if (view.name === 'search') setTimeout(() => { const i = $('#searchIn'); i && i.focus(); }, 50);
+}
+window.addEventListener('hashchange', route);
+const go = h => { if (location.hash.slice(1) === h) route(); else location.hash = h; };
+
+function render() {
+  const v = $('#view');
+  let h = '';
+  if (view.name === 'series') h = viewSeries(view.id);
+  else if (view.name === 'notes') h = viewNotes();
+  else if (view.name === 'clips') h = viewClips();
+  else if (view.name === 'search') h = viewSearch();
+  else h = viewHome();
+  // في صفحتي البحث والفوائد نحافظ على حقل الإدخال كي لا يفقد التركيز
+  if ((view.name === 'search' || view.name === 'notes') && v.dataset.v === view.name) {
+    const r = $('#results'); if (r) { r.innerHTML = view.name === 'search' ? searchResults() : notesResults(); }
+  } else { v.innerHTML = h; v.dataset.v = view.name; }
+  $('#fab').classList.toggle('hidden', !(view.name === 'home' || view.name === 'series'));
+  renderMini();
+}
+function banners() {
+  let b = '';
+  if (location.protocol === 'file:') b += `<div class="banner">افتح التطبيق من رابط الموقع (https) وليس كملف، وإلا فلن يعمل مشغّل يوتيوب.</div>`;
+  else if (ytApiFailed && !ytApiOk) b += `<div class="banner">تعذّر تحميل مشغّل يوتيوب. تحقّق من الإنترنت ثم أعد فتح التطبيق.</div>`;
+  if (!storageOK) b += `<div class="banner">الحفظ لا يعمل على هذا الجهاز الآن. صدّر نسخة احتياطية من الإعدادات.</div>`;
+  return b;
+}
+function statsSummary() {
+  const days = S.stats.days, tk = todayKey();
+  let streak = 0; const d = new Date();
+  if ((days[tk] || 0) < 60) d.setDate(d.getDate() - 1);
+  while ((days[dayKey(d)] || 0) >= 60) { streak++; d.setDate(d.getDate() - 1); }
+  return { today: (days[tk] || 0) / 60, streak, total: Object.values(days).reduce((a, b) => a + b, 0), done: S.lessons.filter(l => l.done).length };
+}
+function viewHome() {
+  let h = `<header class="top"><div class="grow"><h1>مكتبتي الصوتية</h1><div class="sub">سلاسل الدروس من يوتيوب</div></div>
+    <button class="icon-btn" data-act="gotoSearch" aria-label="بحث">${ic('search')}</button>
+    <button class="icon-btn" data-act="settings" aria-label="الإعدادات">${ic('gear')}</button></header>`;
+  h += banners();
+  if (!S.series.length) {
+    return h + `<div class="card empty">
+      <div class="big">${ic('head', 40, 1.8)}</div>
+      <h2>مرحبًا بك</h2>
+      <p>اجمع دروسك وسلاسلك من يوتيوب في مكان واحد، واستمع إليها صوتًا فقط.</p>
+      <ol class="steps">
+        <li>افتح الدرس أو قائمة التشغيل في يوتيوب، واضغط «مشاركة» ثم «نسخ الرابط».</li>
+        <li>ارجع إلى هنا واضغط زر <b>+</b>، ثم «لصق».</li>
+        <li>استمع، واكتب فوائدك، واحفظ المقاطع المهمة.</li>
+      </ol>
+      <button class="btn primary block" data-act="addOpen">${ic('plus', 20)} أضف أول سلسلة</button>
+    </div>`;
+  }
+  const lc = L(S.last);
+  if (lc) {
+    const s = SR(lc.seriesId), p = lessonPct(lc);
+    h += `<div class="card cont" data-act="play" data-id="${lc.id}">
+      <div class="th"><img src="${thumb(lc.videoId)}" alt="" loading="lazy"><div class="l-prog"><i style="width:${p}%"></i></div></div>
+      <div class="meta"><div class="lbl">تابع الاستماع</div><div class="tt">${esc(lc.title)}</div><div class="ss">${esc(s ? s.title : '')}${lc.duration ? ' · بقي ' + human(Math.max(0, lc.duration - (lc.pos || 0))) : ''}</div></div>
+      <div class="play-fab">${ic('play', 22)}</div></div>`;
+  }
+  const st = statsSummary(), g = S.settings.goal, pct = clamp(Math.round(st.today / g * 100), 0, 100);
+  h += `<div class="card stats">
+    <div class="goal"><div class="ring" style="--p:${pct}"></div><div><b class="${pct >= 100 ? 'goal-done' : ''}">${Math.floor(st.today)} / ${g}</b><small>دقيقة اليوم${pct >= 100 ? ' ✓' : ''}</small></div></div>
+    <div><b>${st.streak}</b><small>أيام متتالية</small></div>
+    <div><b>${st.done}</b><small>درس منتهٍ</small></div>
+    <div><b>${st.total >= 3600 ? Math.floor(st.total / 3600) + ' س' : Math.floor(st.total / 60) + ' د'}</b><small>مجموع الاستماع</small></div>
+  </div>`;
+  const nN = S.lessons.reduce((a, l) => a + l.notes.length, 0), nC = S.lessons.reduce((a, l) => a + l.clips.length, 0);
+  h += `<div class="shortcuts">
+    <button class="shortcut" data-act="gotoNotes"><span class="si">${ic('note')}</span><span><b>فوائدي</b><small>${nN} فائدة</small></span></button>
+    <button class="shortcut" data-act="gotoClips"><span class="si">${ic('scissors')}</span><span><b>مقاطعي</b><small>${nC} مقطع</small></span></button>
+  </div>`;
+  h += `<div class="section-h">سلاسلي <small>${S.series.length}</small></div>`;
+  S.series.slice().sort((a, b) => (b.touched || b.createdAt) - (a.touched || a.createdAt)).forEach(s => {
+    const p = seriesProgress(s.id), nx = nextUp(s.id), first = lessonsOf(s.id)[0];
+    h += `<div class="series-card" data-act="openSeries" data-id="${s.id}">
+      <span class="stripe" style="background:${s.color}"></span>
+      <div class="main"><div class="ttl">${esc(s.title)}</div>
+        <div class="mt">${p.done} من ${lessonsWord(p.n)} · ${p.pct}%</div>
+        <div class="bar"><i style="width:${p.pct}%;background:${s.color}"></i></div>
+        <div class="nx">${p.n ? (nx ? 'التالي: ' + esc(nx.title) : '✓ أتممت السلسلة') : 'لا دروس بعد — أضف روابط'}</div></div>
+      ${first ? `<div class="th"><img src="${thumb(first.videoId)}" alt="" loading="lazy"></div>` : ''}
+    </div>`;
+  });
+  return h;
+}
+function viewSeries(sid) {
+  const s = SR(sid); if (!s) return viewHome();
+  const ls = lessonsOf(sid), p = seriesProgress(sid), nx = nextUp(sid);
+  const nDone = ls.filter(l => l.done).length;
+  let h = `<header class="top"><button class="icon-btn" data-act="home" aria-label="رجوع">${ic('back')}</button>
+    <div class="grow"><h1 class="t-ellip" style="font-size:21px">${esc(s.title)}</h1></div>
+    <button class="icon-btn" data-act="seriesMenu" data-id="${sid}" aria-label="خيارات">${ic('more')}</button></header>`;
+  h += banners();
+  if (batch && batch.sid === sid) h += `<div class="batch"><span class="spin"></span><div style="flex:1">استخراج الفوائد تلقائيًا: الدرس ${batch.i + 1} من ${batch.ids.length}${batch.ok ? ' · أُنجز ' + batch.ok : ''}</div><button class="btn" data-act="stopBatch">إيقاف</button></div>`;
+  h += `<div class="card s-head">
+    <div class="nums"><span>${p.done} من ${lessonsWord(p.n)} منتهية</span><span>${p.n && p.remain ? 'المتبقي ' + (p.known ? '' : '≈ ') + human(p.remain) : ''}</span></div>
+    <div class="bar"><i style="width:${p.pct}%;background:${s.color}"></i></div>
+    <div class="row">
+      ${nx ? `<button class="btn primary" data-act="play" data-id="${nx.id}">${ic('play', 18)} ${nx.pos > 5 ? 'تابع' : 'ابدأ'} الدرس ${ls.indexOf(nx) + 1}</button>` : ''}
+      <button class="btn" data-act="addOpen" data-id="${sid}">${ic('plus', 18)} إضافة دروس</button>
+    </div></div>`;
+  if (!ls.length) return h + `<div class="empty-s">لا دروس في هذه السلسلة بعد. اضغط «إضافة دروس» والصق روابط يوتيوب أو رابط قائمة تشغيل.</div>`;
+  h += `<div class="chips">
+    <button class="chip ${filter === 'all' ? 'on' : ''}" data-act="filter" data-id="all">الكل (${ls.length})</button>
+    <button class="chip ${filter === 'left' ? 'on' : ''}" data-act="filter" data-id="left">المتبقية (${ls.length - nDone})</button>
+    <button class="chip ${filter === 'done' ? 'on' : ''}" data-act="filter" data-id="done">المنتهية (${nDone})</button></div>`;
+  ls.forEach((l, i) => {
+    if (filter === 'left' && l.done) return;
+    if (filter === 'done' && !l.done) return;
+    const pc = lessonPct(l), isCur = l.id === cur;
+    h += `<div class="lesson ${l.done ? 'done' : ''} ${isCur ? 'playing' : ''}" data-act="play" data-id="${l.id}">
+      <div class="l-th"><img src="${thumb(l.videoId)}" alt="" loading="lazy"><span class="l-num">${i + 1}</span>
+        ${l.duration ? `<span class="l-dur">${fmt(l.duration)}</span>` : ''}
+        ${l.done ? `<span class="l-ok">${ic('checkc', 30)}</span>` : (pc ? `<div class="l-prog"><i style="width:${pc}%"></i></div>` : '')}</div>
+      <div class="l-main"><div class="l-title">${esc(l.title)}</div>
+        <div class="l-meta">${isCur ? '<span class="now-badge">● يُشغَّل الآن</span>' : (l.done ? '<span class="ok">✓ انتهى</span>' : (pc ? 'استمعت ' + pc + '%' : 'لم يبدأ'))}
+          ${l.notes.length ? `<span class="tag">${ic('note', 14)} ${l.notes.length}</span>` : ''}
+          ${l.clips.length ? `<span class="tag">${ic('scissors', 14)} ${l.clips.length}</span>` : ''}</div></div>
+      <button class="icon-btn sm" data-act="lessonMenu" data-id="${l.id}" aria-label="خيارات">${ic('more', 20)}</button>
+    </div>`;
+  });
+  return h;
+}
+function viewNotes() {
+  const total = S.lessons.reduce((a, l) => a + l.notes.length, 0);
+  return `<header class="top"><button class="icon-btn" data-act="home" aria-label="رجوع">${ic('back')}</button><div class="grow"><h1>فوائدي</h1><div class="sub">${total} فائدة</div></div>
+    ${total ? `<button class="icon-btn" data-act="copyAllNotes" aria-label="نسخ الكل">${ic('copy')}</button>` : ''}</header>
+    <input class="search-in" id="notesIn" placeholder="ابحث في الفوائد…" value="${esc(notesQ)}" oninput="notesQ=this.value;render()">
+    <div id="results">${notesResults()}</div>`;
+}
+function notesResults() {
+  const q = notesQ.trim(), nq = norm(q);
+  let h = '', any = false;
+  S.series.forEach(s => {
+    lessonsOf(s.id).forEach((l, i) => {
+      const ns = sortedNotes(l).filter(n => !nq || norm(n.text).includes(nq));
+      if (!ns.length) return;
+      any = true;
+      h += `<div class="group-h" data-act="play" data-id="${l.id}"><span class="dot" style="background:${s.color}"></span><span class="t-ellip">${esc(l.title)}</span><small>· ${esc(s.title)} · ${i + 1}</small></div>`;
+      h += ns.map(n => noteHTML(l, n, q)).join('');
+    });
+  });
+  return any ? h : `<div class="empty-s">${q ? 'لا نتائج.' : 'لا توجد فوائد بعد. افتح أي درس واكتب فوائدك في تبويب «الفوائد».'}</div>`;
+}
+function viewClips() {
+  let h = `<header class="top"><button class="icon-btn" data-act="home" aria-label="رجوع">${ic('back')}</button><div class="grow"><h1>مقاطعي</h1></div></header>`;
+  let any = false;
+  S.series.forEach(s => {
+    const items = [];
+    lessonsOf(s.id).forEach(l => l.clips.slice().sort((a, b) => a.start - b.start).forEach(c => items.push(clipHTML(l, c, true))));
+    if (!items.length) return;
+    any = true;
+    h += `<div class="group-h"><span class="dot" style="background:${s.color}"></span>${esc(s.title)} <small>${items.length}</small></div>` + items.join('');
+  });
+  return h + (any ? '' : `<div class="empty-s">لا مقاطع محفوظة بعد. افتح درسًا، ثم تبويب «المقاطع»، وحدّد البداية والنهاية.</div>`);
+}
+function viewSearch() {
+  return `<header class="top"><button class="icon-btn" data-act="home" aria-label="رجوع">${ic('back')}</button><div class="grow"><h1>بحث</h1></div></header>
+    <input class="search-in" id="searchIn" placeholder="ابحث في عناوين الدروس والسلاسل والفوائد…" value="${esc(searchQ)}" oninput="searchQ=this.value;render()">
+    <div id="results">${searchResults()}</div>`;
+}
+function searchResults() {
+  const q = searchQ.trim(), nq = norm(q);
+  if (!nq) return `<div class="empty-s">اكتب كلمة للبحث. البحث يتجاهل التشكيل والهمزات.</div>`;
+  let h = '';
+  const ss = S.series.filter(s => norm(s.title).includes(nq));
+  if (ss.length) h += `<div class="section-h">السلاسل</div>` + ss.map(s => `<div class="group-h" data-act="openSeries" data-id="${s.id}"><span class="dot" style="background:${s.color}"></span>${hl(s.title, q)}</div>`).join('');
+  const ls = S.lessons.filter(l => norm(l.title).includes(nq)).slice(0, 60);
+  if (ls.length) h += `<div class="section-h">الدروس <small>${ls.length}</small></div>` + ls.map(l => {
+    const s = SR(l.seriesId);
+    return `<div class="lesson ${l.done ? 'done' : ''}" data-act="play" data-id="${l.id}"><div class="l-th" style="width:84px"><img src="${thumb(l.videoId)}" alt="" loading="lazy"></div>
+      <div class="l-main"><div class="l-title">${hl(l.title, q)}</div><div class="l-meta">${esc(s ? s.title : '')}${l.done ? ' · <span class="ok">✓</span>' : ''}</div></div></div>`;
+  }).join('');
+  const nh = [];
+  S.lessons.forEach(l => sortedNotes(l).forEach(n => { if (norm(n.text).includes(nq)) nh.push(noteHTML(l, n, q, true)); }));
+  if (nh.length) h += `<div class="section-h">الفوائد <small>${nh.length}</small></div>` + nh.slice(0, 80).join('');
+  return h || `<div class="empty-s">لا نتائج لـ «${esc(q)}».</div>`;
+}
+
+/* ============ النوافذ السفلية ============ */
+const sheet = $('#sheet'), backdrop = $('#backdrop');
+let sheetClose = null, sheetResolve = null;
+function openSheet(html, onClose) {
+  sheetResolve = null;
+  sheet.innerHTML = '<div class="grab"></div>' + html;
+  sheet.scrollTop = 0;
+  sheet.classList.add('open'); backdrop.classList.add('open');
+  sheetClose = onClose || null;
+}
+function closeSheet() {
+  sheet.classList.remove('open'); backdrop.classList.remove('open');
+  const f = sheetClose; sheetClose = null; sheetResolve = null; f && f();
+}
+backdrop.addEventListener('click', closeSheet);
+function ask(msg, ok = 'تأكيد', danger = false, sub = '') {
+  return new Promise(res => {
+    openSheet(`<h3>${esc(msg)}</h3>${sub ? `<p class="hint" style="margin-top:-4px">${esc(sub)}</p>` : ''}<div class="sheet-actions"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn ${danger ? 'danger' : 'primary'}" data-act="sheetYes">${esc(ok)}</button></div>`, () => res(false));
+    sheetResolve = v => { sheetClose = null; closeSheet(); res(v); };
+  });
+}
+function askText(title, value = '', placeholder = '') {
+  return new Promise(res => {
+    openSheet(`<h3>${esc(title)}</h3><label class="fld"><input id="askIn" value="${esc(value)}" placeholder="${esc(placeholder)}"></label>
+      <div class="sheet-actions"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn primary" data-act="sheetYes">حفظ</button></div>`, () => res(null));
+    const inp = $('#askIn'); setTimeout(() => { inp.focus(); inp.select(); }, 250);
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') sheetResolve && sheetResolve(true); });
+    sheetResolve = v => { const val = inp.value.trim(); sheetClose = null; closeSheet(); res(v ? val : null); };
+  });
+}
+let toastT = null;
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('show'), 2600);
+}
+async function copyText(txt, okMsg = 'تم النسخ ✓') {
+  try { await navigator.clipboard.writeText(txt); toast(okMsg); return true; }
+  catch (e) {
+    const ta = document.createElement('textarea'); ta.value = txt; ta.setAttribute('readonly', ''); ta.style.position = 'fixed'; ta.style.top = '-1000px';
+    document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, txt.length);
+    let ok = false; try { ok = document.execCommand('copy'); } catch (er) {}
+    ta.remove(); toast(ok ? okMsg : 'تعذّر النسخ'); return ok;
+  }
+}
+function downloadFile(name, text, type = 'text/plain') {
+  try {
+    const blob = new Blob([text], { type: type + ';charset=utf-8' });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  } catch (e) { toast('تعذّر التنزيل — استعمل النسخ'); }
+}
+
+/* إضافة الدروس */
+function openAdd(presetSid) {
+  const opts = S.series.map(s => `<option value="${s.id}" ${s.id === presetSid ? 'selected' : ''}>${esc(s.title)}</option>`).join('');
+  openSheet(`<h3>إضافة دروس من يوتيوب</h3>
+    <label class="fld"><span>السلسلة</span><select id="addSeries">${opts}<option value="__new" ${presetSid ? '' : 'selected'}>➕ سلسلة جديدة</option></select></label>
+    <label class="fld" id="newNameWrap"><span>اسم السلسلة الجديدة</span><input id="addNewName" placeholder="اتركه فارغًا ليؤخذ من قائمة التشغيل"></label>
+    <label class="fld"><span>الروابط</span><textarea id="addLinks" rows="4" dir="ltr" placeholder="https://youtu.be/…&#10;رابط في كل سطر، أو رابط قائمة تشغيل كاملة"></textarea></label>
+    <div class="maker-row" style="margin-top:-4px"><button class="btn" data-act="pasteLinks">${ic('paste', 18)} لصق</button><span id="addDetect" class="hint" style="margin:0"></span></div>
+    <label class="chk hidden" id="plWrap" style="margin-top:10px"><input type="checkbox" id="addFullPl" checked> استيراد قائمة التشغيل كاملة</label>
+    <div class="sheet-actions"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn primary" data-act="doAdd" id="addBtn">إضافة</button></div>`);
+  const sel = $('#addSeries'), ta = $('#addLinks');
+  const sync = () => $('#newNameWrap').classList.toggle('hidden', sel.value !== '__new');
+  sel.addEventListener('change', sync); sync();
+  ta.addEventListener('input', detectLinks);
+}
+function detectLinks() {
+  const items = extractLinks($('#addLinks').value);
+  const nv = items.filter(i => i.v && !i.list).length, nl = items.filter(i => i.list).length, both = items.filter(i => i.list && i.v).length;
+  $('#addDetect').textContent = items.length ? `✓ ${nv + both} فيديو${nl ? ' · ' + nl + ' قائمة تشغيل' : ''}` : ($('#addLinks').value.trim() ? 'لم أجد رابط يوتيوب صالحًا' : '');
+  $('#plWrap').classList.toggle('hidden', !both);
+}
+function withTimeout(p, ms, fallback) { return Promise.race([p, new Promise(r => setTimeout(() => r(fallback), ms))]); }
+async function doAdd() {
+  const items = extractLinks($('#addLinks').value);
+  if (!items.length) { toast('الصق رابط يوتيوب صالحًا أولًا'); return; }
+  const btn = $('#addBtn'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>';
+  const full = !$('#plWrap').classList.contains('hidden') ? $('#addFullPl').checked : true;
+  let sid = $('#addSeries').value; const newName = ($('#addNewName') || {}).value?.trim() || '';
+  const vids = []; let plTitle = null, failedPl = 0;
+  for (const it of items) {
+    if (it.list && (!it.v || full)) {
+      btn.innerHTML = '<span class="spin"></span> جلب قائمة التشغيل…';
+      const ids = await withTimeout(fetchPlaylist(it.list), 20000, null);
+      if (ids && ids.length) { ids.forEach(v => vids.push({ v, t: 0 })); if (!plTitle) { const r = await withTimeout(oembedTitle('https://www.youtube.com/playlist?list=' + it.list), 6000, null); plTitle = r && r.title ? r.title : null; } }
+      else if (it.v) { vids.push({ v: it.v, t: it.t }); failedPl++; }
+      else failedPl++;
+    } else if (it.v) vids.push({ v: it.v, t: it.t });
+  }
+  if (!vids.length) { btn.disabled = false; btn.textContent = 'إضافة'; toast('تعذّر جلب قائمة التشغيل. جرّب نسخ روابط الدروس واحدًا واحدًا.'); return; }
+  if (sid === '__new' || !SR(sid)) {
+    const s = { id: uid(), title: newName || plTitle || 'سلسلة جديدة', color: COLORS[S.series.length % COLORS.length], createdAt: Date.now() };
+    S.series.push(s); sid = s.id;
+  }
+  const s = SR(sid); s.touched = Date.now();
+  const existing = new Set(lessonsOf(sid).map(l => l.videoId));
+  let order = lessonsOf(sid).reduce((m, l) => Math.max(m, l.order), 0);
+  const added = []; let dup = 0;
+  vids.forEach(({ v, t }) => {
+    if (existing.has(v)) { dup++; return; }
+    existing.add(v);
+    order++;
+    const l = { id: uid(), seriesId: sid, videoId: v, title: 'الدرس ' + order, titleAuto: true, metaOk: false, author: '', duration: 0, pos: t || 0, done: false, notes: [], clips: [], order, addedAt: Date.now() };
+    S.lessons.push(l); added.push(l.id);
+  });
+  save(true); sheetClose = null; closeSheet();
+  toast(added.length ? `أُضيف ${lessonsWord(added.length)}${dup ? ' (وتُجوهل ' + dup + ' مكرر)' : ''}${failedPl ? ' — تعذّرت قائمة تشغيل' : ''}` : 'هذه الدروس موجودة مسبقًا');
+  go('s-' + sid);
+  queueMeta(added);
+}
+
+/* جلب العناوين وقوائم التشغيل */
+async function oembedTitle(url) {
+  const eps = ['https://www.youtube.com/oembed?format=json&url=', 'https://noembed.com/embed?url='];
+  for (const ep of eps) {
+    try {
+      const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 6000);
+      const r = await fetch(ep + encodeURIComponent(url), { signal: ctrl.signal }); clearTimeout(to);
+      if (!r.ok) continue;
+      const j = await r.json();
+      if (j && j.title) return { title: j.title, author: j.author_name || '' };
+    } catch (e) {}
+  }
+  return null;
+}
+let FET = null, fetP = null; const fetListeners = new Set();
+function getFetcher() {
+  if (fetP) return fetP;
+  fetP = ytReadyP.then(() => new Promise(res => {
+    FET = new YT.Player('ytf', { width: 320, height: 180, playerVars: { playsinline: 1, mute: 1, autoplay: 0, controls: 0 },
+      events: { onReady: () => res(FET), onStateChange: e => fetListeners.forEach(f => f(e)) } });
+  }));
+  return fetP;
+}
+function fetchPlaylist(listId) {
+  return getFetcher().then(f => new Promise(res => {
+    let tries = 0, lastLen = -1, stable = 0;
+    try { f.cuePlaylist({ listType: 'playlist', list: listId }); } catch (e) { res(null); return; }
+    const iv = setInterval(() => {
+      tries++;
+      let pl = null; try { pl = f.getPlaylist(); } catch (e) {}
+      if (pl && pl.length) {
+        if (pl.length === lastLen) stable++; else { stable = 0; lastLen = pl.length; }
+        if (stable >= 2) { clearInterval(iv); res(pl.slice()); return; }
+      }
+      if (tries > 40) { clearInterval(iv); res(pl && pl.length ? pl.slice() : null); }
+    }, 350);
+  }));
+}
+function metaViaPlayer(l) {
+  return withTimeout(getFetcher().then(f => new Promise(res => {
+    let done = false;
+    const fin = () => {
+      if (done) return; done = true; fetListeners.delete(h);
+      try {
+        const vd = f.getVideoData();
+        if (vd && vd.title && vd.video_id === l.videoId) { if (l.titleAuto) l.title = vd.title; l.author = vd.author || ''; l.metaOk = true; }
+        const d = f.getDuration(); if (d > 0 && !l.duration) l.duration = Math.round(d);
+      } catch (e) {}
+      res();
+    };
+    const h = e => { if (e.data === 5 || e.data === 1 || e.data === -1) setTimeout(fin, 600); };
+    fetListeners.add(h);
+    try { f.cueVideoById(l.videoId); } catch (e) { fin(); }
+    setTimeout(fin, 7000);
+  })), 12000);
+}
+const metaQ = [], slowQ = []; let metaBusy = false;
+function queueMeta(ids) { ids.forEach(id => { if (!metaQ.includes(id)) metaQ.push(id); }); runMeta(); }
+async function runMeta() {
+  if (metaBusy) return; metaBusy = true;
+  try {
+    while (metaQ.length) {
+      const batch = metaQ.splice(0, 4);
+      await Promise.all(batch.map(async id => {
+        const l = L(id); if (!l || l.metaOk) return;
+        const r = await oembedTitle('https://www.youtube.com/watch?v=' + l.videoId);
+        if (r) { if (l.titleAuto) l.title = r.title; l.author = r.author; l.metaOk = true; }
+        else if (!slowQ.includes(id)) slowQ.push(id);
+      }));
+      save(); render(); if (cur) renderPlayerHead();
+    }
+    while (slowQ.length) {
+      const id = slowQ.shift(), l = L(id); if (!l || l.metaOk) continue;
+      await metaViaPlayer(l); save(); render(); if (cur === id) renderPlayerHead();
+    }
+  } finally { metaBusy = false; }
+}
+
+/* قوائم الخيارات */
+function lessonMenu(id) {
+  const l = L(id); if (!l) return;
+  const ls = lessonsOf(l.seriesId), i = ls.findIndex(x => x.id === id);
+  openSheet(`<h3 class="t-ellip">${esc(l.title)}</h3>
+    <button class="menu-item" data-act="playStart" data-id="${id}">${ic('reset')} تشغيل من البداية</button>
+    <button class="menu-item" data-act="toggleDone" data-id="${id}">${ic('check')} ${l.done ? 'إلغاء علامة «انتهى»' : 'تعليم كمنتهٍ'}</button>
+    <button class="menu-item" data-act="renameLesson" data-id="${id}">${ic('edit')} إعادة تسمية</button>
+    ${i > 0 ? `<button class="menu-item" data-act="moveLesson" data-id="${id}" data-d="-1">${ic('up')} نقل للأعلى</button>` : ''}
+    ${i < ls.length - 1 ? `<button class="menu-item" data-act="moveLesson" data-id="${id}" data-d="1">${ic('dn')} نقل للأسفل</button>` : ''}
+    ${S.series.length > 1 ? `<button class="menu-item" data-act="moveToSeries" data-id="${id}">${ic('move')} نقل إلى سلسلة أخرى</button>` : ''}
+    <button class="menu-item" data-act="copyLink" data-id="${id}">${ic('copy')} نسخ رابط الدرس</button>
+    <a class="menu-item" href="${ytUrl(l.videoId, l.pos)}" target="_blank" rel="noopener">${ic('ext')} فتح في يوتيوب</a>
+    <button class="menu-item danger" data-act="delLesson" data-id="${id}">${ic('trash')} حذف الدرس</button>`);
+}
+function seriesMenu(sid) {
+  const s = SR(sid); if (!s) return;
+  openSheet(`<h3>${esc(s.title)}</h3>
+    <button class="menu-item" data-act="renameSeries" data-id="${sid}">${ic('edit')} إعادة تسمية السلسلة</button>
+    <div class="menu-item" style="flex-wrap:wrap">${ic('palette')} اللون
+      <div class="colors" style="width:100%">${COLORS.map(c => `<button style="background:${c}" class="${c === s.color ? 'on' : ''}" data-act="seriesColor" data-id="${sid}" data-c="${c}" aria-label="لون"></button>`).join('')}</div></div>
+    <button class="menu-item" data-act="batchAi" data-id="${sid}">✨ استخراج فوائد كل الدروس تلقائيًا</button>
+    <button class="menu-item" data-act="copySeriesNotes" data-id="${sid}">${ic('copy')} نسخ كل فوائد السلسلة</button>
+    <button class="menu-item" data-act="dlSeriesNotes" data-id="${sid}">${ic('dl')} تنزيل الفوائد ملفًا نصيًّا</button>
+    <button class="menu-item" data-act="allDone" data-id="${sid}">${ic('check')} تعليم كل الدروس كمنتهية</button>
+    <button class="menu-item" data-act="resetSeries" data-id="${sid}">${ic('reset')} إعادة تعيين التقدّم</button>
+    <button class="menu-item danger" data-act="delSeries" data-id="${sid}">${ic('trash')} حذف السلسلة</button>`);
+}
+function seriesNotesText(sid) {
+  const s = SR(sid); let out = `سلسلة: ${s.title}\n${'═'.repeat(24)}\n`;
+  let any = false;
+  lessonsOf(sid).forEach((l, i) => {
+    if (!l.notes.length && !l.clips.length) return; any = true;
+    out += `\nالدرس ${i + 1}: ${l.title}\n${ytUrl(l.videoId)}\n`;
+    sortedNotes(l).forEach(n => { out += n.kind === 'summary' ? `ملخص: ${n.text}\n` : `• ${n.t != null ? '[' + fmt(n.t) + '] ' : ''}${n.type ? '(' + n.type + ') ' : ''}${n.text}\n`; });
+    l.clips.slice().sort((a, b) => a.start - b.start).forEach(c => { out += `✂ ${c.title || 'مقطع'} [${fmt(c.start)} – ${fmt(c.end)}]\n`; });
+  });
+  return any ? out : null;
+}
+function allNotesText() {
+  return S.series.map(s => seriesNotesText(s.id)).filter(Boolean).join('\n\n');
+}
+function speedSheet() {
+  openSheet(`<h3>سرعة التشغيل</h3><div class="opt-grid">${SPEEDS.map(r => `<button class="opt ${r === S.settings.rate ? 'on' : ''}" data-act="setRate" data-r="${r}" dir="ltr">${r}×</button>`).join('')}</div>`);
+}
+function sleepSheet() {
+  const ms = [5, 10, 15, 20, 30, 45, 60, 90];
+  openSheet(`<h3>مؤقّت النوم</h3><p class="hint" style="margin-top:-6px;margin-bottom:12px">يوقف التشغيل تلقائيًا بعد المدة المختارة.</p>
+    <div class="opt-grid">${ms.map(m => `<button class="opt" data-act="setSleep" data-m="${m}">${m} د</button>`).join('')}</div>
+    <button class="btn block" style="margin-top:10px" data-act="setSleep" data-m="end">عند نهاية الدرس الحالي</button>
+    ${sleep ? `<button class="btn block danger" style="margin-top:10px" data-act="setSleep" data-m="off">إلغاء المؤقّت</button>` : ''}`);
+}
+function settingsSheet() {
+  const st = S.settings;
+  const seg = (key, vals, labels) => `<div class="seg">${vals.map((v, i) => `<button class="${st[key] === v ? 'on' : ''}" data-act="setOpt" data-k="${key}" data-v="${v}">${labels ? labels[i] : v}</button>`).join('')}</div>`;
+  const sw = key => `<button class="switch ${st[key] ? 'on' : ''}" data-act="toggleOpt" data-k="${key}" aria-label="تبديل"></button>`;
+  openSheet(`<h3>الإعدادات</h3>
+    <div class="set-row"><div class="lab">المظهر</div>${seg('theme', ['auto', 'light', 'dark'], ['تلقائي', 'فاتح', 'داكن'])}</div>
+    <div class="set-row"><div class="lab">ثواني القفز<small>زرّا الرجوع والتقديم</small></div>${seg('skip', [5, 10, 15, 30])}</div>
+    <div class="set-row"><div class="lab">هدف الاستماع اليومي<small>بالدقائق</small></div>${seg('goal', [15, 30, 60, 90])}</div>
+    <div class="set-row"><div class="lab">تشغيل الدرس التالي تلقائيًا</div>${sw('autoNext')}</div>
+    <div class="set-row"><div class="lab">إظهار الفيديو افتراضيًا<small>وإلا يظهر غلاف الدرس فقط</small></div>${sw('showVideo')}</div>
+    <div class="set-row"><div class="lab">إيقاف مؤقت عند كتابة فائدة</div>${sw('pauseOnNote')}</div>
+    <div class="set-row" data-act="aiSetup" style="cursor:pointer"><div class="lab">✨ الاستخراج التلقائي للفوائد<small>${st.aiKey ? 'مفعّل' : 'غير مفعّل — اضغط للإعداد'}</small></div>${ic('back', 20)}</div>
+    <div class="section-h" style="margin-top:18px">النسخ الاحتياطي</div>
+    <p class="hint" style="margin-top:-6px">بياناتك محفوظة في هذا الجهاز فقط. صدّر نسخة احتياطية من حين لآخر.</p>
+    <div class="sheet-actions" style="margin-top:8px"><button class="btn" data-act="exportDl">${ic('dl', 18)} تنزيل نسخة</button><button class="btn" data-act="exportCopy">${ic('copy', 18)} نسخ</button></div>
+    <div class="sheet-actions" style="margin-top:8px"><label class="btn" style="flex:1">${ic('ul', 18)} استيراد من ملف<input type="file" accept=".json,application/json,text/plain" id="importFile" hidden></label><button class="btn" data-act="importPaste">${ic('paste', 18)} لصق نسخة</button></div>
+    ${allNotesText() ? `<button class="btn block" style="margin-top:8px" data-act="dlAllNotes">${ic('note', 18)} تنزيل كل الفوائد ملفًا نصيًّا</button>` : ''}
+    <div class="section-h" style="margin-top:18px">مساعدة</div>
+    <div class="help">
+      <h4>إضافة التطبيق إلى الشاشة الرئيسية</h4>
+      <ol><li>افتح الرابط في سفاري.</li><li>اضغط زر المشاركة <b>⎋</b> ثم «إضافة إلى الشاشة الرئيسية».</li><li>افتح التطبيق دائمًا من أيقونته؛ فبياناته منفصلة عن سفاري.</li></ol>
+      <h4>الاستماع والشاشة مغلقة</h4>
+      <ul><li>يوتيوب داخل المتصفح يتوقف غالبًا عند قفل الشاشة؛ هذا قيد من آبل ويوتيوب.</li>
+      <li>جرّب: شغّل الدرس في سفاري، اقفل الشاشة، ثم اضغط ▶ من شاشة القفل أو مركز التحكم؛ ينجح أحيانًا.</li>
+      <li>زر «يوتيوب» يفتح الدرس عند الدقيقة نفسها في تطبيق يوتيوب.</li></ul>
+      <h4>المقاطع</h4>
+      <ul><li>المقطع علامة بداية ونهاية داخل الدرس؛ تشغّله وحده أو تكرّره للحفظ والمراجعة، وتنسخ رابطه لتشاركه.</li></ul>
+    </div>
+    <button class="btn block danger" style="margin-top:18px" data-act="wipeAll">${ic('trash', 18)} حذف كل البيانات</button>
+    <p class="hint" style="text-align:center;margin-top:14px">مكتبتي الصوتية · ${S.series.length} سلسلة · ${S.lessons.length} درس</p>`);
+  const f = $('#importFile');
+  f && f.addEventListener('change', async () => { const file = f.files[0]; if (!file) return; importData(await file.text()); });
+}
+async function importData(text) {
+  let d; try { d = JSON.parse(text); } catch (e) { toast('الملف غير صالح'); return; }
+  if (!d || !Array.isArray(d.series) || !Array.isArray(d.lessons)) { toast('هذه ليست نسخة احتياطية من التطبيق'); return; }
+  const ok = await ask('استبدال بياناتك الحالية بهذه النسخة؟', 'استبدال', true, `النسخة فيها ${d.series.length} سلسلة و${d.lessons.length} درس.`);
+  if (!ok) return;
+  if (YTP && playerReady) try { YTP.stopVideo(); } catch (e) {}
+  S = migrate(d); cur = S.last && L(S.last) ? S.last : null; save(true);
+  applyTheme(); closePlayer(); go(''); render(); toast('تم استيراد النسخة ✓');
+}
+function applyTheme() {
+  const t = S.settings.theme;
+  const dark = t === 'dark' || (t === 'auto' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  document.querySelector('meta[name=theme-color]').content = dark ? '#0d1211' : '#f5f3ee';
+}
+try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch (e) {}
+
+/* ============ استخراج الفوائد بالذكاء الاصطناعي (Gemini) ============ */
+const AI_TYPES = ['تعريف', 'قاعدة', 'دليل', 'مسألة', 'خلاف', 'تنبيه', 'فائدة'];
+class AiError extends Error { constructor(msg, code) { super(msg); this.code = code; } }
+function parseClock(v) {
+  if (typeof v === 'number') return v;
+  const p = String(v || '').trim().replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).split(':').map(x => parseFloat(x));
+  if (!p.length || p.some(isNaN)) return null;
+  return p.reduce((a, b) => a * 60 + b, 0);
+}
+function aiPrompt(l) {
+  const s = SR(l.seriesId), n = S.settings.aiCount;
+  return `أنت مساعد دقيق لطالب علم شرعي. هذا تسجيل درس علمي بعنوان «${l.title}»${s ? ' من سلسلة «' + s.title + '»' : ''}.
+استمع إلى الدرس كاملًا واستخرج الفوائد العلمية التي ذكرها الشيخ.
+الشروط:
+1. ${n === 'auto' ? 'استخرج كل فائدة علمية مستقلة ذات قيمة، دون تكرار ولا حشو.' : 'استخرج قرابة ' + n + ' فائدة هي الأهم في الدرس.'}
+2. اكتب كل فائدة في جملة أو جملتين بعربية فصيحة واضحة، أمينة لكلام الشيخ ومعناه، ولا تضف شيئًا من عندك ولا من مصادر خارج الدرس.
+3. إذا ذكر الشيخ آية أو حديثًا أو قول عالم أو تعريفًا أو قاعدة أو خلافًا فاذكره كما ورد في كلامه، ولا تنسب قولًا إلى أحد لم ينسبه الشيخ إليه.
+4. لا تخترع أسماء كتب ولا أرقام صفحات ولا أحكامًا على الأحاديث لم يذكرها الشيخ.
+5. لكل فائدة اذكر التوقيت الذي بدأ فيه الشيخ الكلام عنها بصيغة MM:SS أو H:MM:SS.
+6. صنّف كل فائدة بنوع واحد من: ${AI_TYPES.join('، ')}.
+7. اكتب ملخصًا للدرس في ثلاث جمل أو أربع.
+8. رتّب الفوائد بحسب ورودها في الدرس.
+أعد JSON فقط بهذا الشكل دون أي نص آخر:
+{"summary":"...","benefits":[{"time":"MM:SS","type":"تعريف","text":"..."}]}`;
+}
+function parseAI(txt, l) {
+  const t = String(txt).trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
+  let j = null;
+  try { j = JSON.parse(t); } catch (e) { const m = t.match(/\{[\s\S]*\}/); if (m) { try { j = JSON.parse(m[0]); } catch (er) {} } }
+  if (!j) throw new Error('parse');
+  const arr = Array.isArray(j) ? j : (j.benefits || j.fawaid || []);
+  const dur = l.duration || 0;
+  const items = arr.map(b => {
+    let sec = parseClock(b.time ?? b.t);
+    if (sec != null && dur && sec > dur + 5) sec = null;
+    return { t: sec != null ? Math.floor(sec) : null, text: String(b.text || '').trim(), type: AI_TYPES.includes(b.type) ? b.type : '' };
+  }).filter(x => x.text);
+  return { summary: Array.isArray(j) ? '' : String(j.summary || '').trim(), items };
+}
+async function geminiCall(l, signal) {
+  const key = (S.settings.aiKey || '').trim();
+  if (!key) throw new AiError('أضف مفتاح Gemini أولًا.', 'nokey');
+  const models = [S.settings.aiModel, 'gemini-flash-latest', 'gemini-2.5-flash'].filter((v, i, a) => v && a.indexOf(v) === i);
+  let lowRes = true, lastErr = null;
+  for (let mi = 0; mi < models.length; mi++) {
+    const body = {
+      contents: [{ role: 'user', parts: [{ fileData: { fileUri: 'https://www.youtube.com/watch?v=' + l.videoId } }, { text: aiPrompt(l) }] }],
+      generationConfig: Object.assign({ temperature: 0.3, responseMimeType: 'application/json' }, lowRes ? { mediaResolution: 'MEDIA_RESOLUTION_LOW' } : {})
+    };
+    let r, j = null;
+    try {
+      r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(models[mi])}:generateContent?key=${encodeURIComponent(key)}`,
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal });
+    } catch (e) {
+      if (e.name === 'AbortError') throw new AiError('أُلغي.', 'abort');
+      throw new AiError('تعذّر الاتصال بخدمة Gemini. تحقّق من الإنترنت.', 'net');
+    }
+    try { j = await r.json(); } catch (e) {}
+    const msg = (j && j.error && j.error.message) || '';
+    if (r.status === 404) { lastErr = new AiError('النموذج غير متاح: ' + models[mi], 'model'); continue; }
+    if (r.status === 400 && lowRes && /media.?resolution/i.test(msg)) { lowRes = false; mi--; continue; }
+    if (!r.ok) {
+      if (/api key/i.test(msg) || r.status === 401) throw new AiError('مفتاح Gemini غير صالح. راجعه في الإعداد.', 'key');
+      if (r.status === 403) throw new AiError('المفتاح مرفوض أو غير مفعّل. راجعه في الإعداد.', 'key');
+      if (r.status === 429) throw new AiError('بلغتَ الحدّ المجاني المؤقت. انتظر قليلًا ثم أعد المحاولة (الحدّ نحو 8 ساعات فيديو يوميًا).', 'quota');
+      if (r.status >= 500) throw new AiError('خدمة Gemini مشغولة الآن. أعد المحاولة بعد قليل.', 'busy');
+      throw new AiError('تعذّرت معالجة هذا الفيديو' + (msg ? ': ' + msg.slice(0, 180) : '.'), 'video');
+    }
+    const cand = j && j.candidates && j.candidates[0];
+    const txt = cand && cand.content && (cand.content.parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
+    if (!txt) throw new AiError('لم يُرجِع Gemini نتيجة' + (cand && cand.finishReason ? ' (' + cand.finishReason + ')' : '') + '. أعد المحاولة.', 'empty');
+    try { return parseAI(txt, l); } catch (e) { throw new AiError('وصلت نتيجة غير مفهومة. أعد المحاولة.', 'parse'); }
+  }
+  throw lastErr || new AiError('لم أجد نموذجًا متاحًا.', 'model');
+}
+let aiCtrl = null, aiResult = null, batch = null;
+function aiExtract(lid) {
+  const l = L(lid || cur); if (!l) return;
+  if (!S.settings.aiKey) { aiSetupSheet(true); return; }
+  if (batch && batch.ids[batch.i] === l.id) { toast('هذا الدرس قيد الاستخراج ضمن السلسلة'); return; }
+  const ctrl = aiCtrl = new AbortController();
+  openSheet(`<div class="ai-wait"><span class="spin"></span><h3>يستمع إلى الدرس ويستخرج الفوائد…</h3>
+    <p class="hint">قد يستغرق ذلك من دقيقة إلى ثلاث دقائق بحسب طول الدرس. يمكنك إغلاق هذه النافذة ومتابعة الاستماع؛ ستظهر النتيجة عند جاهزيتها، لكن أبقِ التطبيق مفتوحًا.</p>
+    <button class="btn" data-act="aiCancel" style="margin-top:14px">إلغاء الاستخراج</button></div>`);
+  geminiCall(l, ctrl.signal).then(res => {
+    if (ctrl.signal.aborted) return;
+    aiCtrl = null;
+    if (!res.items.length && !res.summary) { openSheet(`<h3>لم تُستخرج فوائد</h3><p class="hint">لم يجد Gemini فوائد في هذا الدرس. أعد المحاولة أو اكتبها يدويًا.</p><div class="sheet-actions"><button class="btn primary" data-act="sheetNo">حسنًا</button></div>`); return; }
+    aiResult = Object.assign({ lid: l.id }, res);
+    aiPreview();
+  }).catch(e => {
+    if (e.code === 'abort' || ctrl.signal.aborted) return;
+    aiCtrl = null;
+    openSheet(`<h3>تعذّر الاستخراج</h3><p>${esc(e.message)}</p>
+      <div class="sheet-actions">${e.code === 'key' || e.code === 'nokey' ? '<button class="btn" data-act="aiSetup">إعداد المفتاح</button>' : '<button class="btn" data-act="sheetNo">إغلاق</button>'}<button class="btn primary" data-act="aiExtract" data-id="${l.id}">إعادة المحاولة</button></div>`);
+  });
+}
+function aiPreview() {
+  const r = aiResult, l = r && L(r.lid); if (!l) return;
+  const hadAi = l.notes.some(n => n.ai);
+  openSheet(`<h3>✨ ${r.items.length} فائدة مستخرجة</h3>
+    <p class="hint" style="margin-top:-6px">${esc(l.title)}<br>راجعها قبل الحفظ؛ فالاستخراج الآلي قد يخطئ. اضغط التوقيت لتسمع الموضع وتتحقق.</p>
+    ${r.summary ? `<div class="ai-item"><input type="checkbox" id="aiSumChk" checked><div class="body"><span class="ntag">📌 ملخص الدرس</span><label for="aiSumChk" class="tx">${esc(r.summary)}</label></div></div>` : ''}
+    <div class="maker-row" style="margin:8px 0 2px"><button class="btn" data-act="aiAll" data-v="1">تحديد الكل</button><button class="btn" data-act="aiAll" data-v="0">إلغاء التحديد</button></div>
+    ${r.items.map((it, k) => `<div class="ai-item"><input type="checkbox" class="aiChk" data-k="${k}" id="aic${k}" checked><div class="body">
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:2px">${it.t != null ? `<button class="tchip" data-act="noteSeek" data-l="${l.id}" data-t="${it.t}">${ic('play', 12)} ${fmt(it.t)}</button>` : ''}${it.type ? `<span class="ntag">${esc(it.type)}</span>` : ''}</div>
+      <label for="aic${k}" class="tx">${esc(it.text)}</label></div></div>`).join('')}
+    ${hadAi ? `<label class="chk" style="margin-top:12px"><input type="checkbox" id="aiReplace" checked> حذف الفوائد الآلية السابقة لهذا الدرس</label>` : ''}
+    <div class="sheet-actions" style="position:sticky;bottom:calc(-18px - var(--safe-b));background:var(--card);padding:10px 0 4px"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn primary" data-act="aiSave">حفظ المحدد</button></div>`);
+}
+function addAiNotes(l, summary, items) {
+  const now = Date.now();
+  if (summary) { l.notes = l.notes.filter(n => n.kind !== 'summary'); l.notes.push({ id: uid(), t: null, text: summary, kind: 'summary', ai: true, createdAt: now }); }
+  items.forEach((it, k) => l.notes.push({ id: uid(), t: it.t, text: it.text, type: it.type, ai: true, createdAt: now + k }));
+  l.aiAt = now;
+}
+async function runBatch(sid) {
+  if (!S.settings.aiKey) { aiSetupSheet(false); return; }
+  if (batch) { toast('يوجد استخراج جارٍ الآن'); return; }
+  const ids = lessonsOf(sid).filter(l => !l.aiAt).map(l => l.id);
+  if (!ids.length) { toast('كل دروس السلسلة استُخرجت فوائدها'); return; }
+  batch = { sid, ids, i: 0, ok: 0, fail: 0, ctrl: new AbortController() };
+  render(); if (cur) renderNotes();
+  for (; batch.i < ids.length; batch.i++) {
+    const l = L(ids[batch.i]); if (!l) continue;
+    render(); if (cur) renderNotes();
+    try {
+      const r = await geminiCall(l, batch.ctrl.signal);
+      addAiNotes(l, r.summary, r.items); batch.ok++; save(true);
+      if (cur === l.id) renderNotes();
+    } catch (e) {
+      if (e.code === 'abort') break;
+      batch.fail++;
+      if (['key', 'nokey', 'quota', 'net'].includes(e.code)) { toast(e.message); break; }
+    }
+  }
+  const b = batch; batch = null; render(); if (cur) renderNotes();
+  toast(`انتهى الاستخراج: ${lessonsWord(b.ok)}${b.fail ? ' · تعذّر ' + b.fail : ''}`);
+}
+function aiSetupSheet(thenExtract) {
+  const st = S.settings;
+  openSheet(`<h3>✨ الاستخراج التلقائي للفوائد</h3>
+    <div class="help" style="margin-top:-4px">يستمع <b>Gemini</b> (من Google) إلى الدرس عبر رابط يوتيوب، ثم يستخرج فوائده وملخّصه مع توقيت كل فائدة. الخدمة مجانية بحدود (نحو 8 ساعات فيديو يوميًا)، وتعمل مع الفيديوهات العامة فقط.
+      <h4>احصل على المفتاح مرة واحدة (مجانًا):</h4>
+      <ol><li>افتح <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> وادخل بحساب Google.</li><li>اضغط «Create API key».</li><li>انسخ المفتاح والصقه هنا.</li></ol></div>
+    <label class="fld" style="margin-top:12px"><span>مفتاح Gemini API</span><input id="aiKeyIn" dir="ltr" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="AIza…" value="${esc(st.aiKey)}"></label>
+    <div class="set-row"><div class="lab">عدد الفوائد</div><div class="seg">${['auto', 10, 20, 30].map(v => `<button class="${st.aiCount === v ? 'on' : ''}" data-act="setOpt" data-k="aiCount" data-v="${v}">${v === 'auto' ? 'تلقائي' : v}</button>`).join('')}</div></div>
+    <details><summary>متقدّم</summary><label class="fld" style="margin-top:8px"><span>اسم النموذج</span><input id="aiModelIn" dir="ltr" autocapitalize="off" value="${esc(st.aiModel)}"></label></details>
+    <p class="hint">يُحفظ المفتاح في هذا الجهاز فقط، ولا يكون داخل ملف التطبيق.</p>
+    <div class="sheet-actions"><button class="btn" data-act="aiTest">اختبار المفتاح</button><button class="btn primary" data-act="aiKeySave" data-v="${thenExtract ? 1 : 0}">حفظ</button></div>`);
+}
+
+/* ============ معالجة النقرات ============ */
+const A = {
+  home: () => go(''),
+  gotoSearch: () => go('search'), gotoNotes: () => go('notes'), gotoClips: () => go('clips'),
+  settings: settingsSheet,
+  openSeries: id => go('s-' + id),
+  addOpen: id => openAdd(id || (view.name === 'series' ? view.id : null)),
+  filter: id => { filter = id; render(); },
+  play: id => playLesson(id),
+  playStart: id => { closeSheet(); const l = L(id); l.pos = 0; playLesson(id, { start: 0 }); },
+  lessonMenu: id => lessonMenu(id),
+  lessonMenuCur: () => cur && lessonMenu(cur),
+  seriesMenu: id => seriesMenu(id),
+  openPlayer: () => { openPlayer(); renderPlayerAll(); },
+  closePlayer,
+  toggle: togglePlay,
+  back: () => userSeek(curTime() - S.settings.skip),
+  fwd: () => userSeek(curTime() + S.settings.skip),
+  prev: () => { if (curTime() > 5) { userSeek(0); return; } const p = neighbor(-1); p ? playLesson(p.id, { open: false }) : userSeek(0); },
+  next: () => { const n = neighbor(1); n ? playLesson(n.id, { open: false }) : toast('هذا آخر درس في السلسلة'); },
+  speed: speedSheet,
+  setRate: (_, b) => { const r = +b.dataset.r; S.settings.rate = r; save(); try { YTP && YTP.setPlaybackRate(r); } catch (e) {} renderTools(); closeSheet(); },
+  sleep: sleepSheet,
+  setSleep: (_, b) => {
+    const m = b.dataset.m;
+    if (m === 'off') { sleep = null; toast('أُلغي مؤقّت النوم'); }
+    else if (m === 'end') { sleep = { end: true }; toast('سيتوقّف التشغيل بنهاية الدرس'); }
+    else { sleep = { until: Date.now() + (+m) * 60000 }; toast('سيتوقّف التشغيل بعد ' + m + ' دقيقة'); }
+    renderTools(); closeSheet();
+  },
+  videoToggle: () => { S.settings.showVideo = !S.settings.showVideo; save(); renderStage(); renderTools(); },
+  doneCur: () => { const l = L(cur); if (l) { markDone(l, !l.done); toast(l.done ? '✓ عُلِّم الدرس كمنتهٍ' : 'أُلغيت علامة الانتهاء'); } },
+  toggleDone: id => { const l = L(id); markDone(l, !l.done); closeSheet(); },
+  tab: (_, b) => {
+    tab = b.dataset.tab;
+    $('#tabNotes').classList.toggle('on', tab === 'notes'); $('#tabClips').classList.toggle('on', tab === 'clips');
+    $('#paneNotes').classList.toggle('hidden', tab !== 'notes'); $('#paneClips').classList.toggle('hidden', tab !== 'clips');
+  },
+  /* الفوائد */
+  noteRetime: (_, b, e) => { e.preventDefault(); noteT = curTime(); $('#noteTime').textContent = fmt(noteT); toast('رُبطت الفائدة بالدقيقة ' + fmt(noteT)); },
+  noteAdd: () => {
+    const l = L(cur), ta = $('#noteText'), text = ta.value.trim();
+    if (!l) return; if (!text) { ta.focus(); toast('اكتب الفائدة أولًا'); return; }
+    const t = $('#noteAtTime').checked ? (noteT != null ? noteT : curTime()) : null;
+    l.notes.push({ id: uid(), t: t != null ? Math.floor(t) : null, text, createdAt: Date.now() });
+    ta.value = ''; noteT = null; ta.blur(); save(true); renderNotes(); render(); toast('حُفظت الفائدة ✓');
+  },
+  noteSeek: (_, b) => {
+    const lid = b.dataset.l, t = +b.dataset.t;
+    if (lid === cur && YTP && playerReady && loadedVid === L(lid).videoId) { userSeek(t); if (ytState !== 1) { YTP.playVideo(); armWatchdog(); } }
+    else playLesson(lid, { start: t });
+  },
+  noteEdit: (id, b) => {
+    const l = L(b.dataset.l), n = l && l.notes.find(x => x.id === id); if (!n) return;
+    const box = b.closest('.note'); const tx = box.querySelector('.tx');
+    tx.outerHTML = `<textarea class="edit-ta">${esc(n.text)}</textarea><div class="maker-row"><button class="btn" data-act="noteCancel">إلغاء</button><button class="btn primary" data-act="noteSave" data-l="${l.id}" data-id="${id}">حفظ</button></div>`;
+    const ta = box.querySelector('textarea'); ta.focus();
+  },
+  noteCancel: () => { renderNotes(); render(); },
+  noteSave: (id, b) => {
+    const l = L(b.dataset.l), n = l && l.notes.find(x => x.id === id); if (!n) return;
+    const v = b.closest('.note').querySelector('textarea').value.trim(); if (v) n.text = v;
+    save(true); renderNotes(); render(); toast('تم التعديل ✓');
+  },
+  noteDel: async (id, b) => {
+    const l = L(b.dataset.l); if (!l) return;
+    if (!(await ask('حذف هذه الفائدة؟', 'حذف', true))) return;
+    l.notes = l.notes.filter(n => n.id !== id); save(true); renderNotes(); render();
+  },
+  copyAllNotes: () => { const t = allNotesText(); t ? copyText(t, 'نُسخت كل الفوائد ✓') : toast('لا فوائد بعد'); },
+  dlAllNotes: () => { const t = allNotesText(); if (t) downloadFile('فوائدي.txt', t); },
+  /* المقاطع */
+  clipMark: (_, b) => {
+    const w = b.dataset.w, t = Math.floor(curTime());
+    clipDraft[w] = t;
+    if (w === 'a' && clipDraft.b != null && clipDraft.b <= t) clipDraft.b = null;
+    renderClips(); toast((w === 'a' ? 'البداية: ' : 'النهاية: ') + fmt(t));
+  },
+  clipAdj: (_, b) => {
+    const w = b.dataset.w, d = +b.dataset.d;
+    if (clipDraft[w] == null) clipDraft[w] = Math.floor(curTime());
+    clipDraft[w] = Math.max(0, clipDraft[w] + d); renderClips();
+  },
+  clipPreview: () => {
+    const { a, b } = clipDraft;
+    if (a == null || b == null || b <= a) { toast('حدّد البداية ثم النهاية أولًا'); return; }
+    activeClip = { id: '_draft', start: a, end: b, loop: false };
+    if (YTP && playerReady) { YTP.seekTo(a, true); YTP.playVideo(); armWatchdog(); }
+    renderClips();
+  },
+  clipSave: () => {
+    const l = L(cur), { a, b } = clipDraft;
+    if (!l) return;
+    if (a == null || b == null) { toast('حدّد البداية والنهاية أولًا'); return; }
+    if (b <= a) { toast('النهاية يجب أن تكون بعد البداية'); return; }
+    const name = $('#clipName').value.trim();
+    l.clips.push({ id: uid(), start: a, end: b, title: name || 'مقطع ' + (l.clips.length + 1), createdAt: Date.now() });
+    clipDraft = { a: null, b: null }; $('#clipName').value = '';
+    save(true); renderClips(); render(); toast('حُفظ المقطع ✓');
+  },
+  clipPlay: (id, b) => {
+    const l = L(b.dataset.l), c = l && l.clips.find(x => x.id === id); if (!c) return;
+    const clip = { id: c.id, start: c.start, end: c.end, loop: false };
+    if (l.id === cur && YTP && playerReady && loadedVid === l.videoId) { activeClip = clip; YTP.seekTo(c.start, true); YTP.playVideo(); armWatchdog(); renderClips(); render(); }
+    else playLesson(l.id, { clip });
+  },
+  clipLoop: (id, b) => {
+    const l = L(b.dataset.l), c = l && l.clips.find(x => x.id === id); if (!c) return;
+    if (activeClip && activeClip.id === id && activeClip.loop && l.id === cur) { activeClip.loop = false; toast('أُوقف التكرار'); renderClips(); render(); return; }
+    const clip = { id: c.id, start: c.start, end: c.end, loop: true };
+    if (l.id === cur && YTP && playerReady && loadedVid === l.videoId) { activeClip = clip; YTP.seekTo(c.start, true); YTP.playVideo(); armWatchdog(); }
+    else playLesson(l.id, { clip });
+    toast('تكرار المقطع 🔁'); renderClips(); render();
+  },
+  clipMenu: (id, b) => {
+    const l = L(b.dataset.l), c = l && l.clips.find(x => x.id === id); if (!c) return;
+    openSheet(`<h3>${esc(c.title)}</h3><p class="hint" style="margin-top:-6px" dir="ltr">${fmt(c.start)} → ${fmt(c.end)}</p>
+      <button class="menu-item" data-act="clipRename" data-l="${l.id}" data-id="${id}">${ic('edit')} إعادة تسمية</button>
+      <button class="menu-item" data-act="clipCopy" data-l="${l.id}" data-id="${id}">${ic('copy')} نسخ رابط المقطع</button>
+      <a class="menu-item" href="https://www.youtube.com/embed/${l.videoId}?start=${c.start}&end=${c.end}&autoplay=1" target="_blank" rel="noopener">${ic('ext')} فتح المقطع وحده في المتصفح</a>
+      <button class="menu-item danger" data-act="clipDel" data-l="${l.id}" data-id="${id}">${ic('trash')} حذف المقطع</button>`);
+  },
+  clipRename: async (id, b) => {
+    const l = L(b.dataset.l), c = l && l.clips.find(x => x.id === id); if (!c) return;
+    const v = await askText('عنوان المقطع', c.title); if (v) { c.title = v; save(true); renderClips(); render(); }
+  },
+  clipCopy: (id, b) => {
+    const l = L(b.dataset.l), c = l && l.clips.find(x => x.id === id); if (!c) return;
+    closeSheet();
+    copyText(`${c.title}\nhttps://www.youtube.com/embed/${l.videoId}?start=${c.start}&end=${c.end}`, 'نُسخ رابط المقطع ✓');
+  },
+  clipDel: async (id, b) => {
+    const l = L(b.dataset.l); if (!l) return;
+    if (!(await ask('حذف هذا المقطع؟', 'حذف', true))) return;
+    l.clips = l.clips.filter(c => c.id !== id); if (activeClip && activeClip.id === id) activeClip = null;
+    save(true); renderClips(); render();
+  },
+  /* الإضافة */
+  pasteLinks: async () => {
+    try { const t = await navigator.clipboard.readText(); const ta = $('#addLinks'); ta.value = (ta.value.trim() ? ta.value.trim() + '\n' : '') + t; detectLinks(); }
+    catch (e) { toast('اضغط مطوّلًا داخل المربع واختر «لصق»'); $('#addLinks').focus(); }
+  },
+  doAdd,
+  aiExtract: id => aiExtract(id),
+  aiCancel: () => { if (aiCtrl) aiCtrl.abort(); aiCtrl = null; closeSheet(); toast('أُلغي الاستخراج'); },
+  aiAll: (_, b) => sheet.querySelectorAll('.aiChk,#aiSumChk').forEach(c => { c.checked = b.dataset.v === '1'; }),
+  aiSave: () => {
+    const r = aiResult, l = r && L(r.lid); if (!l) { closeSheet(); return; }
+    if ($('#aiReplace') && $('#aiReplace').checked) l.notes = l.notes.filter(n => !n.ai);
+    const items = [...sheet.querySelectorAll('.aiChk')].filter(c => c.checked).map(c => r.items[+c.dataset.k]);
+    const sum = r.summary && $('#aiSumChk') && $('#aiSumChk').checked ? r.summary : '';
+    addAiNotes(l, sum, items); aiResult = null;
+    save(true); closeSheet(); if (cur === l.id) renderNotes(); render(); toast(`حُفظت ${items.length} فائدة ✓`);
+  },
+  aiSetup: () => aiSetupSheet(false),
+  aiKeySave: (_, b) => {
+    S.settings.aiKey = $('#aiKeyIn').value.trim();
+    const m = $('#aiModelIn'); S.settings.aiModel = (m && m.value.trim()) || 'gemini-flash-latest';
+    save(true); closeSheet(); if (cur) renderNotes();
+    toast(S.settings.aiKey ? 'حُفظ المفتاح ✓' : 'حُذف المفتاح');
+    if (b.dataset.v === '1' && S.settings.aiKey && cur) setTimeout(() => aiExtract(cur), 350);
+  },
+  aiTest: async (_, b) => {
+    const k = $('#aiKeyIn').value.trim(); if (!k) { toast('الصق المفتاح أولًا'); return; }
+    b.innerHTML = '<span class="spin"></span>';
+    try { const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1&key=' + encodeURIComponent(k)); toast(r.ok ? 'المفتاح يعمل ✓' : 'المفتاح لا يعمل ✗'); }
+    catch (e) { toast('تعذّر الاتصال'); }
+    b.textContent = 'اختبار المفتاح';
+  },
+  batchAi: id => { closeSheet(); runBatch(id); },
+  stopBatch: () => { if (batch) { batch.ctrl.abort(); toast('جارٍ الإيقاف…'); } },
+  sheetYes: () => sheetResolve && sheetResolve(true),
+  sheetNo: () => sheetResolve ? sheetResolve(false) : closeSheet(),
+  /* الدروس */
+  renameLesson: async id => {
+    const l = L(id); const v = await askText('اسم الدرس', l.title);
+    if (v) { l.title = v; l.titleAuto = false; save(true); render(); if (id === cur) renderPlayerAll(); }
+  },
+  moveLesson: (id, b) => {
+    const l = L(id), ls = lessonsOf(l.seriesId), i = ls.indexOf(l), j = i + (+b.dataset.d), o = ls[j];
+    if (!o) return; [l.order, o.order] = [o.order, l.order]; save(true); render(); closeSheet();
+  },
+  moveToSeries: id => {
+    const l = L(id);
+    openSheet(`<h3>نقل إلى سلسلة</h3>${S.series.filter(s => s.id !== l.seriesId).map(s => `<button class="menu-item" data-act="moveTo" data-id="${id}" data-s="${s.id}"><span class="dot" style="width:10px;height:10px;border-radius:50%;background:${s.color}"></span> ${esc(s.title)}</button>`).join('')}`);
+  },
+  moveTo: (id, b) => {
+    const l = L(id), sid = b.dataset.s;
+    l.seriesId = sid; l.order = lessonsOf(sid).filter(x => x.id !== id).reduce((m, x) => Math.max(m, x.order), 0) + 1;
+    save(true); closeSheet(); render(); toast('نُقل الدرس ✓');
+  },
+  copyLink: id => { closeSheet(); copyText(ytUrl(L(id).videoId), 'نُسخ الرابط ✓'); },
+  delLesson: async id => {
+    const l = L(id);
+    const extra = (l.notes.length || l.clips.length) ? `سيُحذف معه ${l.notes.length} فائدة و${l.clips.length} مقطع.` : '';
+    if (!(await ask('حذف هذا الدرس؟', 'حذف', true, extra))) return;
+    if (cur === id) { try { YTP && YTP.stopVideo(); } catch (e) {} cur = null; S.last = null; closePlayer(); }
+    S.lessons = S.lessons.filter(x => x.id !== id); save(true); render();
+  },
+  /* السلاسل */
+  renameSeries: async id => { const s = SR(id); const v = await askText('اسم السلسلة', s.title); if (v) { s.title = v; save(true); render(); if (cur) renderPlayerHead(); } },
+  seriesColor: (id, b) => { SR(id).color = b.dataset.c; save(true); render(); seriesMenu(id); },
+  copySeriesNotes: id => { closeSheet(); const t = seriesNotesText(id); t ? copyText(t, 'نُسخت فوائد السلسلة ✓') : toast('لا فوائد في هذه السلسلة بعد'); },
+  dlSeriesNotes: id => { const t = seriesNotesText(id); if (!t) { toast('لا فوائد في هذه السلسلة بعد'); return; } downloadFile('فوائد - ' + SR(id).title + '.txt', t); closeSheet(); },
+  allDone: async id => { if (!(await ask('تعليم كل دروس السلسلة كمنتهية؟'))) return; lessonsOf(id).forEach(l => { l.done = true; l.doneAt = Date.now(); }); save(true); render(); },
+  resetSeries: async id => { if (!(await ask('إعادة تعيين التقدّم في هذه السلسلة؟', 'إعادة تعيين', true, 'تبقى الفوائد والمقاطع كما هي.'))) return; lessonsOf(id).forEach(l => { l.done = false; l.pos = 0; l.doneAt = null; }); save(true); render(); },
+  delSeries: async id => {
+    const s = SR(id), n = lessonsOf(id).length;
+    if (!(await ask(`حذف سلسلة «${s.title}»؟`, 'حذف نهائيًّا', true, `سيُحذف ${lessonsWord(n)} مع فوائدها ومقاطعها.`))) return;
+    if (cur && L(cur) && L(cur).seriesId === id) { try { YTP && YTP.stopVideo(); } catch (e) {} cur = null; S.last = null; closePlayer(); }
+    S.lessons = S.lessons.filter(l => l.seriesId !== id); S.series = S.series.filter(x => x.id !== id);
+    save(true); go(''); toast('حُذفت السلسلة');
+  },
+  /* الإعدادات */
+  setOpt: (_, b) => {
+    const k = b.dataset.k; let v = b.dataset.v; if (/^\d+$/.test(v)) v = +v;
+    S.settings[k] = v; save(true); applyTheme(); renderTools(); render();
+    b.parentElement.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+  },
+  toggleOpt: (_, b) => { const k = b.dataset.k; S.settings[k] = !S.settings[k]; b.classList.toggle('on', S.settings[k]); save(true); renderStage(); renderTools(); },
+  exportDl: () => downloadFile('مكتبتي-الصوتية-' + todayKey() + '.json', JSON.stringify(S), 'application/json'),
+  exportCopy: () => copyText(JSON.stringify(S), 'نُسخت النسخة الاحتياطية ✓ — احفظها في الملاحظات'),
+  importPaste: () => {
+    openSheet(`<h3>لصق نسخة احتياطية</h3><label class="fld"><textarea id="impTa" rows="6" dir="ltr" placeholder='{"v":1,...}'></textarea></label>
+      <div class="sheet-actions"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn primary" data-act="importGo">استيراد</button></div>`);
+  },
+  importGo: () => { const t = $('#impTa').value; closeSheet(); importData(t); },
+  wipeAll: async () => {
+    if (!(await ask('حذف كل السلاسل والدروس والفوائد؟', 'حذف الكل', true, 'لا يمكن التراجع. صدّر نسخة احتياطية أولًا إن أردت.'))) return;
+    try { YTP && YTP.stopVideo(); } catch (e) {}
+    S = defaults(); cur = null; save(true); closePlayer(); applyTheme(); go(''); toast('حُذفت كل البيانات');
+  }
+};
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const f = A[b.dataset.act]; if (!f) return;
+  if (b.tagName !== 'A' && b.tagName !== 'LABEL') e.preventDefault();
+  e.stopPropagation();
+  f(b.dataset.id, b, e);
+});
+
+/* ============ البدء ============ */
+$('#fab').innerHTML = ic('plus', 28, 2.4);
+$('#pClose').innerHTML = ic('down', 24);
+$('#pMore').innerHTML = ic('more', 22);
+$('#bPrev').innerHTML = ic('prev', 28);
+$('#bNext').innerHTML = ic('next', 28);
+applyTheme();
+route();
+if (cur) { renderPlayerAll(); ytReadyP.then(() => { if (cur && !YTP) { const l = L(cur); let st = l.pos || 0; if (l.duration && st > l.duration - 8) st = 0; createPlayer(l.videoId, st, false); } }); }
+renderPlayState();
+// إكمال العناوين التي لم تُجلب بعد
+setTimeout(() => queueMeta(S.lessons.filter(l => !l.metaOk && l.titleAuto).map(l => l.id)), 2500);
+</script>
+</body>
+</html>
