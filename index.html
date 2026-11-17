@@ -287,7 +287,19 @@ mark{background:#ffe49a;color:inherit;border-radius:3px;padding:0 1px}
 .ai-item{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
 .ai-item>input{width:22px;height:22px;accent-color:var(--accent);flex:none;margin-top:4px}
 .ai-item .body{flex:1;min-width:0}
-.ai-item .tx{display:block;font-family:"Noto Naskh Arabic",serif;font-size:16.5px;line-height:1.8}
+.ai-item .tx{display:block;font-family:"Noto Naskh Arabic",serif;font-size:16.5px;line-height:1.8;white-space:pre-wrap}
+.ai-grp{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:16px 0 2px;padding:6px 10px;border-radius:10px;font-weight:700;font-size:14.5px}
+.ai-grp button{font-size:12.5px;font-weight:600;opacity:.85}
+.ai-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.ai-mode{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:right;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--card2)}
+.ai-mode b{font-size:15px}
+.ai-mode small{color:var(--muted);font-size:12px;line-height:1.5}
+.ai-mode.wide{grid-column:1/-1;background:linear-gradient(135deg,rgba(15,118,110,.12),rgba(109,40,217,.12))}
+.nfilter{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;padding-bottom:2px;scrollbar-width:none}
+.nfilter::-webkit-scrollbar{display:none}
+.nfilter button{flex:none;font-size:13px;font-weight:600;padding:5px 11px;border-radius:20px;border:1px solid var(--line);background:var(--card);white-space:nowrap}
+.nfilter button.on{color:#fff;border-color:transparent}
+.ai-sumline{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
 .ai-wait{text-align:center;padding:22px 8px}
 .ai-wait .spin{width:36px;height:36px;border-width:3px;color:var(--accent);margin-bottom:12px}
 details{margin:10px 0}summary{cursor:pointer;color:var(--accent);font-weight:600}
@@ -359,6 +371,7 @@ details{margin:10px 0}summary{cursor:pointer;color:var(--accent);font-weight:600
           <button class="btn primary" data-act="noteAdd">حفظ الفائدة</button>
         </div>
       </div>
+      <div id="notesFilter" class="nfilter"></div>
       <div id="notesList"></div>
     </div>
     <div id="paneClips" class="hidden">
@@ -823,12 +836,19 @@ function updateProgress() {
   $('#miniProg').style.width = (d ? clamp(t / d * 100, 0, 100) : 0) + '%';
   if (document.activeElement !== $('#noteText') && !$('#noteText').value) $('#noteTime').textContent = fmt(t);
 }
+let notesType = '';
 function renderNotes() {
   const l = L(cur); if (!l) return;
   $('#nCount').textContent = l.notes.length ? '(' + l.notes.length + ')' : '';
   const busy = batch && batch.ids[batch.i] === l.id;
-  $('#aiBtn').innerHTML = busy ? '<span class="spin"></span> جارٍ استخراج فوائد هذا الدرس…' : ('✨ ' + (l.aiAt ? 'إعادة استخراج الفوائد' : 'استخراج الفوائد تلقائيًا') + (S.settings.aiKey ? '' : ' <small>(إعداد لمرة واحدة)</small>'));
-  const ns = sortedNotes(l);
+  $('#aiBtn').innerHTML = busy ? '<span class="spin"></span> جارٍ استخراج فوائد هذا الدرس…' : ('✨ ' + (l.aiAt ? 'استخراج آخر: فوائد · أقوال · تعريفات · تقسيمات' : 'استخراج الفوائد والأقوال والتعريفات والتقسيمات') + (S.settings.aiKey ? '' : ' <small>(إعداد لمرة واحدة)</small>'));
+  const all = sortedNotes(l), cnt = {};
+  all.forEach(n => { if (n.kind !== 'summary' && n.type) cnt[n.type] = (cnt[n.type] || 0) + 1; });
+  const types = AI_TYPES.filter(t => cnt[t]);
+  if (notesType && !cnt[notesType]) notesType = '';
+  $('#notesFilter').innerHTML = types.length ? `<button data-act="nType" data-v="" class="${notesType ? '' : 'on'}" style="${notesType ? '' : 'background:var(--accent)'}">الكل (${all.length})</button>` +
+    types.map(t => `<button data-act="nType" data-v="${t}" class="${notesType === t ? 'on' : ''}" style="${notesType === t ? 'background:' + TYPE_COLOR[t] : 'color:' + TYPE_COLOR[t]}">${TYPE_ICON[t]} ${TYPE_PLURAL[t]} (${cnt[t]})</button>`).join('') : '';
+  const ns = notesType ? all.filter(n => n.type === notesType) : all;
   $('#notesList').innerHTML = ns.length ? ns.map(n => noteHTML(l, n)).join('') :
     `<div class="empty-s">لا توجد فوائد بعد. اكتب أول فائدة من هذا الدرس، وستُربط بالدقيقة الحالية لتعود إليها بلمسة.</div>`;
 }
@@ -839,7 +859,7 @@ function noteHTML(l, n, q, showLesson) {
     <div class="nh">
       ${n.kind === 'summary' ? '<span class="ntag">📌 ملخص الدرس</span>' : ''}
       ${n.t != null ? `<button class="tchip" data-act="noteSeek" data-l="${l.id}" data-t="${n.t}">${ic('play', 12)} ${fmt(n.t)}</button>` : ''}
-      ${n.type ? `<span class="ntag">${esc(n.type)}</span>` : ''}
+      ${typeTag(n.type)}
       ${n.ai ? '<span class="ntag ai">✨ آلي</span>' : ''}
       ${showLesson ? `<small class="t-ellip" style="color:var(--muted);font-size:12.5px;min-width:0">${esc(l.title)}</small>` : ''}
       <span class="sp"></span>
@@ -1376,7 +1396,19 @@ function applyTheme() {
 try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme); } catch (e) {}
 
 /* ============ استخراج الفوائد بالذكاء الاصطناعي (Gemini) ============ */
-const AI_TYPES = ['تعريف', 'قاعدة', 'دليل', 'مسألة', 'خلاف', 'تنبيه', 'فائدة'];
+const AI_TYPES = ['فائدة', 'قول', 'تعريف', 'تقسيم', 'قاعدة', 'دليل', 'مسألة', 'خلاف', 'تنبيه'];
+const TYPE_COLOR = { 'فائدة': '#0f766e', 'قول': '#9d174d', 'تعريف': '#15803d', 'تقسيم': '#b45309', 'قاعدة': '#1d4ed8', 'دليل': '#7c3aed', 'مسألة': '#0e7490', 'خلاف': '#b91c1c', 'تنبيه': '#c2410c' };
+const TYPE_PLURAL = { 'فائدة': 'الفوائد', 'قول': 'الأقوال', 'تعريف': 'التعريفات', 'تقسيم': 'التقسيمات', 'قاعدة': 'القواعد', 'دليل': 'الأدلة', 'مسألة': 'المسائل', 'خلاف': 'الخلاف', 'تنبيه': 'التنبيهات' };
+const TYPE_ICON = { 'فائدة': '💡', 'قول': '💬', 'تعريف': '📘', 'تقسيم': '🗂', 'قاعدة': '📐', 'دليل': '📖', 'مسألة': '❓', 'خلاف': '⚖️', 'تنبيه': '⚠️' };
+const AI_MODES = {
+  all: { label: 'استخراج الكل مقسّمًا', sub: 'فوائد وأقوال وتعريفات وتقسيمات وقواعد وأدلة ومسائل… كلٌّ في قسمه', types: null },
+  'قول': { label: 'استخراج الأقوال', sub: 'أقوال العلماء والصحابة التي نقلها الشيخ، منسوبةً إلى قائليها', types: ['قول'] },
+  'تعريف': { label: 'استخراج التعريفات', sub: 'تعريف كل مصطلح لغةً واصطلاحًا', types: ['تعريف'] },
+  'تقسيم': { label: 'استخراج التقسيمات', sub: 'الأقسام والأنواع والأركان والشروط المعدودة', types: ['تقسيم'] },
+  'فائدة': { label: 'استخراج الفوائد', sub: 'الفوائد العلمية العامة واللطائف', types: ['فائدة'] },
+  'قاعدة': { label: 'القواعد والمسائل', sub: 'القواعد والضوابط والأحكام والخلاف', types: ['قاعدة', 'مسألة', 'خلاف'] }
+};
+const typeTag = t => t ? `<span class="ntag" style="color:${TYPE_COLOR[t] || 'inherit'};border-color:${TYPE_COLOR[t] || 'var(--line)'}55;background:${TYPE_COLOR[t] || '#888'}14">${TYPE_ICON[t] || ''} ${esc(t)}</span>` : '';
 class AiError extends Error { constructor(msg, code) { super(msg); this.code = code; } }
 function parseClock(v) {
   if (typeof v === 'number') return v;
@@ -1384,29 +1416,47 @@ function parseClock(v) {
   if (!p.length || p.some(isNaN)) return null;
   return p.reduce((a, b) => a * 60 + b, 0);
 }
-function aiPrompt(l, clip) {
-  const s = SR(l.seriesId), n = S.settings.aiCount;
-  const part = clip ? `\nتنبيه: المرفق جزء من الدرس فقط، من الدقيقة ${fmt(clip.s)} إلى ${fmt(clip.e)}. استخرج فوائد هذا الجزء وحده، واحسب توقيت كل فائدة من بداية الدرس كاملًا (أي بين ${fmt(clip.s)} و${fmt(clip.e)}). واجعل الملخص جملة أو جملتين عن هذا الجزء.\n` : '';
+function aiPrompt(l, clip, opt) {
+  const s = SR(l.seriesId), n = (opt && opt.count) || S.settings.aiCount, mode = (opt && opt.mode) || 'all', M = AI_MODES[mode] || AI_MODES.all;
+  const span = clip ? (clip.e - clip.s) : (l.duration || 0);
+  const scaled = (n !== 'auto' && clip && l.duration) ? Math.max(3, Math.round(n * span / l.duration)) : n;
+  const part = clip ? `\nتنبيه: المرفق جزء من الدرس فقط، من ${fmt(clip.s)} إلى ${fmt(clip.e)}. استخرج من هذا الجزء وحده، واحسب توقيت كل عنصر من بداية الدرس كاملًا (أي بين ${fmt(clip.s)} و${fmt(clip.e)}).\n` : '';
+  const what = M.types
+    ? `استخرج ${M.types.map(t => TYPE_PLURAL[t]).join(' و')} فقط، كلَّ ما ورد منها في ${clip ? 'هذا الجزء' : 'الدرس'} دون استثناء، ولا تستخرج غيرها.`
+    : (scaled === 'auto'
+      ? `استخرج أكبر عدد ممكن من العناصر العلمية النافعة (نحو عنصرين لكل دقيقة من الكلام العلمي)، دون تكرار ولا حشو، واحرص خاصةً على ألا يفوتك قول ولا تعريف ولا تقسيم ورد في ${clip ? 'هذا الجزء' : 'الدرس'}.`
+      : `استخرج قرابة ${scaled} عنصرًا هي الأنفع، واحرص على ألا يفوتك قول ولا تعريف ولا تقسيم ورد في ${clip ? 'هذا الجزء' : 'الدرس'}.`);
   return `أنت مساعد دقيق لطالب علم شرعي. هذا تسجيل درس علمي بعنوان «${l.title}»${s ? ' من سلسلة «' + s.title + '»' : ''}.
-استمع إلى ${clip ? 'هذا الجزء من الدرس' : 'الدرس كاملًا'} واستخرج الفوائد العلمية التي ذكرها الشيخ.${part}
+استمع إلى ${clip ? 'هذا الجزء من الدرس' : 'الدرس كاملًا'} بعناية.${part}
+المطلوب: ${what}
+
+أنواع العناصر وطريقة كتابة كلٍّ منها:
+- فائدة: معلومة علمية مستقلة أو لطيفة، في جملة أو جملتين.
+- قول: قول نقله الشيخ عن عالم أو صحابي أو إمام. اكتبه هكذا: «قال فلان: ...» بلفظه إن ذكره الشيخ بلفظه، وإلا بمعناه كما ذكره. لا تنسب قولًا إلى أحد لم ينسبه الشيخ إليه، وإن لم يسمِّ القائل فاكتب «قال بعض العلماء: ...».
+- تعريف: تعريف مصطلح. اكتبه هكذا: «تعريف كذا: لغةً ... واصطلاحًا ...» (أو ما ذكره الشيخ منهما فقط).
+- تقسيم: تقسيم أو أنواع أو أركان أو شروط أو مراتب معدودة. اكتبه هكذا: «ينقسم كذا إلى كذا قسمًا:» ثم كل قسم في سطر مستقل مرقّم (١- ... ٢- ...) مع شرحه المختصر إن ذكره الشيخ.
+- قاعدة: قاعدة أو ضابط.
+- دليل: آية أو حديث استدل به الشيخ مع وجه الدلالة.
+- مسألة: حكم أو مسألة فقهية أو عقدية.
+- خلاف: خلاف بين العلماء مع ذكر الأقوال ومن قال بها كما ذكره الشيخ.
+- تنبيه: تنبيه أو خطأ شائع نبّه عليه الشيخ.
+
 الشروط:
-1. ${n === 'auto' ? 'استخرج كل فائدة علمية مستقلة ذات قيمة، دون تكرار ولا حشو.' : 'استخرج قرابة ' + (clip ? Math.max(3, Math.round(n * (clip.e - clip.s) / Math.max(1, l.duration || clip.e))) : n) + ' فائدة هي الأهم.'}
-2. اكتب كل فائدة في جملة أو جملتين بعربية فصيحة واضحة، أمينة لكلام الشيخ ومعناه، ولا تضف شيئًا من عندك ولا من مصادر خارج الدرس.
-3. إذا ذكر الشيخ آية أو حديثًا أو قول عالم أو تعريفًا أو قاعدة أو خلافًا فاذكره كما ورد في كلامه، ولا تنسب قولًا إلى أحد لم ينسبه الشيخ إليه.
-4. لا تخترع أسماء كتب ولا أرقام صفحات ولا أحكامًا على الأحاديث لم يذكرها الشيخ.
-5. لكل فائدة اذكر التوقيت الذي بدأ فيه الشيخ الكلام عنها بصيغة MM:SS أو H:MM:SS.
-6. صنّف كل فائدة بنوع واحد من: ${AI_TYPES.join('، ')}.
-7. ${clip ? 'اكتب ملخصًا لهذا الجزء في جملة أو جملتين.' : 'اكتب ملخصًا للدرس في ثلاث جمل أو أربع.'}
-8. رتّب الفوائد بحسب ورودها في الدرس.
+1. كن أمينًا لكلام الشيخ ومعناه، ولا تضف شيئًا من عندك ولا من مصادر خارج الدرس.
+2. انقل الآيات والأحاديث كما وردت في كلامه، ولا تخترع أسماء كتب ولا أرقام صفحات ولا أحكامًا على الأحاديث لم يذكرها.
+3. لكل عنصر اذكر التوقيت الذي بدأ فيه الشيخ الكلام عنه بصيغة MM:SS أو H:MM:SS.
+4. صنّف كل عنصر بنوع واحد من: ${AI_TYPES.join('، ')}.
+5. رتّب العناصر بحسب ورودها في الدرس.
+6. ${M.types ? 'لا حاجة إلى ملخص؛ اجعل summary فارغًا.' : (clip ? 'اكتب في summary ملخصًا لهذا الجزء في جملة أو جملتين.' : 'اكتب في summary ملخصًا للدرس في ثلاث جمل أو أربع.')}
 أعد JSON فقط بهذا الشكل دون أي نص آخر:
-{"summary":"...","benefits":[{"time":"MM:SS","type":"تعريف","text":"..."}]}`;
+{"summary":"...","items":[{"time":"MM:SS","type":"قول","text":"..."}]}`;
 }
 function parseAI(txt, l) {
   const t = String(txt).trim().replace(/^```(?:json)?/i, '').replace(/```$/, '').trim();
   let j = null;
   try { j = JSON.parse(t); } catch (e) { const m = t.match(/\{[\s\S]*\}/); if (m) { try { j = JSON.parse(m[0]); } catch (er) {} } }
   if (!j) throw new Error('parse');
-  const arr = Array.isArray(j) ? j : (j.benefits || j.fawaid || []);
+  const arr = Array.isArray(j) ? j : (j.items || j.benefits || j.fawaid || []);
   const dur = l.duration || 0;
   const items = arr.map(b => {
     let sec = parseClock(b.time ?? b.t);
@@ -1427,7 +1477,7 @@ let aiFpsOk = true;      // يُطفأ إن رفض Gemini تقليل عدد ال
 const AI_CHUNK = 600;          // طول الجزء: ١٠ دقائق
 const AI_DIRECT_MAX = 1200;    // الدروس الأطول من ٢٠ دقيقة تُقسَّم مباشرة
 // محاولة واحدة لجزء أو للدرس كله، مع إعادة المحاولة عند الانشغال والانتقال بين النماذج
-async function aiTry(l, signal, key, clip, say, label) {
+async function aiTry(l, signal, key, clip, say, label, opt) {
   const models = AI_MODELS();
   let lowRes = true, useFps = !!clip && aiFpsOk, lastErr = null, busyMsg = '', sawBusy = false, sawQuota = false;
   for (let mi = 0; mi < models.length; mi++) {
@@ -1437,7 +1487,7 @@ async function aiTry(l, signal, key, clip, say, label) {
         say(`${label}${lastErr && lastErr.code === 'quota' ? 'بلغ الحدّ المؤقت، أنتظر قليلًا ثم أكمل' : 'Gemini مشغول، أعيد المحاولة'} (${attempt + 1} من 3)…`);
         await aiSleep(wait, signal);
       }
-      try { return await geminiOnce(l, signal, key, models[mi], lowRes, clip, useFps); }
+      try { return await geminiOnce(l, signal, key, models[mi], lowRes, clip, useFps, opt); }
       catch (e) {
         if (e.code === 'lowres') { lowRes = false; attempt--; continue; }
         if (e.code === 'nofps') { useFps = false; aiFpsOk = false; attempt--; continue; }
@@ -1453,14 +1503,14 @@ async function aiTry(l, signal, key, clip, say, label) {
   if (sawQuota) throw new AiError('بلغتَ الحدّ المجاني المؤقت في كل النماذج. انتظر قليلًا ثم أعد المحاولة.', 'quota');
   throw lastErr || new AiError('لم أجد نموذجًا متاحًا.', 'model');
 }
-async function geminiCall(l, signal, onStatus) {
+async function geminiCall(l, signal, onStatus, opt) {
   const key = (S.settings.aiKey || '').trim();
   if (!key) throw new AiError('أضف مفتاح Gemini أولًا.', 'nokey');
   const say = m => { try { onStatus && onStatus(m); } catch (e) {} };
   const dur = l.duration || 0;
   // الدروس القصيرة: الدرس كله مرة واحدة، فإن فشل لانشغال أو حدّ قُسّم
   if (!dur || dur <= AI_DIRECT_MAX) {
-    try { return await aiTry(l, signal, key, null, say, ''); }
+    try { return await aiTry(l, signal, key, null, say, '', opt); }
     catch (e) { if (!dur || !['busy', 'quota'].includes(e.code)) throw e; say('أقسّم الدرس إلى أجزاء…'); }
   }
   // الدروس الطويلة: أجزاء من ١٠ دقائق
@@ -1470,7 +1520,7 @@ async function geminiCall(l, signal, onStatus) {
     if (clip.e - clip.s < 20) continue;
     const label = `الجزء ${i + 1} من ${n}: `;
     say(label + 'يستمع ويستخرج…');
-    const r = await aiTry(l, signal, key, clip, say, label);
+    const r = await aiTry(l, signal, key, clip, say, label, opt);
     // إن رجعت التوقيتات محسوبة من بداية الجزء لا من بداية الدرس، تُصحَّح
     const ts = r.items.map(x => x.t).filter(t => t != null);
     if (clip.s > 0 && ts.length && Math.max(...ts) <= (clip.e - clip.s) + 15 && Math.min(...ts) < clip.s - 15) r.items.forEach(x => { if (x.t != null) x.t += clip.s; });
@@ -1481,12 +1531,12 @@ async function geminiCall(l, signal, onStatus) {
   const summary = parts.map(p => p.summary).filter(Boolean).join(' ');
   return { summary, items };
 }
-async function geminiOnce(l, signal, key, model, lowRes, clip, useFps) {
+async function geminiOnce(l, signal, key, model, lowRes, clip, useFps, opt) {
   const vid = { fileData: { fileUri: 'https://www.youtube.com/watch?v=' + l.videoId } };
   if (clip) vid.videoMetadata = Object.assign({ startOffset: clip.s + 's', endOffset: clip.e + 's' }, useFps ? { fps: 0.2 } : {});
   const body = {
-    contents: [{ role: 'user', parts: [vid, { text: aiPrompt(l, clip) }] }],
-    generationConfig: Object.assign({ temperature: 0.3, responseMimeType: 'application/json' }, lowRes ? { mediaResolution: 'MEDIA_RESOLUTION_LOW' } : {})
+    contents: [{ role: 'user', parts: [vid, { text: aiPrompt(l, clip, opt) }] }],
+    generationConfig: Object.assign({ temperature: 0.3, maxOutputTokens: 32768, responseMimeType: 'application/json' }, lowRes ? { mediaResolution: 'MEDIA_RESOLUTION_LOW' } : {})
   };
   let r, j = null;
   try {
@@ -1514,38 +1564,56 @@ async function geminiOnce(l, signal, key, model, lowRes, clip, useFps) {
   try { return parseAI(txt, l); } catch (e) { throw new AiError('وصلت نتيجة غير مفهومة. أعد المحاولة.', 'parse'); }
 }
 let aiCtrl = null, aiResult = null, batch = null;
+const AI_COUNTS = ['auto', 20, 40, 60, 80, 100];
 function aiExtract(lid) {
   const l = L(lid || cur); if (!l) return;
   if (!S.settings.aiKey) { aiSetupSheet(true); return; }
   if (batch && batch.ids[batch.i] === l.id) { toast('هذا الدرس قيد الاستخراج ضمن السلسلة'); return; }
+  const st = S.settings;
+  openSheet(`<h3>✨ ماذا تريد أن تستخرج؟</h3>
+    <p class="hint" style="margin-top:-6px">${esc(l.title)}${l.duration ? ' · ' + fmt(l.duration) : ''}</p>
+    <div class="ai-modes">${Object.entries(AI_MODES).map(([k, m]) => `<button class="ai-mode${k === 'all' ? ' wide' : ''}" data-act="aiGo" data-id="${l.id}" data-m="${k}"><b>${k === 'all' ? '✨' : TYPE_ICON[k]} ${m.label}</b><small>${m.sub}</small></button>`).join('')}</div>
+    <div class="set-row"><div class="lab">العدد عند «استخراج الكل»</div><div class="seg">${AI_COUNTS.map(v => `<button class="${st.aiCount === v ? 'on' : ''}" data-act="setOpt" data-k="aiCount" data-v="${v}">${v === 'auto' ? 'أكثر ما يمكن' : v}</button>`).join('')}</div></div>
+    <p class="hint">«أكثر ما يمكن»: نحو عنصرين لكل دقيقة من الدرس. أما الأقوال والتعريفات والتقسيمات فيُستخرج كل ما ورد منها. وما يُستخرج يُضاف إلى فوائد الدرس، ويمكنك أن تستخرج كل نوع على حدة ثم تجمعها.</p>`);
+}
+function aiRun(lid, mode) {
+  const l = L(lid || cur); if (!l) return;
+  const M = AI_MODES[mode] || AI_MODES.all;
   const ctrl = aiCtrl = new AbortController();
-  openSheet(`<div class="ai-wait"><span class="spin"></span><h3>يستمع إلى الدرس ويستخرج الفوائد…</h3><p class="hint ai-status" style="color:var(--accent);font-weight:600"></p>
-    <p class="hint">قد يستغرق ذلك من دقيقة إلى ثلاث دقائق بحسب طول الدرس. يمكنك إغلاق هذه النافذة ومتابعة الاستماع؛ ستظهر النتيجة عند جاهزيتها، لكن أبقِ التطبيق مفتوحًا.</p>
+  openSheet(`<div class="ai-wait"><span class="spin"></span><h3>${M.label}…</h3><p class="hint ai-status" style="color:var(--accent);font-weight:600"></p>
+    <p class="hint">قد يستغرق ذلك من دقيقة إلى خمس دقائق بحسب طول الدرس. يمكنك إغلاق هذه النافذة ومتابعة الاستماع؛ ستظهر النتيجة عند جاهزيتها، لكن أبقِ التطبيق مفتوحًا.</p>
     <button class="btn" data-act="aiCancel" style="margin-top:14px">إلغاء الاستخراج</button></div>`);
-  geminiCall(l, ctrl.signal, m => { if (ctrl.signal.aborted) return; const st = document.querySelector('.ai-wait .ai-status'); if (st) st.textContent = m; }).then(res => {
+  geminiCall(l, ctrl.signal, m => { if (ctrl.signal.aborted) return; const st = document.querySelector('.ai-wait .ai-status'); if (st) st.textContent = m; }, { mode, count: S.settings.aiCount }).then(res => {
     if (ctrl.signal.aborted) return;
     aiCtrl = null;
-    if (!res.items.length && !res.summary) { openSheet(`<h3>لم تُستخرج فوائد</h3><p class="hint">لم يجد Gemini فوائد في هذا الدرس. أعد المحاولة أو اكتبها يدويًا.</p><div class="sheet-actions"><button class="btn primary" data-act="sheetNo">حسنًا</button></div>`); return; }
-    aiResult = Object.assign({ lid: l.id }, res);
+    if (M.types) res.items = res.items.filter(it => !it.type || M.types.includes(it.type)).map(it => Object.assign(it, { type: it.type || M.types[0] }));
+    if (!res.items.length && !res.summary) { openSheet(`<h3>لم يُستخرج شيء</h3><p class="hint">لم يجد Gemini ${M.types ? M.types.map(t => TYPE_PLURAL[t]).join(' ولا ') : 'فوائد'} في هذا الدرس. أعد المحاولة أو اختر نوعًا آخر.</p><div class="sheet-actions"><button class="btn" data-act="sheetNo">حسنًا</button><button class="btn primary" data-act="aiExtract" data-id="${l.id}">نوع آخر</button></div>`); return; }
+    aiResult = Object.assign({ lid: l.id, mode }, res);
     aiPreview();
   }).catch(e => {
     if (e.code === 'abort' || ctrl.signal.aborted) return;
     aiCtrl = null;
     openSheet(`<h3>تعذّر الاستخراج</h3><p>${esc(e.message)}</p>
-      <div class="sheet-actions">${e.code === 'key' || e.code === 'nokey' ? '<button class="btn" data-act="aiSetup">إعداد المفتاح</button>' : '<button class="btn" data-act="sheetNo">إغلاق</button>'}<button class="btn primary" data-act="aiExtract" data-id="${l.id}">إعادة المحاولة</button></div>`);
+      <div class="sheet-actions">${e.code === 'key' || e.code === 'nokey' ? '<button class="btn" data-act="aiSetup">إعداد المفتاح</button>' : '<button class="btn" data-act="sheetNo">إغلاق</button>'}<button class="btn primary" data-act="aiGo" data-id="${l.id}" data-m="${mode}">إعادة المحاولة</button></div>`);
   });
 }
 function aiPreview() {
   const r = aiResult, l = r && L(r.lid); if (!l) return;
-  const hadAi = l.notes.some(n => n.ai);
-  openSheet(`<h3>✨ ${r.items.length} فائدة مستخرجة</h3>
-    <p class="hint" style="margin-top:-6px">${esc(l.title)}<br>راجعها قبل الحفظ؛ فالاستخراج الآلي قد يخطئ. اضغط التوقيت لتسمع الموضع وتتحقق.</p>
+  const M = AI_MODES[r.mode] || AI_MODES.all;
+  const groups = new Map();
+  r.items.forEach((it, k) => { const t = it.type || 'فائدة'; if (!groups.has(t)) groups.set(t, []); groups.get(t).push(k); });
+  const order = AI_TYPES.filter(t => groups.has(t));
+  const prev = l.notes.filter(n => n.ai && n.kind !== 'summary' && (!M.types || M.types.includes(n.type || 'فائدة'))).length;
+  openSheet(`<h3>✨ استُخرج ${r.items.length} عنصرًا</h3>
+    <div class="ai-sumline">${order.map(t => typeTag(t).replace('</span>', ' ' + groups.get(t).length + '</span>')).join('')}</div>
+    <p class="hint" style="margin-top:0">${esc(l.title)}<br>راجعها قبل الحفظ؛ فالاستخراج الآلي قد يخطئ. اضغط التوقيت لتسمع الموضع وتتحقق.</p>
     ${r.summary ? `<div class="ai-item"><input type="checkbox" id="aiSumChk" checked><div class="body"><span class="ntag">📌 ملخص الدرس</span><label for="aiSumChk" class="tx">${esc(r.summary)}</label></div></div>` : ''}
     <div class="maker-row" style="margin:8px 0 2px"><button class="btn" data-act="aiAll" data-v="1">تحديد الكل</button><button class="btn" data-act="aiAll" data-v="0">إلغاء التحديد</button></div>
-    ${r.items.map((it, k) => `<div class="ai-item"><input type="checkbox" class="aiChk" data-k="${k}" id="aic${k}" checked><div class="body">
-      <div style="display:flex;gap:6px;align-items:center;margin-bottom:2px">${it.t != null ? `<button class="tchip" data-act="noteSeek" data-l="${l.id}" data-t="${it.t}">${ic('play', 12)} ${fmt(it.t)}</button>` : ''}${it.type ? `<span class="ntag">${esc(it.type)}</span>` : ''}</div>
-      <label for="aic${k}" class="tx">${esc(it.text)}</label></div></div>`).join('')}
-    ${hadAi ? `<label class="chk" style="margin-top:12px"><input type="checkbox" id="aiReplace" checked> حذف الفوائد الآلية السابقة لهذا الدرس</label>` : ''}
+    ${order.map(t => `<div class="ai-grp" style="background:${TYPE_COLOR[t]}14;color:${TYPE_COLOR[t]}"><span>${TYPE_ICON[t]} ${TYPE_PLURAL[t]} (${groups.get(t).length})</span><button data-act="aiGrp" data-t="${t}" style="color:inherit">تبديل التحديد</button></div>` +
+      groups.get(t).map(k => { const it = r.items[k]; return `<div class="ai-item"><input type="checkbox" class="aiChk" data-k="${k}" data-t="${t}" id="aic${k}" checked><div class="body">
+      ${it.t != null ? `<div style="margin-bottom:2px"><button class="tchip" data-act="noteSeek" data-l="${l.id}" data-t="${it.t}">${ic('play', 12)} ${fmt(it.t)}</button></div>` : ''}
+      <label for="aic${k}" class="tx">${esc(it.text)}</label></div></div>`; }).join('')).join('')}
+    ${prev ? `<label class="chk" style="margin-top:12px"><input type="checkbox" id="aiReplace" checked> حذف ${M.types ? 'ما استُخرج آليًا سابقًا من ' + M.types.map(t => TYPE_PLURAL[t]).join(' و') : 'كل ما استُخرج آليًا سابقًا'} لهذا الدرس (${prev})</label>` : ''}
     <div class="sheet-actions" style="position:sticky;bottom:calc(-18px - var(--safe-b));background:var(--card);padding:10px 0 4px"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn primary" data-act="aiSave">حفظ المحدد</button></div>`);
 }
 function addAiNotes(l, summary, items) {
@@ -1565,7 +1633,7 @@ async function runBatch(sid) {
     const l = L(ids[batch.i]); if (!l) continue;
     render(); if (cur) renderNotes();
     try {
-      const r = await geminiCall(l, batch.ctrl.signal);
+      const r = await geminiCall(l, batch.ctrl.signal, null, { mode: 'all', count: S.settings.aiCount });
       addAiNotes(l, r.summary, r.items); batch.ok++; save(true);
       if (cur === l.id) renderNotes();
     } catch (e) {
@@ -1584,7 +1652,7 @@ function aiSetupSheet(thenExtract) {
       <h4>احصل على المفتاح مرة واحدة (مجانًا):</h4>
       <ol><li>افتح <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> وادخل بحساب Google.</li><li>اضغط «Create API key».</li><li>انسخ المفتاح والصقه هنا.</li></ol></div>
     <label class="fld" style="margin-top:12px"><span>مفتاح Gemini API</span><input id="aiKeyIn" dir="ltr" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="AIza…" value="${esc(st.aiKey)}"></label>
-    <div class="set-row"><div class="lab">عدد الفوائد</div><div class="seg">${['auto', 10, 20, 30].map(v => `<button class="${st.aiCount === v ? 'on' : ''}" data-act="setOpt" data-k="aiCount" data-v="${v}">${v === 'auto' ? 'تلقائي' : v}</button>`).join('')}</div></div>
+    <div class="set-row"><div class="lab">عدد الفوائد</div><div class="seg">${AI_COUNTS.map(v => `<button class="${st.aiCount === v ? 'on' : ''}" data-act="setOpt" data-k="aiCount" data-v="${v}">${v === 'auto' ? 'أكثر ما يمكن' : v}</button>`).join('')}</div></div>
     <details><summary>متقدّم</summary><label class="fld" style="margin-top:8px"><span>اسم النموذج</span><input id="aiModelIn" dir="ltr" autocapitalize="off" value="${esc(st.aiModel)}"></label></details>
     <p class="hint">يُحفظ المفتاح في هذا الجهاز فقط، ولا يكون داخل ملف التطبيق.</p>
     <div class="sheet-actions"><button class="btn" data-act="aiTest">اختبار المفتاح</button><button class="btn primary" data-act="aiKeySave" data-v="${thenExtract ? 1 : 0}">حفظ</button></div>`);
@@ -1734,15 +1802,19 @@ const A = {
   },
   doAdd,
   aiExtract: id => aiExtract(id),
+  aiGo: (id, b) => aiRun(id, b.dataset.m || 'all'),
+  aiGrp: (_, b) => { const cs = [...sheet.querySelectorAll('.aiChk[data-t="' + b.dataset.t + '"]')]; const on = !cs.every(c => c.checked); cs.forEach(c => { c.checked = on; }); },
+  nType: (_, b) => { notesType = b.dataset.v || ''; renderNotes(); },
   aiCancel: () => { if (aiCtrl) aiCtrl.abort(); aiCtrl = null; closeSheet(); toast('أُلغي الاستخراج'); },
   aiAll: (_, b) => sheet.querySelectorAll('.aiChk,#aiSumChk').forEach(c => { c.checked = b.dataset.v === '1'; }),
   aiSave: () => {
     const r = aiResult, l = r && L(r.lid); if (!l) { closeSheet(); return; }
-    if ($('#aiReplace') && $('#aiReplace').checked) l.notes = l.notes.filter(n => !n.ai);
+    const MM = AI_MODES[r.mode] || AI_MODES.all;
+    if ($('#aiReplace') && $('#aiReplace').checked) l.notes = l.notes.filter(n => !n.ai || (MM.types && (n.kind === 'summary' || !MM.types.includes(n.type || 'فائدة'))));
     const items = [...sheet.querySelectorAll('.aiChk')].filter(c => c.checked).map(c => r.items[+c.dataset.k]);
     const sum = r.summary && $('#aiSumChk') && $('#aiSumChk').checked ? r.summary : '';
     addAiNotes(l, sum, items); aiResult = null;
-    save(true); closeSheet(); if (cur === l.id) renderNotes(); render(); toast(`حُفظت ${items.length} فائدة ✓`);
+    save(true); closeSheet(); if (cur === l.id) renderNotes(); render(); toast(`حُفظ ${items.length} عنصرًا ✓`);
   },
   aiSetup: () => aiSetupSheet(false),
   aiKeySave: (_, b) => {
