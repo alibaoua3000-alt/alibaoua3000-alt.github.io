@@ -1414,33 +1414,62 @@ function parseAI(txt, l) {
   }).filter(x => x.text);
   return { summary: Array.isArray(j) ? '' : String(j.summary || '').trim(), items };
 }
-async function geminiCall(l, signal) {
+function aiSleep(ms, signal) {
+  return new Promise((res, rej) => {
+    const t = setTimeout(res, ms);
+    if (signal) signal.addEventListener('abort', () => { clearTimeout(t); rej(new AiError('أُلغي.', 'abort')); }, { once: true });
+  });
+}
+// عند انشغال Gemini (5xx) أو امتلاء حدّ نموذج (429): يعيد المحاولة تلقائيًا، ثم ينتقل إلى نموذج آخر بدل التوقف
+async function geminiCall(l, signal, onStatus) {
   const key = (S.settings.aiKey || '').trim();
   if (!key) throw new AiError('أضف مفتاح Gemini أولًا.', 'nokey');
-  const models = [S.settings.aiModel, 'gemini-flash-latest', 'gemini-2.5-flash'].filter((v, i, a) => v && a.indexOf(v) === i);
-  let lowRes = true, lastErr = null;
+  const models = [S.settings.aiModel, 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite'].filter((v, i, a) => v && a.indexOf(v) === i);
+  const say = m => { try { onStatus && onStatus(m); } catch (e) {} };
+  let lowRes = true, lastErr = null, busyMsg = '', sawBusy = false, sawQuota = false;
   for (let mi = 0; mi < models.length; mi++) {
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (attempt) { say(`Gemini مشغول، أعيد المحاولة تلقائيًا (${attempt + 1} من 3)…`); await aiSleep(attempt === 1 ? 4000 : 10000, signal); }
+      let out;
+      try { out = await geminiOnce(l, signal, key, models[mi], lowRes); }
+      catch (e) {
+        if (e.code === 'lowres') { lowRes = false; attempt--; continue; }
+        if (e.code === 'busy') { sawBusy = true; busyMsg = e.detail || busyMsg; lastErr = e; continue; }
+        if (e.code === 'quota') { sawQuota = true; lastErr = e; break; }
+        if (e.code === 'model') { lastErr = e; break; }
+        throw e;
+      }
+      return out;
+    }
+    if (mi + 1 < models.length) say('أجرّب نموذجًا آخر من Gemini…');
+  }
+  if (sawBusy) throw new AiError('خدمة Gemini مشغولة الآن رغم إعادة المحاولة عدة مرات. جرّب بعد ربع ساعة.' + (busyMsg ? ' (' + busyMsg.slice(0, 120) + ')' : ''), 'busy');
+  if (sawQuota) throw new AiError('بلغتَ الحدّ المجاني المؤقت في كل النماذج. انتظر قليلًا ثم أعد المحاولة (الحدّ نحو 8 ساعات فيديو يوميًا).', 'quota');
+  throw lastErr || new AiError('لم أجد نموذجًا متاحًا.', 'model');
+}
+async function geminiOnce(l, signal, key, model, lowRes) {
+  {
     const body = {
       contents: [{ role: 'user', parts: [{ fileData: { fileUri: 'https://www.youtube.com/watch?v=' + l.videoId } }, { text: aiPrompt(l) }] }],
       generationConfig: Object.assign({ temperature: 0.3, responseMimeType: 'application/json' }, lowRes ? { mediaResolution: 'MEDIA_RESOLUTION_LOW' } : {})
     };
     let r, j = null;
     try {
-      r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(models[mi])}:generateContent?key=${encodeURIComponent(key)}`,
+      r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`,
         { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal });
     } catch (e) {
-      if (e.name === 'AbortError') throw new AiError('أُلغي.', 'abort');
+      if (e.name === 'AbortError' || (signal && signal.aborted)) throw new AiError('أُلغي.', 'abort');
       throw new AiError('تعذّر الاتصال بخدمة Gemini. تحقّق من الإنترنت.', 'net');
     }
     try { j = await r.json(); } catch (e) {}
     const msg = (j && j.error && j.error.message) || '';
-    if (r.status === 404) { lastErr = new AiError('النموذج غير متاح: ' + models[mi], 'model'); continue; }
-    if (r.status === 400 && lowRes && /media.?resolution/i.test(msg)) { lowRes = false; mi--; continue; }
+    if (r.status === 404) throw new AiError('النموذج غير متاح: ' + model, 'model');
+    if (r.status === 400 && lowRes && /media.?resolution/i.test(msg)) throw new AiError('', 'lowres');
     if (!r.ok) {
       if (/api key/i.test(msg) || r.status === 401) throw new AiError('مفتاح Gemini غير صالح. راجعه في الإعداد.', 'key');
       if (r.status === 403) throw new AiError('المفتاح مرفوض أو غير مفعّل. راجعه في الإعداد.', 'key');
-      if (r.status === 429) throw new AiError('بلغتَ الحدّ المجاني المؤقت. انتظر قليلًا ثم أعد المحاولة (الحدّ نحو 8 ساعات فيديو يوميًا).', 'quota');
-      if (r.status >= 500) throw new AiError('خدمة Gemini مشغولة الآن. أعد المحاولة بعد قليل.', 'busy');
+      if (r.status === 429) throw new AiError('بلغتَ الحدّ المجاني المؤقت.', 'quota');
+      if (r.status >= 500) { const e = new AiError('خدمة Gemini مشغولة الآن.', 'busy'); e.detail = msg; throw e; }
       throw new AiError('تعذّرت معالجة هذا الفيديو' + (msg ? ': ' + msg.slice(0, 180) : '.'), 'video');
     }
     const cand = j && j.candidates && j.candidates[0];
@@ -1448,7 +1477,6 @@ async function geminiCall(l, signal) {
     if (!txt) throw new AiError('لم يُرجِع Gemini نتيجة' + (cand && cand.finishReason ? ' (' + cand.finishReason + ')' : '') + '. أعد المحاولة.', 'empty');
     try { return parseAI(txt, l); } catch (e) { throw new AiError('وصلت نتيجة غير مفهومة. أعد المحاولة.', 'parse'); }
   }
-  throw lastErr || new AiError('لم أجد نموذجًا متاحًا.', 'model');
 }
 let aiCtrl = null, aiResult = null, batch = null;
 function aiExtract(lid) {
@@ -1456,10 +1484,10 @@ function aiExtract(lid) {
   if (!S.settings.aiKey) { aiSetupSheet(true); return; }
   if (batch && batch.ids[batch.i] === l.id) { toast('هذا الدرس قيد الاستخراج ضمن السلسلة'); return; }
   const ctrl = aiCtrl = new AbortController();
-  openSheet(`<div class="ai-wait"><span class="spin"></span><h3>يستمع إلى الدرس ويستخرج الفوائد…</h3>
+  openSheet(`<div class="ai-wait"><span class="spin"></span><h3>يستمع إلى الدرس ويستخرج الفوائد…</h3><p class="hint ai-status" style="color:var(--accent);font-weight:600"></p>
     <p class="hint">قد يستغرق ذلك من دقيقة إلى ثلاث دقائق بحسب طول الدرس. يمكنك إغلاق هذه النافذة ومتابعة الاستماع؛ ستظهر النتيجة عند جاهزيتها، لكن أبقِ التطبيق مفتوحًا.</p>
     <button class="btn" data-act="aiCancel" style="margin-top:14px">إلغاء الاستخراج</button></div>`);
-  geminiCall(l, ctrl.signal).then(res => {
+  geminiCall(l, ctrl.signal, m => { if (ctrl.signal.aborted) return; const st = document.querySelector('.ai-wait .ai-status'); if (st) st.textContent = m; }).then(res => {
     if (ctrl.signal.aborted) return;
     aiCtrl = null;
     if (!res.items.length && !res.summary) { openSheet(`<h3>لم تُستخرج فوائد</h3><p class="hint">لم يجد Gemini فوائد في هذا الدرس. أعد المحاولة أو اكتبها يدويًا.</p><div class="sheet-actions"><button class="btn primary" data-act="sheetNo">حسنًا</button></div>`); return; }
