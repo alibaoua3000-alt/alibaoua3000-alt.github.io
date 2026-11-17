@@ -294,6 +294,10 @@ mark{background:#ffe49a;color:inherit;border-radius:3px;padding:0 1px}
 .ai-mode{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:right;padding:12px;border-radius:14px;border:1px solid var(--line);background:var(--card2)}
 .ai-mode b{font-size:15px}
 .ai-mode small{color:var(--muted);font-size:12px;line-height:1.5}
+.ai-steps{display:flex;flex-direction:column;gap:10px;margin:10px 0}
+.ai-step{display:flex;gap:10px;align-items:flex-start;line-height:1.7}
+.ai-step>b{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#fff;font-size:14px}
+.ai-big{display:flex;justify-content:center;width:100%;margin-top:8px;padding:14px;font-size:16px;text-decoration:none}
 .ai-mode.wide{grid-column:1/-1;background:linear-gradient(135deg,rgba(15,118,110,.12),rgba(109,40,217,.12))}
 .nfilter{display:flex;gap:6px;overflow-x:auto;margin:0 0 10px;padding-bottom:2px;scrollbar-width:none}
 .nfilter::-webkit-scrollbar{display:none}
@@ -841,7 +845,7 @@ function renderNotes() {
   const l = L(cur); if (!l) return;
   $('#nCount').textContent = l.notes.length ? '(' + l.notes.length + ')' : '';
   const busy = batch && batch.ids[batch.i] === l.id;
-  $('#aiBtn').innerHTML = busy ? '<span class="spin"></span> جارٍ استخراج فوائد هذا الدرس…' : ('✨ ' + (l.aiAt ? 'استخراج آخر: فوائد · أقوال · تعريفات · تقسيمات' : 'استخراج الفوائد والأقوال والتعريفات والتقسيمات') + (S.settings.aiKey ? '' : ' <small>(إعداد لمرة واحدة)</small>'));
+  $('#aiBtn').innerHTML = busy ? '<span class="spin"></span> جارٍ استخراج فوائد هذا الدرس…' : ('✨ ' + (l.aiAt ? 'استخراج آخر: فوائد · أقوال · تعريفات · تقسيمات' : 'استخراج الفوائد والأقوال والتعريفات والتقسيمات') + ((S.settings.aiKey || (S.settings.aiVia || 'app') === 'app') ? '' : ' <small>(إعداد لمرة واحدة)</small>'));
   const all = sortedNotes(l), cnt = {};
   all.forEach(n => { if (n.kind !== 'summary' && n.type) cnt[n.type] = (cnt[n.type] || 0) + 1; });
   const types = AI_TYPES.filter(t => cnt[t]);
@@ -1567,14 +1571,51 @@ let aiCtrl = null, aiResult = null, batch = null;
 const AI_COUNTS = ['auto', 20, 40, 60, 80, 100];
 function aiExtract(lid) {
   const l = L(lid || cur); if (!l) return;
-  if (!S.settings.aiKey) { aiSetupSheet(true); return; }
   if (batch && batch.ids[batch.i] === l.id) { toast('هذا الدرس قيد الاستخراج ضمن السلسلة'); return; }
-  const st = S.settings;
+  const st = S.settings, via = st.aiVia || 'app';
   openSheet(`<h3>✨ ماذا تريد أن تستخرج؟</h3>
     <p class="hint" style="margin-top:-6px">${esc(l.title)}${l.duration ? ' · ' + fmt(l.duration) : ''}</p>
+    <div class="set-row"><div class="lab">الطريقة</div><div class="seg"><button class="${via === 'app' ? 'on' : ''}" data-act="setOpt" data-k="aiVia" data-v="app">📱 تطبيق Gemini (اشتراكك)</button><button class="${via === 'key' ? 'on' : ''}" data-act="setOpt" data-k="aiVia" data-v="key">⚡ تلقائي بالمفتاح</button></div></div>
     <div class="ai-modes">${Object.entries(AI_MODES).map(([k, m]) => `<button class="ai-mode${k === 'all' ? ' wide' : ''}" data-act="aiGo" data-id="${l.id}" data-m="${k}"><b>${k === 'all' ? '✨' : TYPE_ICON[k]} ${m.label}</b><small>${m.sub}</small></button>`).join('')}</div>
     <div class="set-row"><div class="lab">العدد عند «استخراج الكل»</div><div class="seg">${AI_COUNTS.map(v => `<button class="${st.aiCount === v ? 'on' : ''}" data-act="setOpt" data-k="aiCount" data-v="${v}">${v === 'auto' ? 'أكثر ما يمكن' : v}</button>`).join('')}</div></div>
-    <p class="hint">«أكثر ما يمكن»: نحو عنصرين لكل دقيقة من الدرس. أما الأقوال والتعريفات والتقسيمات فيُستخرج كل ما ورد منها. وما يُستخرج يُضاف إلى فوائد الدرس، ويمكنك أن تستخرج كل نوع على حدة ثم تجمعها.</p>`);
+    <p class="hint">«أكثر ما يمكن»: نحو عنصرين لكل دقيقة من الدرس. أما الأقوال والتعريفات والتقسيمات فيُستخرج كل ما ورد منها. وما يُستخرج يُضاف إلى فوائد الدرس، ويمكنك أن تستخرج كل نوع على حدة ثم تجمعها.</p>
+    <button class="btn" style="width:100%;margin-top:4px" data-act="aiPasteOpen" data-id="${l.id}">📥 عندي رد من Gemini، أريد لصقه</button>`);
+}
+/* الاستخراج عبر تطبيق Gemini: ينسخ التعليمات مع رابط الدرس، ثم يلصق المستخدم الرد */
+const GEMINI_URL = 'https://gemini.google.com/app';
+function aiAppText(l, mode) {
+  return `افتح فيديو هذا الدرس على يوتيوب واستمع إليه: https://www.youtube.com/watch?v=${l.videoId}\n\n` +
+    aiPrompt(l, null, { mode, count: S.settings.aiCount }) +
+    `\n\nمهم: ضع الـJSON كله داخل كتلة كود واحدة (\`\`\`json)، ولا تكتب قبلها ولا بعدها شيئًا. وإن لم تستطع فتح الفيديو فقل ذلك صراحة ولا تخترع شيئًا.`;
+}
+function aiApp(lid, mode) {
+  const l = L(lid || cur); if (!l) return;
+  const M = AI_MODES[mode] || AI_MODES.all;
+  try { localStorage.setItem('maktabati_ai_pending', JSON.stringify({ lid: l.id, mode })); } catch (e) {}
+  openSheet(`<h3>📱 ${M.label} عبر Gemini</h3>
+    <p class="hint" style="margin-top:-6px">${esc(l.title)}</p>
+    <div class="ai-steps">
+      <div class="ai-step"><b>١</b><div>اضغط الزر: تُنسخ التعليمات مع رابط الدرس، ويُفتح Gemini.<a class="btn primary ai-big" href="${GEMINI_URL}" target="_blank" rel="noopener" data-act="aiAppCopy" data-id="${l.id}" data-m="${mode}">📋 انسخ وافتح Gemini</a></div></div>
+      <div class="ai-step"><b>٢</b><div>في Gemini: اضغط مطوّلًا في خانة الكتابة واختر <b>لصق</b>، ثم أرسل. انتظر حتى يكتمل الرد، ثم اضغط زر <b>النسخ</b> تحت الرد.</div></div>
+      <div class="ai-step"><b>٣</b><div>ارجع إلى هنا والصق الرد:</div></div>
+    </div>
+    <label class="fld"><textarea id="aiPasteTa" rows="4" dir="auto" placeholder="الصق رد Gemini هنا…"></textarea></label>
+    <div class="sheet-actions"><button class="btn" data-act="aiPasteClip">📥 لصق</button><button class="btn primary" data-act="aiPasteGo" data-id="${l.id}" data-m="${mode}">توزيع الفوائد</button></div>
+    <p class="hint">إن لم يستجب زر الفتح، فافتح تطبيق Gemini بنفسك والصق فيه؛ فالتعليمات منسوخة.</p>`);
+}
+function aiPasteGo(lid, mode, txt) {
+  const l = L(lid); if (!l) return;
+  const M = AI_MODES[mode] || AI_MODES.all;
+  txt = String(txt || '').trim();
+  if (!txt) { toast('الصق رد Gemini أولًا'); return; }
+  let res;
+  try { res = parseAI(txt, l); }
+  catch (e) { toast('لم أفهم الرد. انسخه كاملًا بزر النسخ تحت رد Gemini'); return; }
+  if (M.types) res.items = res.items.filter(it => !it.type || M.types.includes(it.type)).map(it => Object.assign(it, { type: it.type || M.types[0] }));
+  if (!res.items.length && !res.summary) { toast('الرد لا يحوي فوائد'); return; }
+  try { localStorage.removeItem('maktabati_ai_pending'); } catch (e) {}
+  aiResult = Object.assign({ lid: l.id, mode }, res);
+  aiPreview();
 }
 function aiRun(lid, mode) {
   const l = L(lid || cur); if (!l) return;
@@ -1594,7 +1635,8 @@ function aiRun(lid, mode) {
     if (e.code === 'abort' || ctrl.signal.aborted) return;
     aiCtrl = null;
     openSheet(`<h3>تعذّر الاستخراج</h3><p>${esc(e.message)}</p>
-      <div class="sheet-actions">${e.code === 'key' || e.code === 'nokey' ? '<button class="btn" data-act="aiSetup">إعداد المفتاح</button>' : '<button class="btn" data-act="sheetNo">إغلاق</button>'}<button class="btn primary" data-act="aiGo" data-id="${l.id}" data-m="${mode}">إعادة المحاولة</button></div>`);
+      <div class="sheet-actions">${e.code === 'key' || e.code === 'nokey' ? '<button class="btn" data-act="aiSetup">إعداد المفتاح</button>' : '<button class="btn" data-act="sheetNo">إغلاق</button>'}<button class="btn primary" data-act="aiGoKey" data-id="${l.id}" data-m="${mode}">إعادة المحاولة</button></div>
+      <button class="btn primary" style="width:100%;margin-top:8px" data-act="aiGoApp" data-id="${l.id}" data-m="${mode}">📱 استخرج عبر تطبيق Gemini (اشتراكك)</button>`);
   });
 }
 function aiPreview() {
@@ -1802,7 +1844,25 @@ const A = {
   },
   doAdd,
   aiExtract: id => aiExtract(id),
-  aiGo: (id, b) => aiRun(id, b.dataset.m || 'all'),
+  aiGo: (id, b) => {
+    const m = b.dataset.m || 'all';
+    if ((S.settings.aiVia || 'app') === 'app') { aiApp(id, m); return; }
+    if (!S.settings.aiKey) { aiSetupSheet(true); return; }
+    aiRun(id, m);
+  },
+  aiGoKey: (id, b) => { if (!S.settings.aiKey) { aiSetupSheet(true); return; } aiRun(id, b.dataset.m || 'all'); },
+  aiGoApp: (id, b) => aiApp(id, b.dataset.m || 'all'),
+  aiAppCopy: (id, b) => { const l = L(id); if (!l) return; copyText(aiAppText(l, b.dataset.m || 'all'), 'نُسخت التعليمات ✓ الصقها في Gemini'); },
+  aiPasteOpen: id => {
+    let p = null; try { p = JSON.parse(localStorage.getItem('maktabati_ai_pending') || 'null'); } catch (e) {}
+    aiApp(id, p && p.lid === id ? p.mode : 'all');
+  },
+  aiPasteClip: async () => {
+    const ta = $('#aiPasteTa');
+    try { ta.value = await navigator.clipboard.readText(); toast('لُصق ✓ اضغط «توزيع الفوائد»'); }
+    catch (e) { toast('اضغط مطوّلًا داخل المربع واختر «لصق»'); ta.focus(); }
+  },
+  aiPasteGo: (id, b) => aiPasteGo(id, b.dataset.m || 'all', $('#aiPasteTa').value),
   aiGrp: (_, b) => { const cs = [...sheet.querySelectorAll('.aiChk[data-t="' + b.dataset.t + '"]')]; const on = !cs.every(c => c.checked); cs.forEach(c => { c.checked = on; }); },
   nType: (_, b) => { notesType = b.dataset.v || ''; renderNotes(); },
   aiCancel: () => { if (aiCtrl) aiCtrl.abort(); aiCtrl = null; closeSheet(); toast('أُلغي الاستخراج'); },
