@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="مستخرج الفوائد">
+<meta name="theme-color" content="#8a3b12">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<title>مستخرج الفوائد</title>
+<style>
+:root{
+  --bg:#f6f2ea; --card:#ffffff; --card2:#fbf8f2; --text:#1f1b16; --muted:#6f675c; --line:#e7dfd1;
+  --accent:#8a3b12; --accent-ink:#ffffff; --accent-soft:#f6e6d9; --gold:#b7892e; --danger:#b42318; --ok:#15803d;
+  --shadow:0 1px 2px rgba(40,25,10,.05),0 6px 20px rgba(40,25,10,.06);
+  --r:16px; --safe-b:env(safe-area-inset-bottom,0px); --safe-t:env(safe-area-inset-top,0px);
+  color-scheme:light;
+}
+[data-theme=dark]{
+  --bg:#12100d; --card:#1c1915; --card2:#221e19; --text:#efe9e1; --muted:#a39886; --line:#2f2a23;
+  --accent:#e08a57; --accent-ink:#2a1206; --accent-soft:#3a2416; --gold:#dcae4c; --danger:#f97066; --ok:#4ade80;
+  --shadow:none; color-scheme:dark;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--text)}
+body{font-family:"IBM Plex Sans Arabic",-apple-system,system-ui,"Geeza Pro",sans-serif;font-size:16px;line-height:1.6;
+  padding:calc(var(--safe-t) + 6px) 0 calc(var(--safe-b) + 130px);-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;cursor:pointer}
+input,select,textarea{font-size:16px}
+.hidden{display:none!important}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+.top{display:flex;align-items:center;gap:10px;padding:10px 0 14px}
+.top h1{font-size:23px;margin:0;font-weight:700}
+.top .grow{flex:1;min-width:0}
+.top .sub{color:var(--muted);font-size:13.5px}
+.ellip{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--line);flex:none;font-size:19px}
+.icon-btn:active{transform:scale(.94)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;margin-bottom:12px}
+.section-h{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 10px;font-weight:700;font-size:17px}
+.section-h small{color:var(--muted);font-weight:500;font-size:13.5px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 16px;border-radius:12px;background:var(--card2);border:1px solid var(--line);font-weight:600;font-size:15px;min-height:44px;text-decoration:none;color:inherit;text-align:center}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.btn.danger{background:var(--danger);color:#fff;border-color:transparent}
+.btn.block{width:100%}
+.btn.sm{min-height:36px;padding:6px 12px;font-size:14px}
+.btn:active{opacity:.85}
+.btn[disabled]{opacity:.45}
+.row{display:flex;gap:8px;align-items:center}
+.row>.btn{flex:1}
+.hint{color:var(--muted);font-size:13.5px;margin:6px 0 0}
+.banner{border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:14px;background:#fff4e0;color:#7a4b00;border:1px solid #f1d7a5}
+.banner.err{background:#fdecea;color:#8a1c12;border-color:#f3c3bd}
+[data-theme=dark] .banner{background:#2d2310;color:#f3d18e;border-color:#4a3a18}
+[data-theme=dark] .banner.err{background:#3a1512;color:#fbb4ab;border-color:#5a221d}
+.banner .btn{margin-top:8px}
+
+/* add grid */
+.add-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.add{display:flex;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow);text-align:start;min-height:64px}
+.add .ai{width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--accent-soft);font-size:20px;flex:none}
+.add b{display:block;font-size:14.5px;line-height:1.3}
+.add small{color:var(--muted);font-size:12px;line-height:1.3;display:block}
+.add.wide{grid-column:1/-1}
+
+/* book cards */
+.bk{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:12px;margin-bottom:10px;cursor:pointer;position:relative;overflow:hidden}
+.bk .cv{width:46px;height:58px;border-radius:6px 10px 10px 6px;display:grid;place-items:center;font-size:22px;flex:none;color:#fff;box-shadow:inset 4px 0 0 rgba(0,0,0,.18)}
+.bk .mn{flex:1;min-width:0}
+.bk .tt{font-weight:700;font-size:16px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.bk .mt{color:var(--muted);font-size:12.5px;margin-top:2px}
+.badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.bdg{font-size:11.5px;padding:1px 7px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--muted)}
+.bdg.run{background:var(--accent-soft);color:var(--accent);border-color:transparent;font-weight:600}
+.bdg.err{background:#fdecea;color:#8a1c12;border-color:transparent}
+
+/* services */
+.svc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.svc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;box-shadow:var(--shadow);text-align:start;display:flex;flex-direction:column;gap:2px;min-height:96px;position:relative}
+.svc .si{font-size:22px}
+.svc b{font-size:14.5px;line-height:1.35}
+.svc small{color:var(--muted);font-size:12px;line-height:1.35}
+.svc .st{margin-top:auto;font-size:12px;font-weight:600;color:var(--accent)}
+.svc .st.done{color:var(--ok)}
+.svc.wide{grid-column:1/-1;flex-direction:row;align-items:center;gap:12px;min-height:64px}
+.svc.wide .si{font-size:26px}
+
+/* sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:40}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--card);border-radius:20px 20px 0 0;max-height:88vh;overflow:auto;padding:8px 18px calc(var(--safe-b) + 18px);max-width:720px;margin:0 auto;box-shadow:0 -10px 30px rgba(0,0,0,.15);-webkit-overflow-scrolling:touch}
+.sheet .grab{width:42px;height:5px;border-radius:3px;background:var(--line);margin:4px auto 10px}
+.sheet h3{margin:4px 0 8px;font-size:18px}
+.sheet-actions{display:flex;gap:8px;margin-top:14px}
+.sheet-actions .btn{flex:1}
+.fld{display:block;margin:10px 0}
+.fld>span{display:block;font-size:13.5px;color:var(--muted);margin-bottom:4px;font-weight:500}
+.fld input,.fld textarea,.fld select{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card2);outline:none}
+.fld textarea{resize:vertical;line-height:1.6}
+.fld input:focus,.fld textarea:focus{border-color:var(--accent)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.set-row{margin:12px 0}
+.set-row .lab{font-size:13.5px;color:var(--muted);margin-bottom:6px;font-weight:500}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card2);font-size:14px;font-weight:500}
+.seg button.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.menu-item{display:flex;align-items:center;gap:12px;width:100%;padding:13px 4px;border-bottom:1px solid var(--line);font-size:15.5px;text-align:start}
+.menu-item:last-child{border-bottom:0}
+.menu-item.danger{color:var(--danger)}
+.step{display:flex;gap:10px;margin:10px 0;font-size:14.5px}
+.step>b{width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:13px;flex:none}
+.step .btn{margin-top:8px;width:100%}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:calc(var(--safe-b) + 24px);transform:translate(-50%,30px);background:#1f1b16;color:#fff;padding:10px 16px;border-radius:12px;font-size:14.5px;opacity:0;pointer-events:none;transition:.25s;z-index:60;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* run bar */
+.runbar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:0 12px calc(var(--safe-b) + 10px)}
+.runbar .in{max-width:696px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,.18);padding:12px 14px}
+.runbar .h{display:flex;align-items:center;gap:10px}
+.runbar .h b{flex:1;min-width:0;font-size:14.5px}
+.runbar .m{font-size:13px;color:var(--muted);margin:4px 0 8px}
+.bar{height:7px;border-radius:6px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:6px;transition:width .4s}
+.spin{width:18px;height:18px;border:2.5px solid var(--accent-soft);border-top-color:var(--accent);border-radius:50%;animation:sp 1s linear infinite;flex:none}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* results */
+.chips{display:flex;gap:6px;margin:4px 0 10px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:6px 12px;border-radius:20px;background:var(--card);border:1px solid var(--line);font-size:13.5px;white-space:nowrap;font-weight:500;flex:none}
+.chip.on{background:var(--text);color:var(--bg);border-color:transparent}
+.search{width:100%;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--card);margin-bottom:10px;outline:none}
+.it{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:8px;position:relative;cursor:pointer}
+.it .tx{white-space:pre-line;font-family:"Noto Naskh Arabic","IBM Plex Sans Arabic",serif;font-size:17px;line-height:1.85}
+.it .ft{display:flex;align-items:center;gap:6px;margin-top:6px;flex-wrap:wrap}
+.pg{font-size:12px;color:var(--muted);background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:0 7px}
+.ntag{font-size:12px;border:1px solid;border-radius:8px;padding:0 7px;font-weight:600}
+.star{position:absolute;top:8px;left:10px;font-size:15px}
+.sec-title{font-size:12px;color:var(--muted)}
+.grp-h{display:flex;align-items:center;gap:8px;margin:18px 2px 8px;font-weight:700;font-size:16px}
+.grp-h i{flex:1;height:1px;background:var(--line)}
+.overall{background:var(--accent-soft);border:1px solid transparent;border-radius:14px;padding:14px;margin-bottom:12px;white-space:pre-line;font-family:"Noto Naskh Arabic",serif;font-size:16.5px;line-height:1.9}
+.overall h4{margin:0 0 6px;font-family:"IBM Plex Sans Arabic",sans-serif;font-size:15px;color:var(--accent)}
+.sum h4{margin:0 0 4px;font-size:16px;color:var(--accent)}
+.tree-n{display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px dashed var(--line);cursor:pointer}
+.tree-n .dot{width:9px;height:9px;border-radius:50%;margin-top:10px;flex:none}
+.tree-n .t{flex:1;font-size:15.5px}
+.tree-n.l1 .t{font-weight:700;font-size:17px}
+.tree-n.l2 .t{font-weight:600}
+.qa .q{font-weight:700;font-size:16px}
+.qa .a{margin-top:8px;padding-top:8px;border-top:1px dashed var(--line);font-family:"Noto Naskh Arabic",serif;font-size:16.5px;white-space:pre-line}
+.qa.closed .a{display:none}
+.qa .rv{font-size:12.5px;color:var(--accent);margin-top:6px}
+.qa:not(.closed) .rv{display:none}
+.flash{min-height:260px;display:flex;flex-direction:column;justify-content:center;text-align:center;padding:24px 18px}
+.flash .q{font-size:19px;font-weight:700}
+.flash .a{margin-top:16px;font-family:"Noto Naskh Arabic",serif;font-size:18px;white-space:pre-line;color:var(--accent)}
+.chat .msg{border-radius:14px;padding:10px 14px;margin-bottom:10px;font-size:15.5px;white-space:pre-line}
+.chat .me{background:var(--accent);color:var(--accent-ink);margin-inline-start:40px}
+.chat .ai{background:var(--card);border:1px solid var(--line);margin-inline-end:20px;font-family:"Noto Naskh Arabic",serif;font-size:16.5px;line-height:1.9}
+.askbox{position:sticky;bottom:calc(var(--safe-b) + 8px);display:flex;gap:8px;background:var(--bg);padding:8px 0}
+.askbox textarea{flex:1;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:var(--card);resize:none;outline:none;min-height:46px;max-height:140px}
+.empty{text-align:center;padding:26px 12px;color:var(--muted)}
+.steps{text-align:start;margin:12px 0 0;padding:0;list-style:none;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:10px;margin-bottom:9px;font-size:14.5px;color:var(--text)}
+.steps li::before{content:counter(s);width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:12.5px;font-weight:700;flex:none}
+.chk{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:15px}
+.chk input{width:20px;height:20px;accent-color:var(--accent)}
+.chk small{color:var(--muted);margin-inline-start:auto}
+.thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin-top:10px}
+.thumbs img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+
+/* ===== print / PDF ===== */
+#print{display:none}
+@page{size:A4;margin:16mm 15mm 16mm 15mm}
+@media print{
+  html,body{background:#fff!important;color:#000}
+  body{padding:0!important}
+  body>*:not(#print){display:none!important}
+  #print{display:block!important}
+}
+.doc{font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;color:#1a1a1a;font-size:13.5pt;line-height:1.9;direction:rtl}
+.doc .cover{min-height:255mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:3px double #8a3b12;padding:20mm 14mm;page-break-after:always;break-after:page}
+.doc .cover .bas{font-family:"Amiri",serif;font-size:17pt;color:#8a3b12;margin-bottom:18mm}
+.doc .cover h1{font-family:"Amiri",serif;font-size:30pt;margin:0 0 6mm;color:#5a2408;line-height:1.5}
+.doc .cover .au{font-size:15pt;margin-bottom:10mm}
+.doc .cover .what{font-size:13pt;color:#444;max-width:140mm}
+.doc .cover .by{margin-top:22mm;font-size:15pt}
+.doc .cover .by b{color:#8a3b12}
+.doc .cover .dt{margin-top:6mm;font-size:11.5pt;color:#555}
+.doc .cover .note{margin-top:16mm;font-size:10pt;color:#777;max-width:140mm;border-top:1px solid #ddd;padding-top:4mm}
+.doc .toc{page-break-after:always;break-after:page}
+.doc .toc h2,.doc h2{font-family:"Amiri",serif;font-size:21pt;color:#5a2408;border-bottom:2px solid #8a3b12;padding-bottom:2mm;margin:0 0 6mm}
+.doc .toc ol{font-size:14pt;line-height:2.2}
+.doc .part{page-break-before:always;break-before:page}
+.doc .part.first{page-break-before:auto;break-before:auto}
+.doc h3{font-size:15pt;margin:7mm 0 3mm;padding:1.5mm 4mm;border-inline-start:5px solid #8a3b12;background:#f7efe7;break-after:avoid;page-break-after:avoid}
+.doc .ov{background:#f7efe7;border:1px solid #e3cdb8;border-radius:3mm;padding:4mm 6mm;margin-bottom:6mm;white-space:pre-line}
+.doc .itm{margin:0 0 3mm;break-inside:avoid;page-break-inside:avoid;white-space:pre-line}
+.doc .itm .n{font-weight:700;color:#8a3b12;margin-inline-end:2mm}
+.doc .ref{font-size:10pt;color:#777;white-space:nowrap;font-family:"IBM Plex Sans Arabic",sans-serif}
+.doc .tg{font-size:10pt;font-weight:700;border:1px solid;border-radius:2mm;padding:0 2mm;margin-inline-end:2mm;font-family:"IBM Plex Sans Arabic",sans-serif}
+.doc .sumb{margin-bottom:5mm;break-inside:avoid-page}
+.doc .sumb h4{margin:0 0 1mm;font-size:14pt;color:#5a2408}
+.doc .sumb div{white-space:pre-line}
+.doc .tr{margin:0;padding:.6mm 0;break-inside:avoid}
+.doc .tr.l1{font-weight:700;font-size:14.5pt;color:#5a2408;margin-top:3mm}
+.doc .tr.l2{font-weight:700}
+.doc .qq{font-weight:700}
+.doc .qa{margin-bottom:4mm;break-inside:avoid;page-break-inside:avoid}
+.doc .qa .an{white-space:pre-line;padding-inline-start:6mm}
+.doc .end{text-align:center;margin-top:12mm;font-family:"Amiri",serif;font-size:15pt;color:#5a2408}
+</style>
+</head>
+<body>
+<div id="app" class="wrap"></div>
+<div id="runbar" class="runbar hidden"></div>
+<div id="sheetBg" class="sheet-bg hidden" data-act="sheetNo"></div>
+<div id="sheet" class="sheet hidden"></div>
+<div id="toast" class="toast"></div>
+<div id="print"></div>
+<input type="file" id="fPdf" accept="application/pdf,.pdf" hidden>
+<input type="file" id="fDoc" accept=".docx,.txt,.md,.text,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/plain" hidden>
+<input type="file" id="fImg" accept="image/*" multiple hidden>
+<input type="file" id="fBak" accept="application/json,.json" hidden>
+<script>
+'use strict';
+/* ================= أدوات عامة ================= */
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+const toInt = v => { if (v == null || v === '') return null; const n = parseInt(String(v).replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[^\d]/g, ''), 10); return isNaN(n) ? null : n; };
+const sleep = (ms, signal) => new Promise((res, rej) => {
+  if (signal && signal.aborted) { rej(new AiError('أُلغي.', 'abort')); return; }
+  const t = setTimeout(res, ms);
+  if (signal) signal.addEventListener('abort', () => { clearTimeout(t); rej(new AiError('أُلغي.', 'abort')); }, { once: true });
+});
+class AiError extends Error { constructor(msg, code) { super(msg); this.code = code; } }
+let toastT = null;
+function toast(m, ms) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), ms || 2600); }
+function copyText(t, msg) {
+  const ok = () => toast(msg || 'نُسخ ✓');
+  const fb = () => { const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.focus(); ta.select(); try { document.execCommand('copy'); ok(); } catch (e) { toast('تعذّر النسخ'); } ta.remove(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(ok, fb); else fb();
+}
+const stripTashkeel = s => String(s || '').replace(/[ً-ٰٟۖ-ۭـ]/g, '');
+const normAr = s => stripTashkeel(s).replace(/[إأآٱ]/g, 'ا').replace(/ى/g, 'ي').replace(/ة/g, 'ه').replace(/\s+/g, ' ').trim();
+
+/* ================= التخزين ================= */
+const DB = {
+  p: null,
+  open() {
+    return this.p || (this.p = new Promise((res, rej) => {
+      const r = indexedDB.open('mustakhrij_fawaid', 1);
+      r.onupgradeneeded = () => { const d = r.result; d.createObjectStore('books', { keyPath: 'id' }); d.createObjectStore('blobs'); };
+      r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error);
+    }));
+  },
+  async tx(store, mode, fn) {
+    const d = await this.open();
+    return new Promise((res, rej) => {
+      const t = d.transaction(store, mode), s = t.objectStore(store); let out;
+      const q = fn(s); if (q) q.onsuccess = () => { out = q.result; };
+      t.oncomplete = () => res(out); t.onerror = () => rej(t.error); t.onabort = () => rej(t.error);
+    });
+  },
+  all() { return this.tx('books', 'readonly', s => s.getAll()); },
+  put(b) { return this.tx('books', 'readwrite', s => s.put(b)); },
+  del(id) { return this.tx('books', 'readwrite', s => s.delete(id)); },
+  putBlob(k, v) { return this.tx('blobs', 'readwrite', s => s.put(v, k)); },
+  getBlob(k) { return this.tx('blobs', 'readonly', s => s.get(k)); },
+  delPrefix(p) { return this.tx('blobs', 'readwrite', s => s.delete(IDBKeyRange.bound(p, p + '￿'))); }
+};
+const SKEY = 'mustakhrij_settings_v1';
+let ST = { key: '', model: 'gemini-flash-latest', author: 'علي بشير باوه', theme: 'auto', density: 'mid', via: 'key', aiNote: true };
+try { Object.assign(ST, JSON.parse(localStorage.getItem(SKEY) || '{}')); } catch (e) {}
+if (!ST.key) { try { const m = JSON.parse(localStorage.getItem('maktabati_sawtiya_v1') || 'null'); if (m && m.settings && m.settings.aiKey) ST.key = m.settings.aiKey; } catch (e) {} }
+function saveST() { try { localStorage.setItem(SKEY, JSON.stringify(ST)); } catch (e) {} }
+let BOOKS = [];
+const B = id => BOOKS.find(b => b.id === id);
+async function save(b) { b.updated = Date.now(); try { await DB.put(b); } catch (e) { toast('تعذّر الحفظ في الهاتف: ' + (e && e.message || '')); } }
+
+/* ================= الخدمات والأنواع ================= */
+const TYPES = ['فائدة', 'قول', 'تعريف', 'تقسيم', 'قاعدة', 'دليل', 'مسألة', 'خلاف', 'تنبيه'];
+const TCOLOR = { 'فائدة': '#0f766e', 'قول': '#9d174d', 'تعريف': '#15803d', 'تقسيم': '#b45309', 'قاعدة': '#1d4ed8', 'دليل': '#7c3aed', 'مسألة': '#0e7490', 'خلاف': '#b91c1c', 'تنبيه': '#c2410c' };
+const TPLURAL = { 'فائدة': 'الفوائد', 'قول': 'الأقوال', 'تعريف': 'التعريفات', 'تقسيم': 'التقسيمات', 'قاعدة': 'القواعد والضوابط', 'دليل': 'الأدلة', 'مسألة': 'المسائل', 'خلاف': 'مسائل الخلاف', 'تنبيه': 'التنبيهات' };
+const TICON = { 'فائدة': '💡', 'قول': '💬', 'تعريف': '📘', 'تقسيم': '🗂', 'قاعدة': '📐', 'دليل': '📖', 'مسألة': '❓', 'خلاف': '⚖️', 'تنبيه': '⚠️' };
+const FMODES = {
+  all: { label: 'الكل مقسّمًا', types: null },
+  'قول': { label: 'الأقوال', types: ['قول'] },
+  'تعريف': { label: 'التعريفات', types: ['تعريف'] },
+  'تقسيم': { label: 'التقسيمات', types: ['تقسيم'] },
+  'فائدة': { label: 'الفوائد واللطائف', types: ['فائدة'] },
+  'قاعدة': { label: 'القواعد والمسائل والخلاف', types: ['قاعدة', 'مسألة', 'خلاف'] }
+};
+const SVC = {
+  fawaid: { icon: '💡', name: 'الفوائد مقسّمة', sub: 'أقوال، تعريفات، تقسيمات، قواعد، أدلة، مسائل، خلاف، تنبيهات', pp: 10 },
+  summary: { icon: '📝', name: 'التلخيص', sub: 'ملخص منظّم لكل باب، ثم خلاصة جامعة للكتاب', pp: 20 },
+  tree: { icon: '🌳', name: 'التشجير', sub: 'مشجّر المسائل: الباب ← الفصل ← المسألة ← الأقسام', pp: 20 },
+  qa: { icon: '❓', name: 'أسئلة المراجعة', sub: 'أسئلة وأجوبة من الكتاب، مع بطاقات للحفظ', pp: 15 },
+  nusus: { icon: '📖', name: 'الآيات والأحاديث والآثار', sub: 'فهرس النصوص الشرعية الواردة ومواضعها', pp: 15 },
+  alam: { icon: '👤', name: 'فهرس الأعلام', sub: 'الصحابة والأئمة والعلماء المذكورون ومواضعهم', pp: 20 },
+  gharib: { icon: '🔤', name: 'المصطلحات وغريب الألفاظ', sub: 'معجم الكلمات الصعبة ومعانيها', pp: 15 }
+};
+const SVC_ORDER = ['summary', 'fawaid', 'tree', 'qa', 'nusus', 'alam', 'gharib'];
+const DENS = { low: 'مختصر', mid: 'متوسط', max: 'موسّع' };
+const KIND = {
+  pdf: { icon: '📕', label: 'كتاب PDF', color: '#8a3b12' },
+  text: { icon: '📝', label: 'وورد / نص', color: '#1d4ed8' },
+  images: { icon: '✍️', label: 'صور دروس مكتوبة', color: '#0f766e' },
+  shamela: { icon: '📚', label: 'المكتبة الشاملة', color: '#6d28d9' },
+  url: { icon: '🔗', label: 'رابط', color: '#475569' }
+};
+const unitOf = b => b.kind === 'text' ? 'مقطع' : 'ص';
+const paged = b => b.kind !== 'url';
+const pRef = (b, p) => p ? `${unitOf(b)} ${p}` : '';
+
+/* ================= المكتبات الخارجية (تُحمَّل عند الحاجة) ================= */
+const LIBS = { pdflib: 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js', mammoth: 'https://cdn.jsdelivr.net/npm/mammoth@1.13.0/mammoth.browser.min.js' };
+const libP = {};
+function need(n) {
+  if (libP[n]) return libP[n];
+  return libP[n] = new Promise((res, rej) => {
+    const s = document.createElement('script'); s.src = LIBS[n]; s.onload = res;
+    s.onerror = () => { libP[n] = null; rej(new AiError('تعذّر تحميل أداة قراءة الملف. تحقّق من الإنترنت.', 'net')); };
+    document.head.appendChild(s);
+  });
+}
+function b64(u8) { return new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1]); fr.onerror = () => rej(fr.error); fr.readAsDataURL(new Blob([u8])); }); }
+
+/* ================= Gemini ================= */
+const MODELS = () => [ST.model, 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite'].filter((v, i, a) => v && a.indexOf(v) === i);
+async function gemini(model, parts, o) {
+  const key = (ST.key || '').trim();
+  if (!key) throw new AiError('أضف مفتاح Gemini أولًا من الإعدادات ⚙️، أو استعمل طريقة «تطبيق Gemini».', 'nokey');
+  const body = { contents: [{ role: 'user', parts }], generationConfig: { temperature: 0.3, maxOutputTokens: o.maxTokens || 32768 } };
+  if (o.json && !o.tools) body.generationConfig.responseMimeType = 'application/json';
+  if (o.tools) body.tools = [{ url_context: {} }];
+  let r, j = null;
+  try {
+    r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal: o.signal });
+  } catch (e) {
+    if (o.signal && o.signal.aborted) throw new AiError('أُلغي.', 'abort');
+    throw new AiError('تعذّر الاتصال بخدمة Gemini. تحقّق من الإنترنت.', 'net');
+  }
+  try { j = await r.json(); } catch (e) {}
+  const msg = (j && j.error && j.error.message) || '';
+  if (r.status === 404) throw new AiError('النموذج غير متاح: ' + model, 'model');
+  if (!r.ok) {
+    if (/api key/i.test(msg) || r.status === 401) throw new AiError('مفتاح Gemini غير صالح. راجعه في الإعدادات ⚙️.', 'key');
+    if (r.status === 403) throw new AiError('المفتاح مرفوض أو غير مفعّل. راجعه في الإعدادات ⚙️.', 'key');
+    if (r.status === 429) throw new AiError('بلغتَ الحدّ المجاني المؤقت.', 'quota');
+    if (r.status === 413 || /too large|exceeds|payload size|request size/i.test(msg)) throw new AiError('الجزء كبير جدًا.', 'toolarge');
+    if (r.status >= 500) { const e = new AiError('خدمة Gemini مشغولة الآن.', 'busy'); e.detail = msg; throw e; }
+    if (o.tools && /url|tool/i.test(msg)) throw new AiError('هذا النموذج لا يفتح الروابط: ' + model, 'model');
+    throw new AiError('تعذّرت المعالجة' + (msg ? ': ' + msg.slice(0, 200) : '.'), 'bad');
+  }
+  const cand = j && j.candidates && j.candidates[0];
+  if (!cand) {
+    if (j && j.promptFeedback && j.promptFeedback.blockReason) throw new AiError('رفض Gemini معالجة هذا المحتوى (' + j.promptFeedback.blockReason + ').', 'blocked');
+    throw new AiError('لم يُرجِع Gemini نتيجة.', 'empty');
+  }
+  const txt = ((cand.content && cand.content.parts) || []).filter(p => !p.thought).map(p => p.text || '').join('');
+  if (o.tools) {
+    const um = cand.urlContextMetadata || cand.url_context_metadata;
+    const list = um && (um.urlMetadata || um.url_metadata);
+    if (list && list.length && list.every(u => !/SUCCESS/.test(u.urlRetrievalStatus || u.url_retrieval_status || ''))) throw new AiError('لم يستطع Gemini فتح الرابط. تأكد أنه رابط عام يفتح دون تسجيل دخول، أو استعمل طريقة «تطبيق Gemini».', 'url');
+  }
+  if (!txt.trim()) {
+    if (cand.finishReason === 'RECITATION') throw new AiError('توقّف Gemini لأن النص منقول حرفيًا.', 'recitation');
+    if (cand.finishReason === 'SAFETY') throw new AiError('رفض Gemini معالجة هذا الجزء.', 'blocked');
+    throw new AiError('لم يُرجِع Gemini نتيجة' + (cand.finishReason ? ' (' + cand.finishReason + ')' : '') + '.', 'empty');
+  }
+  return { txt, finish: cand.finishReason };
+}
+// إعادة المحاولة عند الانشغال، والانتقال بين النماذج
+async function aiTry(build, say, signal) {
+  const models = MODELS(); let last = null, soft = false, sawBusy = false, sawQuota = false;
+  for (let mi = 0; mi < models.length; mi++) {
+    for (let at = 0; at < 3; at++) {
+      if (at) {
+        const q = last && last.code === 'quota';
+        say(q ? 'بلغ الحدّ المؤقت، أنتظر قليلًا ثم أكمل…' : 'Gemini مشغول، أعيد المحاولة…');
+        await sleep(q ? 45000 : (at === 1 ? 4000 : 10000), signal);
+      }
+      try { return await build(models[mi], soft); }
+      catch (e) {
+        last = e;
+        if (e.code === 'abort') throw e;
+        if (e.code === 'busy') { sawBusy = true; continue; }
+        if (e.code === 'empty' || e.code === 'parse' || e.code === 'net') continue;
+        if (e.code === 'recitation') { if (!soft) { soft = true; continue; } throw e; }
+        if (e.code === 'quota') { sawQuota = true; if (at < 1) continue; break; }
+        if (e.code === 'model') break;
+        throw e;
+      }
+    }
+    if (mi + 1 < models.length) say('أجرّب نموذجًا آخر من Gemini…');
+  }
+  if (sawQuota) throw new AiError('بلغتَ الحدّ المجاني المؤقت. انتظر قليلًا ثم اضغط «استكمال»، أو استعمل طريقة «تطبيق Gemini».', 'quota');
+  if (sawBusy) throw new AiError('خدمة Gemini مشغولة الآن رغم إعادة المحاولة. اضغط «استكمال» بعد قليل، أو استعمل طريقة «تطبيق Gemini».', 'busy');
+  throw last || new AiError('تعذّر الاستخراج.', 'x');
+}
+function looseJSON(t) {
+  t = String(t || '').trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```\s*$/, '');
+  try { return JSON.parse(t); } catch (e) {}
+  const s = t.indexOf('{'), e = t.lastIndexOf('}');
+  if (s >= 0 && e > s) { try { return JSON.parse(t.slice(s, e + 1)); } catch (er) {} }
+  const a = t.indexOf('['), z = t.lastIndexOf(']');
+  if (a >= 0 && z > a && (s < 0 || a < s)) { try { return { items: JSON.parse(t.slice(a, z + 1)) }; } catch (er) {} }
+  // رد مقطوع: نحتفظ بما اكتمل من العناصر
+  if (s >= 0) {
+    const body = t.slice(s); let k = body.length, n = 0;
+    while ((k = body.lastIndexOf('}', k - 1)) > 0 && n++ < 60) {
+      for (const tail of [']}', ']}}']) { try { return JSON.parse(body.slice(0, k + 1) + tail); } catch (er) {} }
+    }
+  }
+  return null;
+}
+
+/* ================= تجهيز أجزاء المصدر ================= */
+let PDFC = null; // { id, doc }
+async function pdfDoc(b) {
+  await need('pdflib');
+  if (!PDFC || PDFC.id !== b.id) {
+    const buf = await DB.getBlob(b.id + ':file');
+    if (!buf) throw new AiError('لم أجد ملف الكتاب في الهاتف. احذفه وأضفه من جديد.', 'nofile');
+    PDFC = { id: b.id, doc: await PDFLib.PDFDocument.load(buf, { ignoreEncryption: true, updateMetadata: false }) };
+  }
+  return PDFC.doc;
+}
+async function pdfChunk(b, a, z) {
+  const src = await pdfDoc(b);
+  const out = await PDFLib.PDFDocument.create();
+  const idx = []; for (let i = a; i <= z; i++) idx.push(i - 1);
+  (await out.copyPages(src, idx)).forEach(p => out.addPage(p));
+  const bytes = await out.save({ useObjectStreams: true });
+  if (bytes.length > 15e6) throw new AiError('الجزء كبير جدًا.', 'toolarge');
+  return b64(bytes);
+}
+function splitPages(text, size) {
+  size = size || 1500;
+  text = String(text || '').replace(/\r/g, '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  const out = []; let i = 0;
+  while (i < text.length) {
+    let j = Math.min(text.length, i + size);
+    if (j < text.length) { const k = text.lastIndexOf('\n', j); if (k > i + size * 0.6) j = k; else { const k2 = text.lastIndexOf(' ', j); if (k2 > i + size * 0.6) j = k2; } }
+    const s = text.slice(i, j).trim(); if (s) out.push(s); i = j;
+  }
+  return out;
+}
+let TXC = null;
+async function textPages(b) { if (TXC && TXC.id === b.id) return TXC.p; const t = await DB.getBlob(b.id + ':text'); TXC = { id: b.id, p: splitPages(t || '') }; return TXC.p; }
+const shamelaUrl = (b, p) => `https://shamela.ws/book/${b.shamelaId}/${p}`;
+// يُرجع ما يُرسَل إلى Gemini لصفحات من a إلى z
+async function payload(b, a, z) {
+  if (b.kind === 'pdf') {
+    if (b.noSplit) {
+      const buf = await DB.getBlob(b.id + ':file');
+      return { parts: [{ inlineData: { mimeType: 'application/pdf', data: await b64(new Uint8Array(buf)) } }], desc: `المرفق ملف PDF للكتاب كاملًا. اعمل على الصفحات من ${a} إلى ${z} فقط بحسب ترتيب صفحات الملف، واكتب في "p" رقم الصفحة بحسب ترتيب الملف.` };
+    }
+    return { parts: [{ inlineData: { mimeType: 'application/pdf', data: await pdfChunk(b, a, z) } }], desc: `المرفق ملف PDF فيه الصفحات من ${a} إلى ${z} من الكتاب: الصفحة الأولى في المرفق هي الصفحة ${a}، والتي تليها ${a + 1}، وهكذا. اكتب في "p" رقم الصفحة بهذا الترقيم.` };
+  }
+  if (b.kind === 'images') {
+    const parts = [];
+    for (let i = a; i <= z; i++) { const u8 = await DB.getBlob(b.id + ':img:' + i); if (u8) parts.push({ inlineData: { mimeType: 'image/jpeg', data: await b64(u8) } }); }
+    return { parts, desc: `المرفق ${parts.length} صور لصفحات درس مكتوب (قد تكون بخط اليد)، وهي الصفحات من ${a} إلى ${z} بالترتيب: الصورة الأولى هي الصفحة ${a}. اقرأ الخط بعناية، وإن لم تتبيّن كلمة فلا تخمّنها. اكتب في "p" رقم الصفحة.` };
+  }
+  if (b.kind === 'text') {
+    const pg = await textPages(b);
+    const txt = pg.slice(a - 1, z).map((t, i) => `[${a + i}]\n${t}`).join('\n\n');
+    return { parts: [], desc: `فيما يلي نص من الكتاب مقسّم إلى مقاطع، وقبل كل مقطع رقمه بين معقوفين مثل [${a}]. اكتب في "p" رقم المقطع الذي ورد فيه العنصر.\n\n<<<بداية النص\n${txt}\nنهاية النص>>>` };
+  }
+  if (b.kind === 'shamela') {
+    const urls = []; for (let i = a; i <= z; i++) urls.push(shamelaUrl(b, i));
+    return { parts: [], tools: true, desc: `صفحات الكتاب منشورة في المكتبة الشاملة. افتح الروابط التالية كلها واقرأها، وكل رابط صفحة واحدة، ورقمها هو الرقم الذي في آخر الرابط:\n${urls.join('\n')}\nاكتب في "p" رقم الصفحة (الرقم الذي في آخر رابطها).` };
+  }
+  return { parts: [], tools: true, desc: `افتح هذا الرابط واقرأ محتواه كاملًا بعناية:\n${b.url}\nإن كان فيه ترقيم صفحات فاكتب في "p" رقم الصفحة، وإلا فاكتب 0.` };
+}
+
+/* ================= التعليمات لكل خدمة ================= */
+function svcPrompt(b, svc, run, desc, soft, app) {
+  const head = `أنت مساعد علمي دقيق لطالب علم شرعي وباحث.\nالكتاب: «${b.title}»${b.author ? ' — ' + b.author : ''}.\n${desc}\n\n`;
+  let task = '', schema = '';
+  if (svc === 'fawaid') {
+    const M = FMODES[run.mode] || FMODES.all;
+    const dens = { low: 'استخرج أنفع العناصر فقط، نحو عنصر واحد لكل صفحتين.', mid: 'استخرج نحو عنصرين لكل صفحة من الكلام العلمي.', max: 'استخرج كل ما فيه فائدة علمية دون تكرار ولا حشو.' }[run.density || 'mid'];
+    task = `المطلوب: ${M.types ? `استخرج ${M.types.map(t => TPLURAL[t]).join(' و')} فقط، كلَّ ما ورد منها دون استثناء، ولا تستخرج غيرها.` : dens + ' واحرص خاصةً على ألا يفوتك قول ولا تعريف ولا تقسيم.'}
+
+أنواع العناصر وطريقة كتابة كلٍّ منها:
+- فائدة: معلومة علمية مستقلة أو لطيفة، في جملة أو جملتين.
+- قول: قول نقله المؤلف عن عالم أو صحابي أو إمام. اكتبه هكذا: «قال فلان: ...» بلفظه كما في الكتاب. لا تنسب قولًا إلى أحد لم ينسبه المؤلف إليه، وإن لم يسمِّ القائل فاكتب «قال بعض العلماء: ...». وإن كان القول للمؤلف نفسه فاكتب «قال المؤلف: ...».
+- تعريف: تعريف مصطلح، هكذا: «تعريف كذا: لغةً ... واصطلاحًا ...» (أو ما ذكره المؤلف منهما فقط).
+- تقسيم: أقسام أو أنواع أو أركان أو شروط أو مراتب معدودة، هكذا: «ينقسم كذا إلى كذا قسمًا:» ثم كل قسم في سطر مستقل مرقّم (١- ... ٢- ...) مع شرحه المختصر إن ذكره المؤلف.
+- قاعدة: قاعدة أو ضابط.
+- دليل: آية أو حديث استدل به المؤلف مع وجه الدلالة.
+- مسألة: حكم أو مسألة فقهية أو عقدية.
+- خلاف: خلاف بين العلماء مع الأقوال ومن قال بها كما ذكره المؤلف.
+- تنبيه: تنبيه أو خطأ شائع نبّه عليه المؤلف.
+صنّف كل عنصر بنوع واحد من: ${TYPES.join('، ')}.
+واكتب في "sec" عنوان الباب أو الفصل الذي ورد فيه العنصر إن ظهر في الصفحات، وإلا فاتركه فارغًا.`;
+    schema = '{"items":[{"p":12,"type":"قول","sec":"باب كذا","text":"..."}]}';
+  } else if (svc === 'summary') {
+    task = `المطلوب: لخّص هذه الصفحات تلخيصًا علميًا وافيًا، مرتبًا بحسب أبوابها وموضوعاتها: لكل باب أو موضوع عنوان قصير، ثم تلخيصه في فقرة أو في نقاط (كل نقطة في سطر يبدأ بـ «- »). احفظ الأقسام والتعاريف والأقوال المهمة والراجح عند المؤلف، واحذف الاستطراد والتكرار.${app ? '\nثم اكتب في "overall" خلاصة جامعة لما قرأته في 8 إلى 15 نقطة: مقصوده، ومنهجه، وأهم مسائله.' : ''}`;
+    schema = app ? '{"overall":"- ...\\n- ...","items":[{"p":12,"title":"...","text":"..."}]}' : '{"items":[{"p":12,"title":"...","text":"..."}]}';
+  } else if (svc === 'tree') {
+    task = `المطلوب: شجّر مسائل هذه الصفحات تشجيرًا هرميًا كما يفعل طلاب العلم: الباب، ثم الفصل، ثم المسألة، ثم الأقسام والأقوال والأدلة والشروط. كل عقدة عبارة قصيرة (لا تزيد على 15 كلمة)، و"lvl" مستواها من 1 (الأعلى) إلى 5. حافظ على ترتيب المؤلف.`;
+    schema = '{"items":[{"lvl":1,"text":"...","p":12}]}';
+  } else if (svc === 'qa') {
+    task = `المطلوب: ضع أسئلة مراجعة تغطي أهم مسائل هذه الصفحات، نحو سؤال واحد لكل صفحة من الكلام العلمي، وأجب عن كل سؤال جوابًا مختصرًا دقيقًا من الكتاب نفسه. نوّع الأسئلة: تعريف، وتعداد أقسام أو شروط، وحكم، ودليل، وقول عالم، ومقارنة، وعلّة.`;
+    schema = '{"items":[{"q":"...","a":"...","p":12}]}';
+  } else if (svc === 'nusus') {
+    task = `المطلوب: استخرج كل آية، وكل حديث نبوي، وكل أثر عن صحابي أو تابعي، ورد في هذه الصفحات.
+- "kind": آية أو حديث أو أثر.
+- "text": النص كما ورد في الكتاب.
+- "ref": للآية: اسم السورة ورقم الآية، إن كنت متأكدًا منهما تمامًا، وإلا فاتركه فارغًا. للحديث والأثر: من رواه وحكمه كما ذكرهما المؤلف فقط، فإن لم يذكر شيئًا فاتركه فارغًا ولا تخرّجه من عندك.`;
+    schema = '{"items":[{"kind":"حديث","text":"...","ref":"...","p":12}]}';
+  } else if (svc === 'alam') {
+    task = `المطلوب: استخرج الأعلام المذكورين في هذه الصفحات: الصحابة، والأئمة، والعلماء، والرواة، والمؤلفين. اكتب في "name" الاسم كما ورد، وفي "note" ما ذكره المؤلف عنه في جملة قصيرة (وفاته، أو صفته، أو قوله…) إن ذكر شيئًا، وإلا فاتركه فارغًا. لا تكرر العلم في الصفحة الواحدة.`;
+    schema = '{"items":[{"name":"...","note":"...","p":12}]}';
+  } else if (svc === 'gharib') {
+    task = `المطلوب: استخرج المصطلحات العلمية والكلمات الغريبة التي يحتاج طالب العلم المبتدئ إلى معرفة معناها، مع ضبطها بالشكل إن احتاجت. اكتب في "meaning" معناها كما بيّنه المؤلف واجعل "src":"المؤلف". فإن لم يبيّنه المؤلف فبيّن معناها بإيجاز من معرفتك الموثوقة باللغة واجعل "src":"إيضاح".`;
+    schema = '{"items":[{"term":"...","meaning":"...","src":"المؤلف","p":12}]}';
+  }
+  const rules = `
+
+الشروط:
+1. اعتمد على هذا المصدر وحده، ولا تضف معلومات من خارجه${svc === 'gharib' ? ' إلا ما أُذن لك فيه في معاني الألفاظ' : ''}.
+2. لا تخترع أسماء كتب ولا أرقام صفحات ولا تخريجًا ولا حكمًا على حديث لم يرد في النص.
+3. انقل الآيات والأحاديث كما وردت في النص.
+4. رتّب العناصر بحسب ورودها.
+5. إن كانت هذه الصفحات غلافًا أو فهرسًا أو مقدمة نشر لا علم فيها، فأرجع "items" فارغة.${soft ? '\n6. اكتب بأسلوبك مختصرًا، ولا تنقل فقرات طويلة حرفيًا.' : ''}
+أعد JSON صحيحًا فقط، دون أي كلام قبله أو بعده، بهذا الشكل:
+${schema}`;
+  return head + task + rules;
+}
+function normItems(b, svc, j, a, z) {
+  const arr = Array.isArray(j) ? j : (j && (j.items || j.fawaid || j.results)) || [];
+  const fixP = v => {
+    let p = toInt(v); if (!p) return null; if (!paged(b)) return p;
+    if (p < a || p > z) { if (a > 1 && p >= 1 && p <= z - a + 1) p = a + p - 1; else if (p < a - 2 || p > z + 2) p = null; }
+    return p;
+  };
+  const s = v => String(v ?? '').trim();
+  return arr.map(x => {
+    if (!x || typeof x !== 'object') return null;
+    const p = fixP(x.p ?? x.page);
+    if (svc === 'fawaid') { const t = s(x.text); return t ? { id: uid(), p, type: TYPES.includes(s(x.type)) ? s(x.type) : 'فائدة', sec: s(x.sec), text: t } : null; }
+    if (svc === 'summary') { const t = s(x.text); return t ? { id: uid(), p, title: s(x.title), text: t } : null; }
+    if (svc === 'tree') { const t = s(x.text); return t ? { id: uid(), p, lvl: Math.min(5, Math.max(1, toInt(x.lvl) || 1)), text: t } : null; }
+    if (svc === 'qa') { const q = s(x.q); return q ? { id: uid(), p, q, a: s(x.a) } : null; }
+    if (svc === 'nusus') { const t = s(x.text); const k = s(x.kind); return t ? { id: uid(), p, kind: ['آية', 'حديث', 'أثر'].includes(k) ? k : (/آية/.test(k) ? 'آية' : /أثر/.test(k) ? 'أثر' : 'حديث'), text: t, ref: s(x.ref) } : null; }
+    if (svc === 'alam') { const n = s(x.name); return n ? { id: uid(), p, name: n, note: s(x.note) } : null; }
+    if (svc === 'gharib') { const t = s(x.term); return t ? { id: uid(), p, term: t, meaning: s(x.meaning), src: s(x.src) === 'المؤلف' ? 'المؤلف' : 'إيضاح' } : null; }
+    return null;
+  }).filter(Boolean);
+}
+
+/* ================= تشغيل الخدمات ================= */
+let RUN = null;
+function makeParts(b, svc, a, z, density) {
+  if (!paged(b)) return [{ a: 1, b: 1, done: false }];
+  let pp = SVC[svc].pp;
+  if (svc === 'fawaid' && density === 'max') pp = 7;
+  if (b.kind === 'images') pp = Math.min(pp, 6);
+  if (b.kind === 'shamela') pp = 15;
+  const parts = []; for (let i = a; i <= z; i += pp) parts.push({ a: i, b: Math.min(z, i + pp - 1), done: false });
+  return parts;
+}
+const inRange = (p, a, z) => p == null ? false : p >= a && p <= z;
+function clearRange(b, svc, a, z, types) {
+  const all = !paged(b);
+  b.res[svc] = (b.res[svc] || []).filter(x => !((all || inRange(x.p, a, z) || (x.p == null && a <= 1)) && (!types || types.includes(x.type))));
+}
+let WL = null;
+async function wake(on) { try { if (on && 'wakeLock' in navigator) WL = await navigator.wakeLock.request('screen'); else if (!on && WL) { await WL.release(); WL = null; } } catch (e) {} }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && RUN) wake(true); });
+
+async function startRun(b, svc, o) {
+  if (RUN) { toast('انتظر حتى تنتهي العملية الجارية'); return; }
+  let run = b.runs[svc];
+  if (!o.resume || !run) {
+    run = { status: 'running', a: o.a, z: o.z, mode: o.mode || 'all', density: o.density || 'mid', parts: makeParts(b, svc, o.a, o.z, o.density), started: Date.now() };
+    clearRange(b, svc, o.a, o.z, svc === 'fawaid' ? (FMODES[run.mode] || FMODES.all).types : null);
+    if (svc === 'summary') b.overall = '';
+    b.runs[svc] = run;
+  }
+  run.status = 'running'; run.err = '';
+  const ctrl = new AbortController();
+  RUN = { id: b.id, svc, ctrl, msg: 'يبدأ…', done: run.parts.filter(p => p.done).length, n: run.parts.length };
+  paintRun(); await save(b); wake(true); render(); paintRun();
+  try {
+    for (let i = 0; i < run.parts.length; i++) {
+      const p = run.parts[i]; if (p.done) continue;
+      const label = run.parts.length > 1 ? `الجزء ${i + 1} من ${run.parts.length}${paged(b) ? ` (${unitOf(b)} ${p.a}–${p.b})` : ''}: ` : '';
+      const say = m => { RUN.msg = label + m; paintRun(); };
+      say(b.kind === 'pdf' ? 'يجهّز الصفحات…' : 'يقرأ…');
+      let items;
+      try {
+        const pl = await payload(b, p.a, p.b);
+        say(pl.tools ? 'يفتح الروابط ويقرأ…' : 'يقرأ ويستخرج…');
+        items = await aiTry(async (model, soft) => {
+          const { txt } = await gemini(model, [...pl.parts, { text: svcPrompt(b, svc, run, pl.desc, soft) }], { tools: pl.tools, json: true, signal: ctrl.signal });
+          const j = looseJSON(txt); if (!j) throw new AiError('وصلت نتيجة غير مفهومة.', 'parse');
+          return normItems(b, svc, j, p.a, p.b);
+        }, say, ctrl.signal);
+      } catch (e) {
+        if (e.code === 'toolarge' && p.b > p.a) { const mid = Math.floor((p.a + p.b) / 2); run.parts.splice(i, 1, { a: p.a, b: mid, done: false }, { a: mid + 1, b: p.b, done: false }); RUN.n = run.parts.length; i--; continue; }
+        throw e;
+      }
+      if (paged(b)) items.forEach(x => { if (x.p == null) x.p = p.a; });
+      b.res[svc] = (b.res[svc] || []).concat(items);
+      p.done = true; RUN.done = run.parts.filter(x => x.done).length;
+      await save(b); paintRun(); if (view.name !== 'home') render();
+      if (i + 1 < run.parts.length) await sleep(1200, ctrl.signal);
+    }
+    if (svc === 'summary' && (b.res.summary || []).length) {
+      RUN.msg = 'يكتب الخلاصة الجامعة للكتاب…'; paintRun();
+      try { await makeOverall(b, ctrl.signal, m => { RUN.msg = m; paintRun(); }); } catch (e) { if (e.code === 'abort') throw e; }
+    }
+    sortRes(b, svc);
+    run.status = 'done';
+    toast('اكتمل: ' + SVC[svc].name + ' ✓', 3500);
+  } catch (e) {
+    run.status = e.code === 'abort' ? 'paused' : 'error';
+    run.err = e.code === 'abort' ? '' : e.message;
+    if (e.code !== 'abort') toast(e.message, 5000);
+  } finally {
+    RUN = null; sortRes(b, svc); await save(b); wake(false); render(); paintRun();
+  }
+}
+function sortRes(b, svc) {
+  const arr = b.res[svc]; if (!arr || svc === 'tree') return;
+  arr.forEach((x, i) => x._o = i);
+  arr.sort((x, y) => ((x.p ?? 1e9) - (y.p ?? 1e9)) || (x._o - y._o));
+  arr.forEach(x => delete x._o);
+}
+async function makeOverall(b, signal, say) {
+  const src = (b.res.summary || []).map(x => `(${pRef(b, x.p)}) ${x.title}: ${x.text}`).join('\n').slice(0, 300000);
+  const prompt = `هذه ملخصات أجزاء كتاب «${b.title}»${b.author ? ' — ' + b.author : ''}، مرتبة بحسب ورودها:\n\n${src}\n\nاكتب خلاصة جامعة للكتاب في 8 إلى 15 نقطة مرتبة، كل نقطة في سطر يبدأ بـ «- »: مقصود الكتاب، ومنهجه، وأهم مسائله وما رجّحه المؤلف. اعتمد على هذه الملخصات وحدها.\nأعد JSON فقط بهذا الشكل: {"overall":"- ...\\n- ..."}`;
+  b.overall = await aiTry(async model => {
+    const { txt } = await gemini(model, [{ text: prompt }], { json: true, signal, maxTokens: 8192 });
+    const j = looseJSON(txt); if (!j || !j.overall) throw new AiError('', 'parse'); return String(j.overall).trim();
+  }, say || (() => {}), signal);
+}
+function paintRun() {
+  const el = $('#runbar');
+  if (!RUN) { el.classList.add('hidden'); return; }
+  const b = B(RUN.id); const pct = RUN.n ? Math.round(RUN.done / RUN.n * 100) : 0;
+  el.classList.remove('hidden');
+  el.innerHTML = `<div class="in"><div class="h"><div class="spin"></div><b class="ellip">${SVC[RUN.svc].icon} ${SVC[RUN.svc].name} — ${esc(b ? b.title : '')}</b><button class="btn sm" data-act="stopRun">إيقاف</button></div>
+    <div class="m">${esc(RUN.msg || '')}</div><div class="bar"><i style="width:${Math.max(3, pct)}%"></i></div>
+    <div class="hint" style="font-size:12px">أبقِ التطبيق مفتوحًا حتى ينتهي. وإن أُغلق فاضغط «استكمال» ليكمل من حيث توقّف.</div></div>`;
+}
+
+/* ================= إضافة المصادر ================= */
+async function addBook(o) {
+  const b = Object.assign({ id: uid(), title: 'بدون عنوان', author: '', kind: 'text', created: Date.now(), pages: 0, range: null, runs: {}, res: {}, overall: '', chat: [] }, o);
+  if (!b.range && b.pages) b.range = { a: 1, z: b.pages };
+  BOOKS.unshift(b); await save(b); return b;
+}
+const cleanName = n => String(n || '').replace(/\.[^.]+$/, '').replace(/[_]+/g, ' ').trim() || 'بدون عنوان';
+async function pdfFromBuffer(buf, name, extra) {
+  let pages = 0, noSplit = false;
+  try { await need('pdflib'); const d = await PDFLib.PDFDocument.load(buf, { ignoreEncryption: true, updateMetadata: false }); pages = d.getPageCount(); }
+  catch (e) { noSplit = true; }
+  if (noSplit && buf.byteLength > 18e6) { toast('تعذّر فتح هذا الملف، وهو أكبر من أن يُرسل كاملًا. جرّب ملفًا آخر.', 5000); return null; }
+  const b = await addBook(Object.assign({ kind: 'pdf', title: cleanName(name), pages, noSplit, size: buf.byteLength }, extra || {}));
+  await DB.putBlob(b.id + ':file', buf);
+  if (noSplit) toast('لم أستطع عدّ صفحات الملف، فأدخل عددها عند الاستخراج', 4500);
+  return b;
+}
+async function onPdf(f) {
+  if (!f) return; toast('يفتح الكتاب…', 1500);
+  try { const b = await pdfFromBuffer(await f.arrayBuffer(), f.name); if (b) go('book', b.id); }
+  catch (e) { toast(e.message || 'تعذّر فتح الملف'); }
+}
+async function onDoc(f) {
+  if (!f) return;
+  try {
+    let text = '';
+    if (/\.docx$/i.test(f.name) || /wordprocessingml/.test(f.type)) {
+      toast('يقرأ ملف الوورد…', 1500); await need('mammoth');
+      const r = await mammoth.extractRawText({ arrayBuffer: await f.arrayBuffer() }); text = r.value || '';
+    } else if (/\.doc$/i.test(f.name)) { toast('صيغة .doc القديمة لا تُقرأ. احفظ الملف في وورد بصيغة .docx أو PDF ثم أضفه.', 6000); return; }
+    else text = await f.text();
+    if (text.trim().length < 20) { toast('الملف فارغ أو لا يحتوي نصًا'); return; }
+    const b = await addBook({ kind: 'text', title: cleanName(f.name), pages: splitPages(text).length, chars: text.length });
+    await DB.putBlob(b.id + ':text', text); TXC = null; go('book', b.id);
+  } catch (e) { toast(e.message || 'تعذّر قراءة الملف'); }
+}
+async function toJpeg(file) {
+  const url = URL.createObjectURL(file);
+  try {
+    const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+    const M = 1800, s = Math.min(1, M / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas'); c.width = Math.round(img.naturalWidth * s); c.height = Math.round(img.naturalHeight * s);
+    const g = c.getContext('2d'); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.drawImage(img, 0, 0, c.width, c.height);
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.82));
+    return new Uint8Array(await blob.arrayBuffer());
+  } finally { URL.revokeObjectURL(url); }
+}
+let imgTarget = null;
+async function onImgs(files) {
+  files = [...(files || [])]; if (!files.length) return;
+  files.sort((x, y) => (x.lastModified - y.lastModified) || x.name.localeCompare(y.name));
+  toast('يجهّز الصور…', 2000);
+  try {
+    let b = imgTarget && B(imgTarget);
+    if (!b) b = await addBook({ kind: 'images', title: 'درس مكتوب — ' + new Date().toLocaleDateString('ar-DZ'), pages: 0 });
+    const before = b.pages || 0; let n = before;
+    for (const f of files) { try { const u8 = await toJpeg(f); n++; await DB.putBlob(b.id + ':img:' + n, u8); } catch (e) {} }
+    if (n === before) { toast('تعذّر فتح الصور'); return; }
+    const wasAll = !b.range || b.range.z === b.pages;
+    b.pages = n; if (wasAll) b.range = { a: 1, z: n };
+    await save(b); toast(`أُضيفت ${n - before} صورة ✓`); go('book', b.id);
+  } catch (e) { toast(e.message || 'تعذّر إضافة الصور'); }
+  imgTarget = null;
+}
+async function addLink(url, title) {
+  url = String(url || '').trim(); if (!url) { toast('الصق الرابط أولًا'); return; }
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  const m = url.match(/shamela\.ws\/(?:index\.php\/)?book\/(\d+)(?:\/(\d+))?/i);
+  if (m) {
+    const b = await addBook({ kind: 'shamela', title: title || 'كتاب من الشاملة رقم ' + m[1], shamelaId: m[1], url, pages: 0, range: { a: toInt(m[2]) || 1, z: toInt(m[2]) || 1 } });
+    closeSheet(); go('book', b.id); bookInfoSheet(b.id, true); return;
+  }
+  // رابط ملف PDF: نحاول تنزيله مباشرة
+  if (/\.pdf(\?|#|$)/i.test(url) || /archive\.org\/download\//i.test(url)) {
+    toast('يحاول تنزيل الملف…', 3000);
+    try {
+      const ctl = new AbortController(); const t = setTimeout(() => ctl.abort(), 60000);
+      const r = await fetch(url, { signal: ctl.signal }); clearTimeout(t);
+      if (r.ok) {
+        const buf = await r.arrayBuffer(); const head = new Uint8Array(buf.slice(0, 5));
+        if (String.fromCharCode(...head).startsWith('%PDF')) {
+          const b = await pdfFromBuffer(buf, title || decodeURIComponent(url.split('/').pop().split('?')[0]) || 'كتاب', { url });
+          if (b) { closeSheet(); go('book', b.id); toast('نُزّل الكتاب ✓'); } return;
+        }
+      }
+    } catch (e) {}
+  }
+  const b = await addBook({ kind: 'url', title: title || url.replace(/^https?:\/\/(www\.)?/, '').slice(0, 60), url, pages: 0 });
+  closeSheet(); go('book', b.id);
+}
+async function shamelaInfo(b) {
+  const prompt = `افتح هذا الرابط من المكتبة الشاملة: https://shamela.ws/book/${b.shamelaId}\nواقرأ بطاقة الكتاب. أعد JSON فقط بهذا الشكل: {"title":"عنوان الكتاب","author":"اسم المؤلف","pages":عدد صفحات الكتاب في الشاملة أو 0 إن لم يظهر}`;
+  return aiTry(async model => { const { txt } = await gemini(model, [{ text: prompt }], { tools: true, signal: null, maxTokens: 2048 }); const j = looseJSON(txt); if (!j || !j.title) throw new AiError('', 'parse'); return j; }, () => {}, null);
+}
+
+/* ================= اسأل الكتاب ================= */
+async function askBook(b, q) {
+  let pl, note = '';
+  if (b.kind === 'pdf' || b.kind === 'images' || b.kind === 'shamela') {
+    const max = b.kind === 'pdf' ? 400 : b.kind === 'images' ? 40 : 20;
+    let a = (b.askR && b.askR.a) || (b.range && b.range.a) || 1, z = (b.askR && b.askR.z) || (b.range && b.range.z) || b.pages || a;
+    if (b.kind === 'pdf' && b.noSplit) { a = 1; z = b.pages || 1; }
+    if (z - a + 1 > max) { z = a + max - 1; note = `(بحثتُ في ${unitOf(b)} ${a}–${z} فقط؛ غيّر النطاق من زر «النطاق» أعلاه.)`; }
+    pl = await payload(b, a, z);
+  } else if (b.kind === 'text') {
+    const pg = await textPages(b); const txt = pg.map((t, i) => `[${i + 1}]\n${t}`).join('\n\n').slice(0, 900000);
+    pl = { parts: [], desc: `فيما يلي نص الكتاب مقسّمًا إلى مقاطع مرقّمة بين معقوفين.\n<<<بداية النص\n${txt}\nنهاية النص>>>` };
+  } else pl = await payload(b, 1, 1);
+  const hist = (b.chat || []).slice(-3).map(m => `سؤال سابق: ${m.q}\nجواب سابق: ${m.a.slice(0, 1500)}`).join('\n\n');
+  const prompt = `أنت باحث أمين تساعد طالب علم شرعي.\nالكتاب: «${b.title}»${b.author ? ' — ' + b.author : ''}.\n${pl.desc}\n\n${hist ? hist + '\n\n' : ''}السؤال: ${q}\n\nأجب من هذا الكتاب وحده بعبارة واضحة مرتبة. اذكر بعد كل معلومة موضعها بين قوسين هكذا (${unitOf(b)} 12). وإن نقلت كلام المؤلف بلفظه فضعه بين «». لا تخترع أرقام صفحات ولا أقوالًا. إن لم تجد الجواب في الكتاب فقل بوضوح: «لم أجد هذا في الكتاب»، ثم لك أن تضيف فائدة من خارجه بشرط أن تبدأها بعبارة «من خارج الكتاب:».`;
+  const ans = await aiTry(async model => (await gemini(model, [...pl.parts, { text: prompt }], { tools: pl.tools, signal: ASK && ASK.signal, maxTokens: 8192 })).txt.trim(), m => { const el = $('#askWait'); if (el) el.textContent = m; }, ASK && ASK.signal);
+  return note ? ans + '\n\n' + note : ans;
+}
+let ASK = null, ASKQ = '';
+
+/* ================= طريقة تطبيق Gemini ================= */
+const GEMINI_URL = 'https://gemini.google.com/app';
+async function appPrompt(b, svc, o) {
+  const run = { mode: o.mode, density: o.density };
+  let desc = '', attach = '';
+  if (b.kind === 'pdf') { desc = `أرفقتُ لك ملف الكتاب (PDF). اعمل على الصفحات من ${o.a} إلى ${o.z} بحسب ترتيب صفحات الملف، واكتب في "p" رقم الصفحة بهذا الترتيب.`; attach = `اضغط ➕ في Gemini وأرفق ملف الكتاب «${esc(b.title)}» من «الملفات»`; }
+  else if (b.kind === 'images') { desc = `أرفقتُ لك صور صفحات درس مكتوب (قد تكون بخط اليد) بالترتيب. اعمل على الصور من ${o.a} إلى ${o.z}، واكتب في "p" رقم الصورة. وإن لم تتبيّن كلمة فلا تخمّنها.`; attach = 'اضغط ➕ في Gemini وأرفق صور الصفحات نفسها بالترتيب'; }
+  else if (b.kind === 'text') {
+    const pg = await textPages(b); const txt = pg.slice(o.a - 1, o.z).map((t, i) => `[${o.a + i}]\n${t}`).join('\n\n');
+    if (txt.length <= 60000) { desc = `فيما يلي نص من الكتاب مقسّم إلى مقاطع، وقبل كل مقطع رقمه بين معقوفين. اكتب في "p" رقم المقطع.\n\n<<<بداية النص\n${txt}\nنهاية النص>>>`; attach = 'لا تحتاج إلى إرفاق شيء، فالنص داخل التعليمات'; }
+    else { desc = `أرفقتُ لك ملف الكتاب. اعمل عليه كاملًا، واكتب في "p" رقمًا تقريبيًا لموضع العنصر أو 0.`; attach = 'النص طويل: اضغط ➕ في Gemini وأرفق ملف الوورد نفسه'; }
+  } else if (b.kind === 'shamela') {
+    const urls = []; for (let i = o.a; i <= Math.min(o.z, o.a + 49); i++) urls.push(shamelaUrl(b, i));
+    desc = `افتح روابط صفحات الكتاب التالية من المكتبة الشاملة واقرأها كلها، وكل رابط صفحة واحدة ورقمها في آخره:\n${urls.join('\n')}\nاكتب في "p" رقم الصفحة.`; attach = 'لا تحتاج إلى إرفاق شيء، فالروابط داخل التعليمات';
+  } else { desc = `افتح هذا الرابط واقرأ محتواه كاملًا:\n${b.url}\nواكتب في "p" رقم الصفحة إن وُجد، وإلا 0.`; attach = 'لا تحتاج إلى إرفاق شيء، فالرابط داخل التعليمات'; }
+  return { text: svcPrompt(b, svc, run, desc, false, true), attach };
+}
+
+/* ================= العرض ================= */
+let view = { name: 'home' };
+let VS = {}; // حالة العرض (التصفية والبحث…)
+function go(name, id, svc) { view = { name, id, svc }; VS = {}; render(); window.scrollTo(0, 0); }
+function applyTheme() { const t = ST.theme === 'auto' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : ST.theme; document.documentElement.dataset.theme = t; }
+function render() {
+  const app = $('#app');
+  if (view.name === 'home') app.innerHTML = homeV();
+  else if (view.name === 'book') { const b = B(view.id); if (!b) return go('home'); app.innerHTML = bookV(b); }
+  else if (view.name === 'svc') { const b = B(view.id); if (!b) return go('home'); app.innerHTML = svcV(b, view.svc); paintList(); }
+  else if (view.name === 'ask') { const b = B(view.id); if (!b) return go('home'); app.innerHTML = askV(b); }
+  else if (view.name === 'search') { app.innerHTML = searchV(); paintSearch(); }
+  else if (view.name === 'stars') app.innerHTML = starsV();
+  else if (view.name === 'cards') { const b = B(view.id); if (!b) return go('home'); app.innerHTML = cardsV(b); }
+}
+const topBar = (title, sub, back, right) => `<div class="top">${back ? `<button class="icon-btn" data-act="${back}" aria-label="رجوع">→</button>` : ''}<div class="grow"><h1 class="ellip">${title}</h1>${sub ? `<div class="sub ellip">${sub}</div>` : ''}</div>${right || ''}</div>`;
+function counts(b) { return SVC_ORDER.filter(s => (b.res[s] || []).length).map(s => `<span class="bdg">${SVC[s].icon} ${(b.res[s] || []).length}</span>`).join(''); }
+function runBadge(b) {
+  if (RUN && RUN.id === b.id) return `<span class="bdg run">⏳ ${SVC[RUN.svc].name}…</span>`;
+  const r = Object.entries(b.runs || {}).find(([, v]) => v.status === 'paused' || v.status === 'error');
+  return r ? `<span class="bdg ${r[1].status === 'error' ? 'err' : 'run'}">⏸ ${SVC[r[0]].name}: لم يكتمل</span>` : '';
+}
+function bookMeta(b) {
+  const k = KIND[b.kind];
+  const n = b.kind === 'pdf' ? (b.pages ? b.pages + ' صفحة' : '') : b.kind === 'images' ? b.pages + ' صورة' : b.kind === 'text' ? b.pages + ' مقطع' : b.kind === 'shamela' ? (b.pages ? b.pages + ' صفحة' : '') : '';
+  return [k.label, n, b.author].filter(Boolean).join(' · ');
+}
+function homeV() {
+  const keyBanner = !ST.key ? `<div class="banner">لتعمل الخدمات تلقائيًا أضف مفتاح Gemini (مجاني). ويمكنك بدونه أن تستعمل طريقة «تطبيق Gemini» باشتراكك.<button class="btn block" data-act="settings">⚙️ إضافة المفتاح</button></div>` : '';
+  const list = BOOKS.length ? BOOKS.map(b => `<div class="bk" data-act="open" data-id="${b.id}"><div class="cv" style="background:${KIND[b.kind].color}">${KIND[b.kind].icon}</div><div class="mn"><div class="tt">${esc(b.title)}</div><div class="mt">${esc(bookMeta(b))}</div><div class="badges">${runBadge(b)}${counts(b)}</div></div></div>`).join('')
+    : `<div class="card empty"><div style="font-size:40px">📚</div><b style="color:var(--text)">مكتبتك فارغة</b><ol class="steps"><li>أضف كتابًا أو محاضرة أو صور درس من الأزرار أعلاه.</li><li>اختر الخدمة: الفوائد، أو التلخيص، أو التشجير، أو الأسئلة…</li><li>صدّر النتيجة PDF مرتبًا باسمك، أو وورد.</li></ol></div>`;
+  return topBar('مستخرج الفوائد', 'من الكتب والمحاضرات والدروس المكتوبة', '', `<button class="icon-btn" data-act="goSearch" aria-label="بحث">🔍</button><button class="icon-btn" data-act="goStars" aria-label="المفضلة">⭐</button><button class="icon-btn" data-act="settings" aria-label="الإعدادات">⚙️</button>`)
+    + keyBanner
+    + `<div class="add-grid">
+      <button class="add" data-act="pick" data-f="fPdf"><span class="ai">📕</span><span><b>كتاب PDF</b><small>كاملًا، ولو مصوّرًا</small></span></button>
+      <button class="add" data-act="pick" data-f="fDoc"><span class="ai">📝</span><span><b>وورد أو نص</b><small>محاضرات ودروس .docx</small></span></button>
+      <button class="add" data-act="pickImg"><span class="ai">✍️</span><span><b>دروس مكتوبة</b><small>صور أو خط اليد</small></span></button>
+      <button class="add" data-act="linkSheet"><span class="ai">🔗</span><span><b>رابط</b><small>الشاملة أو أي موقع</small></span></button>
+      <button class="add wide" data-act="pasteSheet"><span class="ai">📋</span><span><b>لصق نص</b><small>انسخ نص درس أو مقال والصقه هنا</small></span></button>
+    </div>
+    <div class="section-h">مكتبتي <small>${BOOKS.length ? BOOKS.length + ' مصدر' : ''}</small></div>${list}`;
+}
+function svcStatus(b, s) {
+  const r = b.runs[s], n = (b.res[s] || []).length;
+  if (RUN && RUN.id === b.id && RUN.svc === s) return `<span class="st">⏳ جارٍ ${RUN.done}/${RUN.n}</span>`;
+  if (r && (r.status === 'paused' || r.status === 'error')) return `<span class="st">⏸ لم يكتمل (${r.parts.filter(p => p.done).length}/${r.parts.length})</span>`;
+  if (n) return `<span class="st done">✓ ${n}${r && paged(b) && r.a ? ` · ${unitOf(b)} ${r.a}–${r.z}` : ''}</span>`;
+  return '<span class="st" style="color:var(--muted);font-weight:500">لم يُستخرج بعد</span>';
+}
+function bookV(b) {
+  const r = b.range;
+  const err = Object.entries(b.runs || {}).filter(([s, v]) => (v.status === 'error' || v.status === 'paused') && !(RUN && RUN.id === b.id && RUN.svc === s));
+  const errB = err.map(([s, v]) => `<div class="banner ${v.status === 'error' ? 'err' : ''}"><b>${SVC[s].icon} ${SVC[s].name}</b>: ${v.status === 'error' ? esc(v.err || 'توقّف') : 'أُوقف قبل أن يكتمل'} (اكتمل ${v.parts.filter(p => p.done).length} من ${v.parts.length} أجزاء)<div class="row"><button class="btn sm primary" data-act="resume" data-s="${s}">↻ استكمال</button>${v.status === 'error' ? `<button class="btn sm" data-act="runSheet" data-s="${s}" data-via="app">📱 عبر تطبيق Gemini</button>` : ''}</div></div>`).join('');
+  const imgs = b.kind === 'images' ? `<div class="thumbs" id="thumbs"></div>` : '';
+  setTimeout(() => paintThumbs(b), 0);
+  return topBar(esc(b.title), esc(bookMeta(b)), 'goHome', `<button class="icon-btn" data-act="bookMenu" aria-label="المزيد">⋯</button>`)
+    + `<div class="card">${b.kind === 'url' ? `<div class="hint" style="margin:0;direction:ltr;text-align:left;word-break:break-all">${esc(b.url)}</div>` : `<div class="row" style="justify-content:space-between"><span>النطاق المختار: <b>${r ? `${unitOf(b)} ${r.a} – ${r.z}` : 'لم يُحدّد'}</b>${b.pages ? ` <small style="color:var(--muted)">من ${b.pages}</small>` : ''}</span><button class="btn sm" data-act="${b.kind === 'shamela' ? 'bookInfo' : 'rangeSheet'}">تغيير</button></div>`}
+      ${b.kind === 'shamela' ? '<p class="hint">أرقام الصفحات هنا هي ترقيم صفحات الشاملة (الرقم في آخر الرابط).</p>' : ''}
+      ${b.kind === 'images' ? `<button class="btn block" style="margin-top:10px" data-act="moreImgs">➕ إضافة صور أخرى لهذا الدرس</button>` : ''}${imgs}</div>`
+    + errB
+    + `<div class="section-h">الخدمات</div><div class="svc-grid">`
+    + SVC_ORDER.map(s => `<button class="svc" data-act="svc" data-s="${s}"><span class="si">${SVC[s].icon}</span><b>${SVC[s].name}</b><small>${SVC[s].sub}</small>${svcStatus(b, s)}</button>`).join('')
+    + `<button class="svc wide" data-act="goAsk"><span class="si">🔎</span><span><b>اسأل الكتاب</b><small style="display:block">اسأل عن أي مسألة فيجيبك من الكتاب نفسه مع رقم الصفحة</small></span></button>
+      <button class="svc wide" data-act="exportSheet"><span class="si">📄</span><span><b>تصدير PDF أو وورد</b><small style="display:block">كتيّب مرتب باسمك: غلاف، وفهرس، وكل ما استُخرج</small></span></button></div>`;
+}
+async function paintThumbs(b) {
+  const el = $('#thumbs'); if (!el || b.kind !== 'images') return;
+  const n = Math.min(b.pages, 24); let h = '';
+  for (let i = 1; i <= n; i++) { const u8 = await DB.getBlob(b.id + ':img:' + i); if (u8) h += `<img src="${URL.createObjectURL(new Blob([u8], { type: 'image/jpeg' }))}" alt="ص ${i}">`; }
+  if ($('#thumbs')) $('#thumbs').innerHTML = h;
+}
+/* ---- عرض نتائج خدمة ---- */
+function svcV(b, s) {
+  const items = b.res[s] || [];
+  const r = b.runs[s];
+  let head = topBar(`${SVC[s].icon} ${SVC[s].name}`, esc(b.title), 'backBook', `<button class="icon-btn" data-act="copySvc" aria-label="نسخ">📋</button>`);
+  head += `<div class="row" style="margin-bottom:12px"><button class="btn" data-act="runSheet" data-s="${s}">✨ ${items.length ? 'استخراج جديد / نطاق آخر' : 'ابدأ الاستخراج'}</button><button class="btn" data-act="exportSheet" data-s="${s}">📄 تصدير</button></div>`;
+  if (r && r.status === 'error') head += `<div class="banner err">${esc(r.err)}<div class="row"><button class="btn sm primary" data-act="resume" data-s="${s}">↻ استكمال</button></div></div>`;
+  if (!items.length) return head + `<div class="card empty">لا نتائج بعد. اضغط «ابدأ الاستخراج».</div>`;
+  if (s === 'fawaid') {
+    const cnt = {}; items.forEach(x => cnt[x.type] = (cnt[x.type] || 0) + 1);
+    VS.f = VS.f || 'all'; VS.ord = VS.ord || 'type';
+    return head + `<input class="search" id="q" placeholder="ابحث في ${items.length} عنصرًا…" value="${esc(VS.q || '')}" data-inp="q">
+      <div class="chips"><button class="chip ${VS.f === 'all' ? 'on' : ''}" data-act="filt" data-v="all">الكل ${items.length}</button><button class="chip ${VS.f === 'star' ? 'on' : ''}" data-act="filt" data-v="star">⭐</button>${TYPES.filter(t => cnt[t]).map(t => `<button class="chip ${VS.f === t ? 'on' : ''}" data-act="filt" data-v="${t}">${TICON[t]} ${TPLURAL[t]} ${cnt[t]}</button>`).join('')}</div>
+      <div class="seg" style="margin-bottom:10px"><button class="${VS.ord === 'type' ? 'on' : ''}" data-act="ord" data-v="type">مرتبة بالنوع</button><button class="${VS.ord === 'page' ? 'on' : ''}" data-act="ord" data-v="page">بترتيب الكتاب</button></div><div id="list"></div>`;
+  }
+  if (s === 'qa') return head + `<div class="row" style="margin-bottom:10px"><button class="btn primary" data-act="cards">🃏 بطاقات الحفظ والاختبار</button><button class="btn" data-act="qaAll">${VS.open ? 'إخفاء الأجوبة' : 'إظهار الأجوبة'}</button></div><input class="search" id="q" placeholder="ابحث…" value="${esc(VS.q || '')}" data-inp="q"><div id="list"></div>`;
+  if (s === 'nusus') {
+    const cnt = {}; items.forEach(x => cnt[x.kind] = (cnt[x.kind] || 0) + 1); VS.f = VS.f || 'all';
+    return head + `<div class="chips"><button class="chip ${VS.f === 'all' ? 'on' : ''}" data-act="filt" data-v="all">الكل ${items.length}</button>${['آية', 'حديث', 'أثر'].filter(k => cnt[k]).map(k => `<button class="chip ${VS.f === k ? 'on' : ''}" data-act="filt" data-v="${k}">${k === 'آية' ? 'الآيات' : k === 'حديث' ? 'الأحاديث' : 'الآثار'} ${cnt[k]}</button>`).join('')}</div><p class="hint" style="margin:-4px 0 10px">أرقام الآيات من Gemini، والتخريج كما ذكره المؤلف. راجِع قبل النقل.</p><input class="search" id="q" placeholder="ابحث…" value="${esc(VS.q || '')}" data-inp="q"><div id="list"></div>`;
+  }
+  if (s === 'summary') return head + (b.overall ? `<div class="overall"><h4>الخلاصة الجامعة للكتاب</h4>${esc(b.overall)}</div>` : `<button class="btn block" style="margin-bottom:12px" data-act="overall">✨ اكتب الخلاصة الجامعة للكتاب</button>`) + `<div id="list"></div>`;
+  return head + `<input class="search" id="q" placeholder="ابحث…" value="${esc(VS.q || '')}" data-inp="q"><div id="list"></div>`;
+}
+const qMatch = (t, q) => !q || normAr(t).includes(normAr(q));
+function itemHTML(b, s, x) {
+  const st = x.star ? '<span class="star">⭐</span>' : '';
+  const pg = x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : '';
+  if (s === 'fawaid') return `<div class="it" data-act="item" data-s="${s}" data-i="${x.id}">${st}<div class="tx">${esc(x.text)}</div><div class="ft"><span class="ntag" style="color:${TCOLOR[x.type]};border-color:${TCOLOR[x.type]}55;background:${TCOLOR[x.type]}14">${TICON[x.type]} ${x.type}</span>${pg}${x.sec ? `<span class="sec-title ellip">${esc(x.sec)}</span>` : ''}</div></div>`;
+  if (s === 'summary') return `<div class="it sum" data-act="item" data-s="${s}" data-i="${x.id}">${st}${x.title ? `<h4>${esc(x.title)}</h4>` : ''}<div class="tx" style="font-size:16px">${esc(x.text)}</div><div class="ft">${pg}</div></div>`;
+  if (s === 'qa') return `<div class="it qa ${VS.open ? '' : 'closed'}" data-act="qaT" data-i="${x.id}">${st}<div class="q">${esc(x.q)}</div><div class="rv">اضغط لإظهار الجواب</div><div class="a">${esc(x.a)}</div><div class="ft">${pg}<button class="btn sm" style="margin-inline-start:auto;min-height:28px" data-act="item" data-s="${s}" data-i="${x.id}">⋯</button></div></div>`;
+  if (s === 'nusus') return `<div class="it" data-act="item" data-s="${s}" data-i="${x.id}">${st}<div class="tx">${x.kind === 'آية' ? '﴿' + esc(x.text.replace(/^[﴿{(«]+|[﴾})»]+$/g, '')) + '﴾' : esc(x.text)}</div><div class="ft"><span class="ntag" style="color:var(--accent);border-color:var(--line)">${x.kind}</span>${x.ref ? `<span class="sec-title">${esc(x.ref)}</span>` : ''}${pg}</div></div>`;
+  if (s === 'gharib') return `<div class="it" data-act="item" data-s="${s}" data-i="${x.id}">${st}<div class="tx"><b>${esc(x.term)}</b>: ${esc(x.meaning)}</div><div class="ft">${x.src === 'إيضاح' ? '<span class="ntag" style="color:#b45309;border-color:#b4530955">إيضاح من Gemini</span>' : '<span class="ntag" style="color:var(--ok);border-color:var(--line)">من المؤلف</span>'}${pg}</div></div>`;
+  return '';
+}
+function alamMerged(b) {
+  const m = new Map();
+  (b.res.alam || []).forEach(x => { const k = normAr(x.name).replace(/^(الامام|الشيخ|الحافظ|العلامه)\s+/, ''); const o = m.get(k) || { name: x.name, pages: new Set(), notes: [], ids: [] }; if (x.p) o.pages.add(x.p); if (x.note && !o.notes.some(n => normAr(n) === normAr(x.note))) o.notes.push(x.note); o.ids.push(x.id); m.set(k, o); });
+  return [...m.values()].map(o => Object.assign(o, { pages: [...o.pages].sort((a, z) => a - z) })).sort((a, z) => normAr(a.name).localeCompare(normAr(z.name), 'ar'));
+}
+function paintList() {
+  const el = $('#list'); if (!el) return;
+  const b = B(view.id), s = view.svc, q = VS.q || ''; let items = b.res[s] || [];
+  let h = '';
+  if (s === 'fawaid') {
+    items = items.filter(x => (VS.f === 'all' || (VS.f === 'star' ? x.star : x.type === VS.f)) && qMatch(x.text + ' ' + x.sec, q));
+    if (VS.ord === 'type' && VS.f !== 'star' && VS.f === 'all') TYPES.forEach(t => { const g = items.filter(x => x.type === t); if (g.length) h += `<div class="grp-h" style="color:${TCOLOR[t]}">${TICON[t]} ${TPLURAL[t]} <small style="color:var(--muted)">${g.length}</small><i></i></div>` + g.map(x => itemHTML(b, s, x)).join(''); });
+    else h = items.map(x => itemHTML(b, s, x)).join('');
+  } else if (s === 'tree') {
+    const col = ['#8a3b12', '#1d4ed8', '#0f766e', '#7c3aed', '#b45309'];
+    h = `<div class="card">` + items.filter(x => qMatch(x.text, q)).map(x => `<div class="tree-n l${x.lvl}" style="padding-inline-start:${(x.lvl - 1) * 18}px" data-act="item" data-s="tree" data-i="${x.id}"><span class="dot" style="background:${col[x.lvl - 1]}"></span><span class="t">${esc(x.text)}</span>${x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : ''}</div>`).join('') + `</div>`;
+  } else if (s === 'alam') {
+    h = alamMerged(b).filter(o => qMatch(o.name + ' ' + o.notes.join(' '), q)).map(o => `<div class="it" data-act="item" data-s="alam" data-i="${o.ids[0]}"><div class="tx"><b>${esc(o.name)}</b>${o.notes.length ? '<br><span style="font-size:15px;color:var(--muted)">' + esc(o.notes.join(' — ')) + '</span>' : ''}</div><div class="ft">${o.pages.length ? `<span class="pg">${unitOf(b)} ${o.pages.join('، ')}</span>` : ''}</div></div>`).join('');
+  } else if (s === 'gharib') {
+    h = items.filter(x => qMatch(x.term + ' ' + x.meaning, q)).slice().sort((a, z) => normAr(a.term).localeCompare(normAr(z.term), 'ar')).map(x => itemHTML(b, s, x)).join('');
+  } else if (s === 'nusus') {
+    h = items.filter(x => (VS.f === 'all' || !VS.f || x.kind === VS.f) && qMatch(x.text + ' ' + x.ref, q)).map(x => itemHTML(b, s, x)).join('');
+  } else {
+    h = items.filter(x => qMatch((x.text || '') + (x.title || '') + (x.q || '') + (x.a || ''), q)).map(x => itemHTML(b, s, x)).join('');
+  }
+  el.innerHTML = h || '<div class="empty">لا نتائج</div>';
+}
+/* ---- بطاقات الحفظ ---- */
+function cardsV(b) {
+  const qa = b.res.qa || [];
+  if (!VS.order) { VS.order = qa.map(x => x.id).sort(() => Math.random() - .5); VS.i = 0; VS.ok = 0; VS.no = 0; VS.show = false; }
+  if (VS.i >= VS.order.length) return topBar('🃏 بطاقات المراجعة', esc(b.title), 'backQa') + `<div class="card empty"><div style="font-size:40px">🎉</div><b style="color:var(--text);font-size:18px">انتهت البطاقات</b><p>عرفتَ ${VS.ok} ولم تعرف ${VS.no} من ${VS.order.length}</p><div class="row"><button class="btn primary" data-act="cardsAgain">من جديد</button>${VS.missed && VS.missed.length ? `<button class="btn" data-act="cardsMissed">التي لم أعرفها (${VS.missed.length})</button>` : ''}</div></div>`;
+  const x = qa.find(y => y.id === VS.order[VS.i]); if (!x) { VS.i++; return cardsV(b); }
+  return topBar('🃏 بطاقات المراجعة', `${VS.i + 1} من ${VS.order.length} · ✓ ${VS.ok} · ✗ ${VS.no}`, 'backQa')
+    + `<div class="bar" style="margin-bottom:12px"><i style="width:${Math.round(VS.i / VS.order.length * 100)}%"></i></div>
+    <div class="card flash" data-act="flip"><div class="q">${esc(x.q)}</div>${VS.show ? `<div class="a">${esc(x.a)}</div><div class="hint">${pRef(b, x.p)}</div>` : '<div class="hint" style="margin-top:18px">اضغط لإظهار الجواب</div>'}</div>
+    ${VS.show ? `<div class="row"><button class="btn" data-act="cardAns" data-v="0" style="color:var(--danger)">✗ لم أعرفها</button><button class="btn primary" data-act="cardAns" data-v="1">✓ عرفتها</button></div>` : ''}`;
+}
+/* ---- اسأل الكتاب ---- */
+const fmtAns = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^#+\s*(.+)$/gm, '<b>$1</b>').replace(/^\s*[*]\s+/gm, '• ');
+function askV(b) {
+  const msgs = (b.chat || []).map((m, i) => `<div class="msg me">${esc(m.q)}</div><div class="msg ai" data-act="ansMenu" data-i="${i}">${fmtAns(m.a)}</div>`).join('');
+  const rng = paged(b) && b.kind !== 'text' ? `<div class="hint" style="margin:-6px 0 10px">يبحث في: ${unitOf(b)} ${(b.askR || b.range || { a: 1 }).a}–${(b.askR || b.range || { z: b.pages }).z} <button class="btn sm" data-act="askRange" style="min-height:28px">تغيير</button></div>` : '';
+  return topBar('🔎 اسأل الكتاب', esc(b.title), 'backBook', b.chat && b.chat.length ? `<button class="icon-btn" data-act="clearChat" aria-label="مسح">🗑</button>` : '')
+    + rng + `<div class="chat">${msgs || `<div class="card empty">اكتب سؤالك عن أي مسألة في الكتاب، مثل:<br>«ما شروط الصلاة عند المؤلف؟» أو «ما الذي رجّحه في مسألة كذا؟» أو «اذكر الأدلة على كذا».</div>`}
+    ${ASK ? `<div class="msg me">${esc(ASKQ)}</div><div class="msg ai"><span class="spin" style="display:inline-block;vertical-align:middle"></span> <span id="askWait">يقرأ الكتاب ويبحث…</span></div>` : ''}</div>
+    <div class="askbox"><textarea id="askIn" rows="1" placeholder="اكتب سؤالك…" ${ASK ? 'disabled' : ''}></textarea><button class="btn primary" data-act="${ASK ? 'askStop' : 'askGo'}">${ASK ? 'إيقاف' : 'اسأل'}</button></div>`;
+}
+/* ---- البحث العام والمفضلة ---- */
+function itemText(s, x) { return s === 'fawaid' ? x.text : s === 'summary' ? (x.title ? x.title + ': ' : '') + x.text : s === 'tree' ? x.text : s === 'qa' ? x.q + '\n' + x.a : s === 'nusus' ? x.text + (x.ref ? ' [' + x.ref + ']' : '') : s === 'alam' ? x.name + (x.note ? ': ' + x.note : '') : s === 'gharib' ? x.term + ': ' + x.meaning : ''; }
+function searchV() { return topBar('🔍 البحث في كل كتبي', 'في الفوائد والملخصات والأسئلة والفهارس', 'goHome') + `<input class="search" id="q" placeholder="اكتب كلمة…" value="${esc(VS.q || '')}" data-inp="gq" autofocus><div id="slist"></div>`; }
+function paintSearch() {
+  const el = $('#slist'); if (!el) return; const q = (VS.q || '').trim();
+  if (q.length < 2) { el.innerHTML = '<div class="empty">اكتب حرفين على الأقل</div>'; return; }
+  let n = 0, h = '';
+  BOOKS.forEach(b => SVC_ORDER.forEach(s => (b.res[s] || []).forEach(x => { const t = itemText(s, x); if (n < 300 && qMatch(t, q)) { n++; h += `<div class="it" data-act="openRes" data-id="${b.id}" data-s="${s}"><div class="tx" style="font-size:16px">${esc(t.length > 400 ? t.slice(0, 400) + '…' : t)}</div><div class="ft"><span class="ntag" style="color:var(--accent);border-color:var(--line)">${SVC[s].icon} ${SVC[s].name}</span>${x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : ''}<span class="sec-title ellip">${esc(b.title)}</span></div></div>`; } })));
+  el.innerHTML = (n ? `<p class="hint" style="margin:0 0 8px">${n >= 300 ? 'أول 300 نتيجة' : n + ' نتيجة'}</p>` : '') + (h || '<div class="empty">لا نتائج</div>');
+}
+function starsV() {
+  let h = '';
+  BOOKS.forEach(b => { const g = []; SVC_ORDER.forEach(s => (b.res[s] || []).forEach(x => { if (x.star) g.push([s, x]); })); if (g.length) h += `<div class="grp-h">${esc(b.title)}<i></i></div>` + g.map(([s, x]) => `<div class="it" data-act="openRes" data-id="${b.id}" data-s="${s}"><div class="tx" style="font-size:16px">${esc(itemText(s, x))}</div><div class="ft"><span class="ntag" style="color:var(--accent);border-color:var(--line)">${SVC[s].icon} ${SVC[s].name}</span>${x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : ''}</div></div>`).join(''); });
+  return topBar('⭐ المفضلة', 'ما ميّزته من كل الكتب', 'goHome', h ? `<button class="icon-btn" data-act="exportStars" aria-label="تصدير">📄</button>` : '') + (h || '<div class="card empty">لم تميّز شيئًا بعد. اضغط أي فائدة ثم «⭐ تمييز».</div>');
+}
+
+/* ================= الأوراق المنبثقة ================= */
+let SS = {}; // حالة الورقة
+function openSheet(html) { const s = $('#sheet'); s.innerHTML = '<div class="grab"></div>' + html; s.classList.remove('hidden'); $('#sheetBg').classList.remove('hidden'); s.scrollTop = 0; }
+function closeSheet() { $('#sheet').classList.add('hidden'); $('#sheetBg').classList.add('hidden'); }
+function settingsSheet() {
+  openSheet(`<h3>⚙️ الإعدادات</h3>
+    <label class="fld"><span>مفتاح Gemini API</span><input id="kIn" dir="ltr" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="AIza…" value="${esc(ST.key)}"></label>
+    <div class="hint">للحصول عليه مجانًا: افتح <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>، ثم «Create API key»، وانسخه والصقه هنا. وإن كان عندك مفتاح في «مكتبتي الصوتية» فهو نفسه يصلح هنا.</div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" data-act="pasteKey">📋 لصق</button><button class="btn sm" data-act="testKey">اختبار المفتاح</button></div>
+    <label class="fld"><span>النموذج المفضّل</span><input id="mIn" dir="ltr" value="${esc(ST.model)}"></label>
+    <label class="fld"><span>اسم المُعِدّ (يظهر على غلاف الـ PDF)</span><input id="auIn" value="${esc(ST.author)}"></label>
+    <div class="set-row"><div class="lab">المظهر</div><div class="seg">${[['auto', 'تلقائي'], ['light', 'فاتح'], ['dark', 'داكن']].map(([v, l]) => `<button class="${ST.theme === v ? 'on' : ''}" data-act="theme" data-v="${v}">${l}</button>`).join('')}</div></div>
+    <div class="sheet-actions"><button class="btn primary" data-act="saveSet">حفظ</button></div>
+    <div class="section-h" style="margin-top:22px">النسخة الاحتياطية</div>
+    <p class="hint" style="margin-top:-6px">تحفظ النتائج كلها (الفوائد والملخصات وغيرها) في ملف، لا ملفات الكتب نفسها.</p>
+    <div class="row" style="margin-top:8px"><button class="btn" data-act="backup">⬇️ تصدير نسخة</button><button class="btn" data-act="pick" data-f="fBak">⬆️ استيراد نسخة</button></div>`);
+}
+function linkSheet() {
+  openSheet(`<h3>🔗 إضافة رابط</h3>
+    <label class="fld"><span>الرابط</span><input id="lkIn" dir="ltr" inputmode="url" autocapitalize="off" autocorrect="off" placeholder="https://shamela.ws/book/…"></label>
+    <div class="row"><button class="btn sm" data-act="pasteLink">📋 لصق الرابط</button></div>
+    <label class="fld"><span>العنوان (اختياري)</span><input id="lkT" placeholder="اسم الكتاب أو المقال"></label>
+    <ul class="hint" style="padding-inline-start:18px">
+      <li><b>المكتبة الشاملة:</b> افتح الكتاب في shamela.ws وانسخ الرابط. يقرأ Gemini صفحاته واحدة واحدة في النطاق الذي تختاره.</li>
+      <li><b>رابط ملف PDF</b> (مثل أرشيف archive.org): يحاول التطبيق تنزيله، فيصير ككتاب PDF عادي.</li>
+      <li><b>أي صفحة أو مقال:</b> يفتحه Gemini ويقرأه.</li></ul>
+    <div class="sheet-actions"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn primary" data-act="addLink">إضافة</button></div>`);
+}
+function pasteSheet() {
+  openSheet(`<h3>📋 لصق نص</h3>
+    <label class="fld"><span>العنوان</span><input id="psT" placeholder="مثلًا: درس الطهارة"></label>
+    <label class="fld"><span>النص</span><textarea id="psX" rows="8" dir="auto" placeholder="الصق النص هنا…"></textarea></label>
+    <div class="sheet-actions"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn primary" data-act="addPaste">إضافة</button></div>`);
+}
+function bookInfoSheet(id, isNew) {
+  const b = B(id); if (!b) return;
+  openSheet(`<h3>${isNew ? '📚 كتاب من المكتبة الشاملة' : '✏️ بيانات الكتاب'}</h3>
+    ${b.kind === 'shamela' ? `<p class="hint" style="margin-top:-4px">رقم الكتاب في الشاملة: ${b.shamelaId}. ${ST.key ? 'اضغط «اجلب البيانات» ليقرأ Gemini العنوان وعدد الصفحات.' : ''}</p>${ST.key ? `<button class="btn block" data-act="fetchInfo">🔎 اجلب العنوان وعدد الصفحات</button>` : ''}` : ''}
+    <label class="fld"><span>العنوان</span><input id="biT" value="${esc(b.title)}"></label>
+    <label class="fld"><span>المؤلف</span><input id="biA" value="${esc(b.author)}"></label>
+    ${b.kind === 'shamela' || (b.kind === 'pdf' && b.noSplit) ? `<label class="fld"><span>عدد صفحات الكتاب</span><input id="biP" type="number" inputmode="numeric" value="${b.pages || ''}"></label>` : ''}
+    ${paged(b) ? `<div class="two"><label class="fld"><span>النطاق: من ${unitOf(b)}</span><input id="biRa" type="number" inputmode="numeric" value="${b.range ? b.range.a : 1}"></label><label class="fld"><span>إلى ${unitOf(b)}</span><input id="biRz" type="number" inputmode="numeric" value="${b.range ? b.range.z : (b.pages || '')}"></label></div><p class="hint" style="margin-top:-4px">النطاق هو الصفحات التي تعمل عليها الخدمات. ابدأ بجزء من الكتاب إن كان كبيرًا.</p>` : ''}
+    <div class="sheet-actions"><button class="btn primary" data-act="saveInfo">حفظ</button></div>`);
+}
+function readRange(b, ia, iz) {
+  let a = toInt($(ia) && $(ia).value) || 1, z = toInt($(iz) && $(iz).value) || a;
+  if (b.pages) { a = Math.min(Math.max(1, a), b.pages); z = Math.min(Math.max(a, z), b.pages); } else z = Math.max(a, z);
+  return { a, z };
+}
+function runSheet(b, s, via) {
+  const r = b.runs[s] || {};
+  SS = Object.assign({ b: b.id, s, mode: 'all', density: ST.density || 'mid', via: via || ST.via || 'key' }, SS.b === b.id && SS.s === s ? SS : {}, via ? { via } : {});
+  const rg = b.range || { a: 1, z: b.pages || 1 };
+  const unfinished = (r.status === 'paused' || r.status === 'error') && r.parts;
+  let pend = null; try { pend = JSON.parse(localStorage.getItem('mustakhrij_pending') || 'null'); } catch (e) {}
+  const nParts = paged(b) ? makeParts(b, s, rg.a, rg.z, SS.density).length : 1;
+  openSheet(`<h3>${SVC[s].icon} ${SVC[s].name}</h3><p class="hint" style="margin-top:-6px">${SVC[s].sub}</p>
+    ${s === 'fawaid' ? `<div class="set-row"><div class="lab">ماذا تستخرج؟</div><div class="seg">${Object.entries(FMODES).map(([k, m]) => `<button class="${SS.mode === k ? 'on' : ''}" data-act="ss" data-k="mode" data-v="${k}">${k === 'all' ? '✨' : TICON[k]} ${m.label}</button>`).join('')}</div></div>
+      ${SS.mode === 'all' ? `<div class="set-row"><div class="lab">الكثافة</div><div class="seg">${Object.entries(DENS).map(([k, l]) => `<button class="${SS.density === k ? 'on' : ''}" data-act="ss" data-k="density" data-v="${k}">${l}</button>`).join('')}</div></div>` : ''}` : ''}
+    ${paged(b) ? `<div class="two"><label class="fld"><span>من ${unitOf(b)}</span><input id="rA" type="number" inputmode="numeric" value="${rg.a}"></label><label class="fld"><span>إلى ${unitOf(b)}</span><input id="rZ" type="number" inputmode="numeric" value="${rg.z}"></label></div>` : ''}
+    <div class="set-row"><div class="lab">الطريقة</div><div class="seg"><button class="${SS.via === 'key' ? 'on' : ''}" data-act="ss" data-k="via" data-v="key">⚡ تلقائي بالمفتاح</button><button class="${SS.via === 'app' ? 'on' : ''}" data-act="ss" data-k="via" data-v="app">📱 تطبيق Gemini (اشتراكك)</button></div></div>
+    ${SS.via === 'key' ? `<p class="hint">${paged(b) && nParts > 1 ? `يُقسَّم النطاق إلى نحو ${nParts} أجزاء، ويُرسل كل جزء إلى Gemini على حدة، ثم تُجمع النتائج. ` : ''}${b.res[s] && b.res[s].length ? 'تُستبدل النتائج السابقة التي في هذا النطاق فقط.' : ''}</p>
+      <div class="sheet-actions"><button class="btn primary" data-act="startRun">▶ ابدأ</button></div>`
+    : `<p class="hint">يعمل Gemini باشتراكك المدفوع، فهو أسرع ولا يقول «مشغول». ورده محدود الطول، فاختر نطاقًا صغيرًا (نحو 30 صفحة) في كل مرة.</p>
+      <div class="sheet-actions"><button class="btn primary" data-act="appGo">التالي ←</button></div>`}
+    ${unfinished ? `<button class="btn block" style="margin-top:10px" data-act="resume" data-s="${s}">↻ استكمال العملية السابقة (${r.parts.filter(p => p.done).length} من ${r.parts.length})</button>` : ''}
+    ${pend && pend.b === b.id && pend.s === s ? `<button class="btn block" style="margin-top:10px" data-act="appPaste">📥 عندي رد من Gemini، أريد لصقه</button>` : ''}`);
+}
+async function appSheet(b, s, o) {
+  const pr = await appPrompt(b, s, o);
+  APPTXT = pr.text;
+  try { localStorage.setItem('mustakhrij_pending', JSON.stringify({ b: b.id, s, a: o.a, z: o.z, mode: o.mode, density: o.density })); } catch (e) {}
+  openSheet(`<h3>📱 ${SVC[s].name} عبر Gemini</h3>
+    <div class="step"><b>١</b><div>اضغط الزر: تُنسخ التعليمات ويُفتح Gemini.<a class="btn primary" href="${GEMINI_URL}" target="_blank" rel="noopener" data-act="appCopy">📋 انسخ التعليمات وافتح Gemini</a></div></div>
+    <div class="step"><b>٢</b><div>في Gemini: ${pr.attach}، ثم اضغط مطوّلًا في خانة الكتابة واختر <b>لصق</b>، وأرسل. انتظر حتى يكتمل الرد، ثم اضغط زر <b>النسخ</b> تحته.</div></div>
+    <div class="step"><b>٣</b><div>ارجع إلى هنا والصق الرد:</div></div>
+    <label class="fld"><textarea id="apIn" rows="4" dir="auto" placeholder="الصق رد Gemini هنا…"></textarea></label>
+    <div class="row"><button class="btn" data-act="pasteAp">📥 لصق</button><button class="btn primary" data-act="appApply">إضافة النتائج</button></div>
+    <p class="hint">إن لم يفتح الزر Gemini فافتحه بنفسك والصق فيه؛ فالتعليمات منسوخة.</p>`);
+}
+let APPTXT = '';
+async function appApply(txt) {
+  let pend = null; try { pend = JSON.parse(localStorage.getItem('mustakhrij_pending') || 'null'); } catch (e) {}
+  const b = pend && B(pend.b); if (!b) { toast('لم أجد الكتاب'); return; }
+  const j = looseJSON(txt); if (!j) { toast('لم أفهم الرد. انسخه كاملًا بزر النسخ تحت رد Gemini', 4000); return; }
+  const s = pend.s, items = normItems(b, s, j, pend.a, pend.z);
+  if (!items.length && !(j.overall)) { toast('الرد لا يحتوي نتائج', 3500); return; }
+  clearRange(b, s, pend.a, pend.z, s === 'fawaid' ? (FMODES[pend.mode] || FMODES.all).types : null);
+  if (paged(b)) items.forEach(x => { if (x.p == null) x.p = pend.a; });
+  b.res[s] = (b.res[s] || []).concat(items); sortRes(b, s);
+  if (s === 'summary' && j.overall) b.overall = String(j.overall).trim();
+  b.runs[s] = { status: 'done', a: pend.a, z: pend.z, mode: pend.mode, density: pend.density, parts: [{ a: pend.a, b: pend.z, done: true }], via: 'app' };
+  await save(b); try { localStorage.removeItem('mustakhrij_pending'); } catch (e) {}
+  closeSheet(); toast(`أُضيف ${items.length} عنصرًا ✓`); go('svc', b.id, s);
+}
+function itemSheet(b, s, id) {
+  const x = (b.res[s] || []).find(y => y.id === id); if (!x) return;
+  SS = { b: b.id, s, id };
+  const editable = { fawaid: ['text'], summary: ['title', 'text'], tree: ['text'], qa: ['q', 'a'], nusus: ['text', 'ref'], alam: ['name', 'note'], gharib: ['term', 'meaning'] }[s];
+  const lab = { text: 'النص', title: 'العنوان', q: 'السؤال', a: 'الجواب', ref: 'المرجع', name: 'الاسم', note: 'ما ذُكر عنه', term: 'اللفظ', meaning: 'المعنى' };
+  openSheet(`<h3>${SVC[s].icon} ${x.p ? pRef(b, x.p) : SVC[s].name}</h3>
+    ${s === 'fawaid' ? `<div class="set-row"><div class="lab">النوع</div><div class="seg">${TYPES.map(t => `<button class="${x.type === t ? 'on' : ''}" data-act="setType" data-v="${t}">${TICON[t]} ${t}</button>`).join('')}</div></div>` : ''}
+    ${editable.map(f => `<label class="fld"><span>${lab[f]}</span><textarea id="ed_${f}" rows="${f === 'text' || f === 'a' || f === 'meaning' ? 5 : 2}" dir="auto">${esc(x[f])}</textarea></label>`).join('')}
+    <div class="row"><button class="btn" data-act="itStar">${x.star ? '★ إلغاء التمييز' : '⭐ تمييز'}</button><button class="btn" data-act="itCopy">📋 نسخ</button></div>
+    <div class="sheet-actions"><button class="btn" style="color:var(--danger)" data-act="itDel">🗑 حذف</button><button class="btn primary" data-act="itSave">حفظ التعديل</button></div>`);
+}
+function exportSheet(b, only) {
+  const avail = SVC_ORDER.filter(s => (b.res[s] || []).length);
+  if (!avail.length) { toast('لا توجد نتائج لتصديرها بعد'); return; }
+  SS = { b: b.id, ord: 'type' };
+  openSheet(`<h3>📄 تصدير «${esc(b.title)}»</h3>
+    <div class="lab hint" style="margin:0 0 4px">الأقسام:</div>
+    ${avail.map(s => `<label class="chk"><input type="checkbox" class="exS" value="${s}" ${!only || only === s ? 'checked' : ''}> ${SVC[s].icon} ${SVC[s].name}<small>${(b.res[s] || []).length}</small></label>`).join('')}
+    <label class="chk"><input type="checkbox" id="exStar"> ⭐ المميَّز فقط</label>
+    ${avail.includes('fawaid') ? `<div class="set-row"><div class="lab">ترتيب الفوائد</div><div class="seg"><button class="on" data-act="exOrd" data-v="type">بحسب النوع</button><button data-act="exOrd" data-v="page">بترتيب الكتاب</button></div></div>` : ''}
+    <label class="chk"><input type="checkbox" id="exPg" checked> إظهار أرقام الصفحات</label>
+    <label class="chk"><input type="checkbox" id="exNote" ${ST.aiNote ? 'checked' : ''}> تنبيه على الغلاف بأنها مستخرجة بمساعدة Gemini</label>
+    <div class="sheet-actions"><button class="btn primary" data-act="doPdf">📄 PDF</button><button class="btn" data-act="doWord">📝 وورد</button><button class="btn" data-act="doCopy">📋 نص</button></div>
+    <p class="hint">PDF: تظهر صفحة الطباعة، فاضغط زر المشاركة ⬆️ في أعلاها ثم «حفظ في الملفات»، فيُحفظ الملف PDF.</p>`);
+}
+function exportOpts() {
+  return { secs: [...document.querySelectorAll('.exS')].filter(i => i.checked).map(i => i.value), star: $('#exStar') && $('#exStar').checked, ord: SS.ord || 'type', pg: !$('#exPg') || $('#exPg').checked, note: $('#exNote') && $('#exNote').checked };
+}
+
+/* ================= بناء الكتيّب (PDF / وورد / نص) ================= */
+const NUM = n => String(n).replace(/\d/g, d => '٠١٢٣٤٥٦٧٨٩'[d]);
+function hijri() { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date()); } catch (e) { return ''; } }
+function buildDoc(b, o) {
+  const pick = s => (b.res[s] || []).filter(x => !o.star || x.star);
+  const ref = x => o.pg && x.p ? ` <span class="ref">[${pRef(b, x.p)}]</span>` : '';
+  const secs = o.secs.filter(s => s === 'alam' ? pick(s).length : pick(s).length || (s === 'summary' && b.overall && !o.star));
+  const titles = { summary: 'التلخيص', fawaid: 'الفوائد', tree: 'التشجير', qa: 'أسئلة المراجعة', nusus: 'فهرس الآيات والأحاديث والآثار', alam: 'فهرس الأعلام', gharib: 'المصطلحات وغريب الألفاظ' };
+  let h = `<div class="doc"><div class="cover"><div class="bas">بسم الله الرحمن الرحيم</div><h1>${esc(b.title)}</h1>${b.author ? `<div class="au">${esc(b.author)}</div>` : ''}
+    <div class="what">${secs.map(s => titles[s]).join(' · ')}</div>
+    ${ST.author ? `<div class="by">استخراج وترتيب<br><b>${esc(ST.author)}</b></div>` : ''}<div class="dt">${hijri()}${hijri() ? ' — ' : ''}${new Date().toLocaleDateString('ar-DZ', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
+    ${o.note ? `<div class="note">استُخرجت هذه المادة بمساعدة الذكاء الاصطناعي (Gemini)${o.pg && paged(b) ? `، وأرقام الصفحات بحسب ${b.kind === 'shamela' ? 'ترقيم المكتبة الشاملة' : b.kind === 'text' ? 'مقاطع النص' : 'ترتيب صفحات الملف'}` : ''}؛ فراجِع الأصل قبل النقل منها.</div>` : ''}</div>`;
+  if (secs.length > 1) h += `<div class="toc"><h2>الفهرس</h2><ol>${secs.map(s => `<li>${titles[s]}</li>`).join('')}</ol></div>`;
+  secs.forEach((s, si) => {
+    h += `<div class="part ${si === 0 ? 'first' : ''}"><h2>${titles[s]}</h2>`;
+    const items = pick(s);
+    if (s === 'summary') {
+      if (b.overall && !o.star) h += `<div class="ov"><b>الخلاصة الجامعة:</b>\n${esc(b.overall)}</div>`;
+      h += items.map(x => `<div class="sumb">${x.title ? `<h4>${esc(x.title)}${ref(x)}</h4>` : ''}<div>${esc(x.text)}${x.title ? '' : ref(x)}</div></div>`).join('');
+    } else if (s === 'fawaid') {
+      if (o.ord === 'type') { let n = 0; TYPES.forEach(t => { const g = items.filter(x => x.type === t); if (!g.length) return; h += `<h3 style="border-color:${TCOLOR[t]}">${TPLURAL[t]}</h3>` + g.map(x => `<div class="itm"><span class="n">${NUM(++n)}.</span>${esc(x.text)}${ref(x)}</div>`).join(''); }); }
+      else { let lastSec = ''; h += items.map((x, i) => { let s2 = ''; if (x.sec && normAr(x.sec) !== normAr(lastSec)) { lastSec = x.sec; s2 = `<h3>${esc(x.sec)}</h3>`; } return s2 + `<div class="itm"><span class="n">${NUM(i + 1)}.</span><span class="tg" style="color:${TCOLOR[x.type]}">${x.type}</span>${esc(x.text)}${ref(x)}</div>`; }).join(''); }
+    } else if (s === 'tree') {
+      h += items.map(x => `<div class="tr l${x.lvl}" style="padding-inline-start:${(x.lvl - 1) * 7}mm">${x.lvl > 1 ? ['', '◆ ', '● ', '○ ', '– '][x.lvl - 1] : ''}${esc(x.text)}${ref(x)}</div>`).join('');
+    } else if (s === 'qa') {
+      h += items.map((x, i) => `<div class="qa"><div class="qq">${NUM(i + 1)}. ${esc(x.q)}</div><div class="an">${esc(x.a)}${ref(x)}</div></div>`).join('');
+    } else if (s === 'nusus') {
+      [['آية', 'الآيات'], ['حديث', 'الأحاديث'], ['أثر', 'الآثار']].forEach(([k, l]) => { const g = items.filter(x => x.kind === k); if (!g.length) return; h += `<h3>${l}</h3>` + g.map((x, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span>${k === 'آية' ? '﴿' + esc(x.text.replace(/^[﴿{(«]+|[﴾})»]+$/g, '')) + '﴾' : esc(x.text)}${x.ref ? ` <span class="ref">(${esc(x.ref)})</span>` : ''}${ref(x)}</div>`).join(''); });
+    } else if (s === 'alam') {
+      const src = o.star ? { res: { alam: items } } : b;
+      h += alamMerged(Object.assign({}, b, src)).map((a, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span><b>${esc(a.name)}</b>${a.notes.length ? ': ' + esc(a.notes.join(' — ')) : ''}${o.pg && a.pages.length ? ` <span class="ref">[${unitOf(b)} ${a.pages.join('، ')}]</span>` : ''}</div>`).join('');
+    } else if (s === 'gharib') {
+      h += items.slice().sort((a, z) => normAr(a.term).localeCompare(normAr(z.term), 'ar')).map(x => `<div class="itm"><b>${esc(x.term)}</b>: ${esc(x.meaning)}${x.src === 'إيضاح' ? ' <span class="ref">(إيضاح)</span>' : ''}${ref(x)}</div>`).join('');
+    }
+    h += '</div>';
+  });
+  h += `<div class="end">والحمد لله رب العالمين</div></div>`;
+  return h;
+}
+function docText(b, o) {
+  const d = document.createElement('div'); d.innerHTML = buildDoc(b, o);
+  d.querySelectorAll('h1,h2,h3,h4,.itm,.qa,.tr,.sumb,.ov,.au,.by,.dt,.what,.note,.bas,.end,li').forEach(e => e.insertAdjacentText('afterend', '\n'));
+  d.querySelectorAll('h2,h3').forEach(e => e.insertAdjacentText('beforebegin', '\n'));
+  return d.textContent.replace(/\n{3,}/g, '\n\n').trim();
+}
+function doPrint(html, title) {
+  const p = $('#print'); p.innerHTML = html;
+  const old = document.title; document.title = title;
+  const done = () => { p.innerHTML = ''; document.title = old; window.removeEventListener('afterprint', done); };
+  window.addEventListener('afterprint', done);
+  closeSheet();
+  setTimeout(() => { try { window.print(); } catch (e) { toast('تعذّرت الطباعة هنا. افتح الرابط في Safari وجرّب.'); } }, 350);
+}
+async function shareOrDownload(blob, name) {
+  const file = new File([blob], name, { type: blob.type });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) { try { await navigator.share({ files: [file], title: name }); return; } catch (e) { if (e && e.name === 'AbortError') return; } }
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000);
+}
+function wordDoc(html, title) {
+  const css = `body{direction:rtl;font-family:"Traditional Arabic","Simplified Arabic",serif;font-size:16pt;line-height:1.7}
+  h1{font-size:28pt;color:#5a2408;text-align:center}h2{font-size:20pt;color:#5a2408;border-bottom:2px solid #8a3b12;page-break-before:always}
+  h3{font-size:16pt;color:#5a2408;background:#f7efe7;border-right:5px solid #8a3b12;padding:2px 8px}h4{font-size:15pt;color:#5a2408;margin:6px 0 2px}
+  .cover{text-align:center;page-break-after:always}.bas{font-size:18pt;color:#8a3b12}.au{font-size:16pt}.by{font-size:16pt;margin-top:40px}.dt,.note,.what{font-size:12pt;color:#555}
+  .ref{font-size:11pt;color:#777}.n{color:#8a3b12;font-weight:bold}.tg{font-size:11pt;font-weight:bold}.qq{font-weight:bold}.ov{background:#f7efe7;padding:8px}.tr.l1{font-weight:bold;color:#5a2408}.tr.l2{font-weight:bold}
+  .itm,.qa,.sumb{margin-bottom:6px}.end{text-align:center;color:#5a2408;font-size:16pt}`;
+  return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(title)}</title><style>${css}</style></head><body dir="rtl" lang="ar">${html.replace(/\n/g, '<br>')}</body></html>`;
+}
+const safeName = s => String(s || 'كتاب').replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 80);
+
+/* ================= الأفعال ================= */
+const curB = () => B(view.id) || B(SS.b);
+const ACT = {
+  sheetNo: closeSheet,
+  goHome: () => go('home'),
+  backBook: () => go('book', view.id),
+  backQa: () => go('svc', view.id, 'qa'),
+  open: d => go('book', d.id),
+  openRes: d => go('svc', d.id, d.s),
+  goSearch: () => go('search'),
+  goStars: () => go('stars'),
+  settings: settingsSheet,
+  pick: d => { const i = $('#' + d.f); i.value = ''; i.click(); },
+  pickImg: () => { imgTarget = null; const i = $('#fImg'); i.value = ''; i.click(); },
+  moreImgs: () => { imgTarget = view.id; const i = $('#fImg'); i.value = ''; i.click(); },
+  linkSheet, pasteSheet,
+  pasteLink: async () => { try { $('#lkIn').value = (await navigator.clipboard.readText()).trim(); } catch (e) { toast('اضغط مطوّلًا في الخانة واختر «لصق»'); } },
+  addLink: () => addLink($('#lkIn').value, $('#lkT').value.trim()),
+  addPaste: async () => {
+    const t = $('#psX').value; if (t.trim().length < 20) { toast('الصق النص أولًا'); return; }
+    const b = await addBook({ kind: 'text', title: $('#psT').value.trim() || 'نص ملصوق — ' + new Date().toLocaleDateString('ar-DZ'), pages: splitPages(t).length, chars: t.length });
+    await DB.putBlob(b.id + ':text', t); TXC = null; closeSheet(); go('book', b.id);
+  },
+  svc: d => { const b = curB(); if ((b.res[d.s] || []).length || (RUN && RUN.id === b.id && RUN.svc === d.s)) go('svc', b.id, d.s); else runSheet(b, d.s); },
+  runSheet: d => runSheet(curB(), d.s, d.via),
+  ss: d => { SS[d.k] = d.v; if (d.k === 'density') ST.density = d.v; if (d.k === 'via') ST.via = d.v; saveST(); const a = $('#rA') && $('#rA').value, z = $('#rZ') && $('#rZ').value; const b = B(SS.b); runSheet(b, SS.s); if (a && $('#rA')) { $('#rA').value = a; $('#rZ').value = z; } },
+  startRun: () => {
+    const b = B(SS.b), s = SS.s; if (!ST.key) { toast('أضف مفتاح Gemini أولًا، أو اختر «تطبيق Gemini»', 4000); return; }
+    let a = 1, z = 1;
+    if (paged(b)) { if (!b.pages && b.kind === 'shamela' && !toInt($('#rZ').value)) { toast('أدخل رقم آخر صفحة'); return; } ({ a, z } = readRange(b, '#rA', '#rZ')); b.range = { a, z }; }
+    closeSheet(); startRun(b, s, { a, z, mode: SS.mode, density: SS.density }); if (view.name !== 'svc') go('book', b.id);
+  },
+  appGo: async () => { const b = B(SS.b); let a = 1, z = 1; if (paged(b)) { ({ a, z } = readRange(b, '#rA', '#rZ')); b.range = { a, z }; save(b); } await appSheet(b, SS.s, { a, z, mode: SS.mode, density: SS.density }); },
+  appCopy: () => copyText(APPTXT, 'نُسخت التعليمات ✓ الصقها في Gemini'),
+  appPaste: () => { let p = null; try { p = JSON.parse(localStorage.getItem('mustakhrij_pending') || 'null'); } catch (e) {} const b = p && B(p.b); if (!b) return; appSheet(b, p.s, { a: p.a, z: p.z, mode: p.mode, density: p.density }); },
+  pasteAp: async () => { try { $('#apIn').value = await navigator.clipboard.readText(); } catch (e) { toast('اضغط مطوّلًا في الخانة واختر «لصق»'); } },
+  appApply: () => appApply($('#apIn').value),
+  resume: d => { const b = curB(); if (!ST.key) { toast('أضف مفتاح Gemini أولًا'); return; } closeSheet(); startRun(b, d.s, { resume: true }); },
+  stopRun: () => { if (RUN) RUN.ctrl.abort(); },
+  bookMenu: () => { const b = curB(); openSheet(`<h3 class="ellip">${esc(b.title)}</h3>
+      <button class="menu-item" data-act="bookInfo">✏️ تعديل العنوان والمؤلف${paged(b) ? ' والنطاق' : ''}</button>
+      <button class="menu-item" data-act="exportSheet">📄 تصدير PDF أو وورد</button>
+      ${b.kind === 'text' ? `<button class="menu-item" data-act="copySrc">📋 نسخ النص الأصلي</button>` : ''}
+      ${b.url ? `<a class="menu-item" href="${esc(b.url)}" target="_blank" rel="noopener">🌐 فتح الرابط</a>` : ''}
+      <button class="menu-item danger" data-act="delBook">🗑 حذف من المكتبة</button>`); },
+  bookInfo: () => bookInfoSheet(curB().id),
+  rangeSheet: () => bookInfoSheet(curB().id),
+  fetchInfo: async () => {
+    const b = curB(); toast('يقرأ بطاقة الكتاب…', 8000);
+    try { const j = await shamelaInfo(b); if (j.title) $('#biT').value = j.title; if (j.author) $('#biA').value = j.author; const p = toInt(j.pages); if (p) { $('#biP').value = p; if (toInt($('#biRz').value) <= 1) $('#biRz').value = p; } toast('✓ راجع البيانات ثم احفظ'); }
+    catch (e) { toast(e.message || 'لم أستطع قراءة البيانات؛ أدخلها بنفسك', 4500); }
+  },
+  saveInfo: async () => {
+    const b = curB(); b.title = $('#biT').value.trim() || b.title; b.author = $('#biA').value.trim();
+    if ($('#biP')) b.pages = toInt($('#biP').value) || b.pages || 0;
+    if ($('#biRa')) { const r = readRange(b, '#biRa', '#biRz'); b.range = r; }
+    await save(b); closeSheet(); render();
+  },
+  delBook: async () => { const b = curB(); openSheet(`<h3>حذف «${esc(b.title)}»؟</h3><p class="hint">تُحذف معه كل نتائجه. لا يمكن التراجع.</p><div class="sheet-actions"><button class="btn" data-act="sheetNo">إلغاء</button><button class="btn danger" data-act="delYes">حذف</button></div>`); },
+  delYes: async () => { const b = curB(); if (RUN && RUN.id === b.id) RUN.ctrl.abort(); await DB.del(b.id); await DB.delPrefix(b.id + ':'); BOOKS = BOOKS.filter(x => x.id !== b.id); if (PDFC && PDFC.id === b.id) PDFC = null; closeSheet(); go('home'); toast('حُذف'); },
+  copySrc: async () => { const b = curB(); copyText(await DB.getBlob(b.id + ':text') || ''); closeSheet(); },
+  filt: d => { VS.f = d.v; render(); },
+  ord: d => { VS.ord = d.v; render(); },
+  item: (d, el, e) => { e.stopPropagation(); itemSheet(curB(), d.s, d.i); },
+  qaT: (d, el) => { el.classList.toggle('closed'); },
+  qaAll: () => { VS.open = !VS.open; render(); },
+  setType: async d => { const b = B(SS.b), x = b.res[SS.s].find(y => y.id === SS.id); x.type = d.v; await save(b); itemSheet(b, SS.s, SS.id); render(); },
+  itStar: async () => { const b = B(SS.b), x = b.res[SS.s].find(y => y.id === SS.id); x.star = !x.star; await save(b); closeSheet(); render(); toast(x.star ? 'مُيّز ⭐' : 'أُلغي التمييز'); },
+  itCopy: () => { const b = B(SS.b), x = b.res[SS.s].find(y => y.id === SS.id); copyText(itemText(SS.s, x) + (x.p ? ` [${pRef(b, x.p)} — ${b.title}]` : '')); },
+  itDel: async () => { const b = B(SS.b); b.res[SS.s] = b.res[SS.s].filter(y => y.id !== SS.id); await save(b); closeSheet(); render(); toast('حُذف'); },
+  itSave: async () => { const b = B(SS.b), x = b.res[SS.s].find(y => y.id === SS.id); document.querySelectorAll('[id^=ed_]').forEach(t => { x[t.id.slice(3)] = t.value.trim(); }); await save(b); closeSheet(); render(); toast('حُفظ ✓'); },
+  copySvc: () => { const b = curB(); copyText(docText(b, { secs: [view.svc], ord: VS.ord || 'type', pg: true, note: false }), 'نُسخ ✓'); },
+  overall: async () => {
+    const b = curB(); if (!ST.key) { toast('أضف مفتاح Gemini أولًا'); return; }
+    toast('يكتب الخلاصة…', 20000);
+    try { await makeOverall(b, null, () => {}); await save(b); render(); toast('✓'); } catch (e) { toast(e.message, 4000); }
+  },
+  exportSheet: d => exportSheet(curB(), d && d.s),
+  exOrd: (d, el) => { SS.ord = d.v; el.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === el)); },
+  doPdf: () => { const b = B(SS.b), o = exportOpts(); if (!o.secs.length) { toast('اختر قسمًا واحدًا على الأقل'); return; } ST.aiNote = o.note; saveST(); doPrint(buildDoc(b, o), safeName(b.title)); },
+  doWord: () => { const b = B(SS.b), o = exportOpts(); if (!o.secs.length) { toast('اختر قسمًا واحدًا على الأقل'); return; } ST.aiNote = o.note; saveST(); closeSheet(); shareOrDownload(new Blob(['﻿' + wordDoc(buildDoc(b, o), b.title)], { type: 'application/msword' }), safeName(b.title) + '.doc'); },
+  doCopy: () => { const b = B(SS.b), o = exportOpts(); copyText(docText(b, o)); },
+  exportStars: () => {
+    let h = `<div class="doc"><div class="cover"><div class="bas">بسم الله الرحمن الرحيم</div><h1>مختارات الفوائد</h1><div class="what">ما ميّزته من الكتب</div>${ST.author ? `<div class="by">جمع وترتيب<br><b>${esc(ST.author)}</b></div>` : ''}<div class="dt">${hijri()}</div></div>`;
+    let first = true;
+    BOOKS.forEach(b => { const g = []; SVC_ORDER.forEach(s => (b.res[s] || []).forEach(x => { if (x.star) g.push([s, x]); })); if (!g.length) return; h += `<div class="part ${first ? 'first' : ''}"><h2>${esc(b.title)}</h2>` + g.map(([s, x], i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span>${esc(itemText(s, x))}${x.p ? ` <span class="ref">[${pRef(b, x.p)}]</span>` : ''}</div>`).join('') + '</div>'; first = false; });
+    doPrint(h + '<div class="end">والحمد لله رب العالمين</div></div>', 'مختارات الفوائد');
+  },
+  goAsk: () => go('ask', curB().id),
+  askRange: () => { const b = curB(); const r = b.askR || b.range || { a: 1, z: b.pages || 1 }; openSheet(`<h3>نطاق البحث</h3><div class="two"><label class="fld"><span>من ${unitOf(b)}</span><input id="aA" type="number" inputmode="numeric" value="${r.a}"></label><label class="fld"><span>إلى ${unitOf(b)}</span><input id="aZ" type="number" inputmode="numeric" value="${r.z}"></label></div><p class="hint">${b.kind === 'pdf' ? 'حتى 400 صفحة في السؤال الواحد.' : b.kind === 'shamela' ? 'حتى 20 صفحة في السؤال الواحد.' : 'حتى 40 صورة.'}</p><div class="sheet-actions"><button class="btn primary" data-act="askRangeSave">حفظ</button></div>`); },
+  askRangeSave: async () => { const b = curB(); b.askR = readRange(b, '#aA', '#aZ'); await save(b); closeSheet(); render(); },
+  askGo: async () => {
+    const b = curB(), q = $('#askIn').value.trim(); if (!q) return;
+    if (!ST.key) { toast('أضف مفتاح Gemini أولًا من الإعدادات'); return; }
+    ASK = new AbortController(); ASKQ = q; b.chat = b.chat || []; const pendQ = q; render(); window.scrollTo(0, document.body.scrollHeight);
+    try { const a = await askBook(b, pendQ); b.chat.push({ q: pendQ, a, t: Date.now() }); await save(b); }
+    catch (e) { if (e.code !== 'abort') toast(e.message, 5000); }
+    ASK = null; if (view.name === 'ask') { render(); window.scrollTo(0, document.body.scrollHeight); }
+  },
+  askStop: () => { if (ASK) ASK.abort(); },
+  clearChat: async () => { const b = curB(); b.chat = []; await save(b); render(); },
+  ansMenu: d => { const b = curB(), m = b.chat[+d.i]; openSheet(`<h3>الجواب</h3><p class="hint">${esc(m.q)}</p><button class="menu-item" data-act="ansCopy" data-i="${d.i}">📋 نسخ الجواب</button><button class="menu-item" data-act="ansSave" data-i="${d.i}">💡 حفظه في الفوائد</button><button class="menu-item danger" data-act="ansDel" data-i="${d.i}">🗑 حذف</button>`); },
+  ansCopy: d => { const m = curB().chat[+d.i]; copyText(m.q + '\n\n' + m.a); closeSheet(); },
+  ansSave: async d => { const b = curB(), m = b.chat[+d.i]; const pg = toInt((m.a.match(/\((?:ص|مقطع)\s*([\d٠-٩]+)/) || [])[1]); b.res.fawaid = (b.res.fawaid || []).concat([{ id: uid(), p: pg, type: 'مسألة', sec: '', text: m.q + '\n' + m.a.replace(/\n\n\(بحثتُ[\s\S]*$/, ''), star: true }]); sortRes(b, 'fawaid'); await save(b); closeSheet(); toast('حُفظ في الفوائد ⭐'); },
+  ansDel: async d => { const b = curB(); b.chat.splice(+d.i, 1); await save(b); closeSheet(); render(); },
+  cards: () => go('cards', curB().id),
+  flip: () => { if (!VS.show) { VS.show = true; render(); } },
+  cardAns: d => { if (d.v === '1') VS.ok++; else { VS.no++; (VS.missed = VS.missed || []).push(VS.order[VS.i]); } VS.i++; VS.show = false; render(); },
+  cardsAgain: () => { VS = {}; render(); },
+  cardsMissed: () => { const m = VS.missed; VS = { order: m.sort(() => Math.random() - .5), i: 0, ok: 0, no: 0, show: false }; render(); },
+  theme: (d, el) => { ST.theme = d.v; saveST(); applyTheme(); el.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === el)); },
+  pasteKey: async () => { try { $('#kIn').value = (await navigator.clipboard.readText()).trim(); } catch (e) { toast('اضغط مطوّلًا في الخانة واختر «لصق»'); } },
+  testKey: async () => { const k = $('#kIn').value.trim(); if (!k) { toast('الصق المفتاح أولًا'); return; } toast('يختبر…'); try { const r = await fetch('https://generativelanguage.googleapis.com/v1beta/models?pageSize=1&key=' + encodeURIComponent(k)); toast(r.ok ? 'المفتاح يعمل ✓' : 'المفتاح لا يعمل ✗'); } catch (e) { toast('تعذّر الاتصال'); } },
+  saveSet: () => { ST.key = $('#kIn').value.trim(); ST.model = $('#mIn').value.trim() || 'gemini-flash-latest'; ST.author = $('#auIn').value.trim(); saveST(); closeSheet(); render(); toast('حُفظ ✓'); },
+  backup: () => { const data = JSON.stringify({ app: 'mustakhrij', v: 1, at: Date.now(), books: BOOKS }); shareOrDownload(new Blob([data], { type: 'application/json' }), 'نسخة-مستخرج-الفوائد-' + new Date().toISOString().slice(0, 10) + '.json'); }
+};
+document.addEventListener('click', e => {
+  const el = e.target.closest('[data-act]'); if (!el) return;
+  const f = ACT[el.dataset.act]; if (!f) return;
+  if (el.tagName === 'A' && el.dataset.act !== 'appCopy') return;
+  try { const r = f(el.dataset, el, e); if (r && r.catch) r.catch(err => toast(err.message || 'حدث خطأ')); } catch (err) { toast(err.message || 'حدث خطأ'); console.error(err); }
+});
+document.addEventListener('input', e => {
+  const k = e.target.dataset && e.target.dataset.inp; if (!k) return;
+  VS.q = e.target.value; if (k === 'gq') paintSearch(); else paintList();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && e.target.id === 'askIn') { e.preventDefault(); ACT.askGo(); } });
+$('#fPdf').addEventListener('change', e => onPdf(e.target.files[0]));
+$('#fDoc').addEventListener('change', e => onDoc(e.target.files[0]));
+$('#fImg').addEventListener('change', e => onImgs(e.target.files));
+$('#fBak').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { const j = JSON.parse(await f.text()); if (!j || !Array.isArray(j.books)) throw 0; let n = 0; for (const b of j.books) { const old = B(b.id); if (old) Object.assign(old, b); else BOOKS.push(b); await DB.put(b); n++; } BOOKS.sort((a, z) => (z.created || 0) - (a.created || 0)); closeSheet(); render(); toast(`استُرجع ${n} مصدر ✓`); }
+  catch (er) { toast('ملف النسخة غير صالح'); }
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener && matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+
+/* ================= البدء ================= */
+(async function init() {
+  applyTheme();
+  try { BOOKS = (await DB.all()) || []; } catch (e) { BOOKS = []; toast('تعذّر فتح التخزين في هذا المتصفح'); }
+  BOOKS.forEach(b => { b.runs = b.runs || {}; b.res = b.res || {}; Object.values(b.runs).forEach(r => { if (r.status === 'running') r.status = 'paused'; }); });
+  BOOKS.sort((a, z) => (z.created || 0) - (a.created || 0));
+  render();
+  if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
+})();
+</script>
+</body>
+</html>
