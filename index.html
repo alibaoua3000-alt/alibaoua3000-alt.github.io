@@ -1384,18 +1384,19 @@ function parseClock(v) {
   if (!p.length || p.some(isNaN)) return null;
   return p.reduce((a, b) => a * 60 + b, 0);
 }
-function aiPrompt(l) {
+function aiPrompt(l, clip) {
   const s = SR(l.seriesId), n = S.settings.aiCount;
+  const part = clip ? `\nتنبيه: المرفق جزء من الدرس فقط، من الدقيقة ${fmt(clip.s)} إلى ${fmt(clip.e)}. استخرج فوائد هذا الجزء وحده، واحسب توقيت كل فائدة من بداية الدرس كاملًا (أي بين ${fmt(clip.s)} و${fmt(clip.e)}). واجعل الملخص جملة أو جملتين عن هذا الجزء.\n` : '';
   return `أنت مساعد دقيق لطالب علم شرعي. هذا تسجيل درس علمي بعنوان «${l.title}»${s ? ' من سلسلة «' + s.title + '»' : ''}.
-استمع إلى الدرس كاملًا واستخرج الفوائد العلمية التي ذكرها الشيخ.
+استمع إلى ${clip ? 'هذا الجزء من الدرس' : 'الدرس كاملًا'} واستخرج الفوائد العلمية التي ذكرها الشيخ.${part}
 الشروط:
-1. ${n === 'auto' ? 'استخرج كل فائدة علمية مستقلة ذات قيمة، دون تكرار ولا حشو.' : 'استخرج قرابة ' + n + ' فائدة هي الأهم في الدرس.'}
+1. ${n === 'auto' ? 'استخرج كل فائدة علمية مستقلة ذات قيمة، دون تكرار ولا حشو.' : 'استخرج قرابة ' + (clip ? Math.max(3, Math.round(n * (clip.e - clip.s) / Math.max(1, l.duration || clip.e))) : n) + ' فائدة هي الأهم.'}
 2. اكتب كل فائدة في جملة أو جملتين بعربية فصيحة واضحة، أمينة لكلام الشيخ ومعناه، ولا تضف شيئًا من عندك ولا من مصادر خارج الدرس.
 3. إذا ذكر الشيخ آية أو حديثًا أو قول عالم أو تعريفًا أو قاعدة أو خلافًا فاذكره كما ورد في كلامه، ولا تنسب قولًا إلى أحد لم ينسبه الشيخ إليه.
 4. لا تخترع أسماء كتب ولا أرقام صفحات ولا أحكامًا على الأحاديث لم يذكرها الشيخ.
 5. لكل فائدة اذكر التوقيت الذي بدأ فيه الشيخ الكلام عنها بصيغة MM:SS أو H:MM:SS.
 6. صنّف كل فائدة بنوع واحد من: ${AI_TYPES.join('، ')}.
-7. اكتب ملخصًا للدرس في ثلاث جمل أو أربع.
+7. ${clip ? 'اكتب ملخصًا لهذا الجزء في جملة أو جملتين.' : 'اكتب ملخصًا للدرس في ثلاث جمل أو أربع.'}
 8. رتّب الفوائد بحسب ورودها في الدرس.
 أعد JSON فقط بهذا الشكل دون أي نص آخر:
 {"summary":"...","benefits":[{"time":"MM:SS","type":"تعريف","text":"..."}]}`;
@@ -1416,67 +1417,101 @@ function parseAI(txt, l) {
 }
 function aiSleep(ms, signal) {
   return new Promise((res, rej) => {
+    if (signal && signal.aborted) { rej(new AiError('أُلغي.', 'abort')); return; }
     const t = setTimeout(res, ms);
     if (signal) signal.addEventListener('abort', () => { clearTimeout(t); rej(new AiError('أُلغي.', 'abort')); }, { once: true });
   });
 }
-// عند انشغال Gemini (5xx) أو امتلاء حدّ نموذج (429): يعيد المحاولة تلقائيًا، ثم ينتقل إلى نموذج آخر بدل التوقف
-async function geminiCall(l, signal, onStatus) {
-  const key = (S.settings.aiKey || '').trim();
-  if (!key) throw new AiError('أضف مفتاح Gemini أولًا.', 'nokey');
-  const models = [S.settings.aiModel, 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite'].filter((v, i, a) => v && a.indexOf(v) === i);
-  const say = m => { try { onStatus && onStatus(m); } catch (e) {} };
-  let lowRes = true, lastErr = null, busyMsg = '', sawBusy = false, sawQuota = false;
+const AI_MODELS = () => [S.settings.aiModel, 'gemini-flash-latest', 'gemini-2.5-flash', 'gemini-flash-lite-latest', 'gemini-2.5-flash-lite'].filter((v, i, a) => v && a.indexOf(v) === i);
+let aiFpsOk = true;      // يُطفأ إن رفض Gemini تقليل عدد الإطارات
+const AI_CHUNK = 600;          // طول الجزء: ١٠ دقائق
+const AI_DIRECT_MAX = 1200;    // الدروس الأطول من ٢٠ دقيقة تُقسَّم مباشرة
+// محاولة واحدة لجزء أو للدرس كله، مع إعادة المحاولة عند الانشغال والانتقال بين النماذج
+async function aiTry(l, signal, key, clip, say, label) {
+  const models = AI_MODELS();
+  let lowRes = true, useFps = !!clip && aiFpsOk, lastErr = null, busyMsg = '', sawBusy = false, sawQuota = false;
   for (let mi = 0; mi < models.length; mi++) {
     for (let attempt = 0; attempt < 3; attempt++) {
-      if (attempt) { say(`Gemini مشغول، أعيد المحاولة تلقائيًا (${attempt + 1} من 3)…`); await aiSleep(attempt === 1 ? 4000 : 10000, signal); }
-      let out;
-      try { out = await geminiOnce(l, signal, key, models[mi], lowRes); }
+      if (attempt) {
+        const wait = lastErr && lastErr.code === 'quota' ? 45000 : (attempt === 1 ? 4000 : 10000);
+        say(`${label}${lastErr && lastErr.code === 'quota' ? 'بلغ الحدّ المؤقت، أنتظر قليلًا ثم أكمل' : 'Gemini مشغول، أعيد المحاولة'} (${attempt + 1} من 3)…`);
+        await aiSleep(wait, signal);
+      }
+      try { return await geminiOnce(l, signal, key, models[mi], lowRes, clip, useFps); }
       catch (e) {
         if (e.code === 'lowres') { lowRes = false; attempt--; continue; }
+        if (e.code === 'nofps') { useFps = false; aiFpsOk = false; attempt--; continue; }
         if (e.code === 'busy') { sawBusy = true; busyMsg = e.detail || busyMsg; lastErr = e; continue; }
-        if (e.code === 'quota') { sawQuota = true; lastErr = e; break; }
+        if (e.code === 'quota') { sawQuota = true; lastErr = e; if (clip && attempt < 1) continue; break; }
         if (e.code === 'model') { lastErr = e; break; }
         throw e;
       }
-      return out;
     }
-    if (mi + 1 < models.length) say('أجرّب نموذجًا آخر من Gemini…');
+    if (mi + 1 < models.length) say(label + 'أجرّب نموذجًا آخر من Gemini…');
   }
-  if (sawBusy) throw new AiError('خدمة Gemini مشغولة الآن رغم إعادة المحاولة عدة مرات. جرّب بعد ربع ساعة.' + (busyMsg ? ' (' + busyMsg.slice(0, 120) + ')' : ''), 'busy');
-  if (sawQuota) throw new AiError('بلغتَ الحدّ المجاني المؤقت في كل النماذج. انتظر قليلًا ثم أعد المحاولة (الحدّ نحو 8 ساعات فيديو يوميًا).', 'quota');
+  if (sawBusy) { const e = new AiError('خدمة Gemini مشغولة الآن رغم إعادة المحاولة عدة مرات. جرّب بعد ربع ساعة.' + (busyMsg ? ' (' + busyMsg.slice(0, 120) + ')' : ''), 'busy'); throw e; }
+  if (sawQuota) throw new AiError('بلغتَ الحدّ المجاني المؤقت في كل النماذج. انتظر قليلًا ثم أعد المحاولة.', 'quota');
   throw lastErr || new AiError('لم أجد نموذجًا متاحًا.', 'model');
 }
-async function geminiOnce(l, signal, key, model, lowRes) {
-  {
-    const body = {
-      contents: [{ role: 'user', parts: [{ fileData: { fileUri: 'https://www.youtube.com/watch?v=' + l.videoId } }, { text: aiPrompt(l) }] }],
-      generationConfig: Object.assign({ temperature: 0.3, responseMimeType: 'application/json' }, lowRes ? { mediaResolution: 'MEDIA_RESOLUTION_LOW' } : {})
-    };
-    let r, j = null;
-    try {
-      r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`,
-        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal });
-    } catch (e) {
-      if (e.name === 'AbortError' || (signal && signal.aborted)) throw new AiError('أُلغي.', 'abort');
-      throw new AiError('تعذّر الاتصال بخدمة Gemini. تحقّق من الإنترنت.', 'net');
-    }
-    try { j = await r.json(); } catch (e) {}
-    const msg = (j && j.error && j.error.message) || '';
-    if (r.status === 404) throw new AiError('النموذج غير متاح: ' + model, 'model');
-    if (r.status === 400 && lowRes && /media.?resolution/i.test(msg)) throw new AiError('', 'lowres');
-    if (!r.ok) {
-      if (/api key/i.test(msg) || r.status === 401) throw new AiError('مفتاح Gemini غير صالح. راجعه في الإعداد.', 'key');
-      if (r.status === 403) throw new AiError('المفتاح مرفوض أو غير مفعّل. راجعه في الإعداد.', 'key');
-      if (r.status === 429) throw new AiError('بلغتَ الحدّ المجاني المؤقت.', 'quota');
-      if (r.status >= 500) { const e = new AiError('خدمة Gemini مشغولة الآن.', 'busy'); e.detail = msg; throw e; }
-      throw new AiError('تعذّرت معالجة هذا الفيديو' + (msg ? ': ' + msg.slice(0, 180) : '.'), 'video');
-    }
-    const cand = j && j.candidates && j.candidates[0];
-    const txt = cand && cand.content && (cand.content.parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
-    if (!txt) throw new AiError('لم يُرجِع Gemini نتيجة' + (cand && cand.finishReason ? ' (' + cand.finishReason + ')' : '') + '. أعد المحاولة.', 'empty');
-    try { return parseAI(txt, l); } catch (e) { throw new AiError('وصلت نتيجة غير مفهومة. أعد المحاولة.', 'parse'); }
+async function geminiCall(l, signal, onStatus) {
+  const key = (S.settings.aiKey || '').trim();
+  if (!key) throw new AiError('أضف مفتاح Gemini أولًا.', 'nokey');
+  const say = m => { try { onStatus && onStatus(m); } catch (e) {} };
+  const dur = l.duration || 0;
+  // الدروس القصيرة: الدرس كله مرة واحدة، فإن فشل لانشغال أو حدّ قُسّم
+  if (!dur || dur <= AI_DIRECT_MAX) {
+    try { return await aiTry(l, signal, key, null, say, ''); }
+    catch (e) { if (!dur || !['busy', 'quota'].includes(e.code)) throw e; say('أقسّم الدرس إلى أجزاء…'); }
   }
+  // الدروس الطويلة: أجزاء من ١٠ دقائق
+  const n = Math.ceil(dur / AI_CHUNK), parts = [];
+  for (let i = 0; i < n; i++) {
+    const clip = { s: i * AI_CHUNK, e: Math.min(dur, (i + 1) * AI_CHUNK) };
+    if (clip.e - clip.s < 20) continue;
+    const label = `الجزء ${i + 1} من ${n}: `;
+    say(label + 'يستمع ويستخرج…');
+    const r = await aiTry(l, signal, key, clip, say, label);
+    // إن رجعت التوقيتات محسوبة من بداية الجزء لا من بداية الدرس، تُصحَّح
+    const ts = r.items.map(x => x.t).filter(t => t != null);
+    if (clip.s > 0 && ts.length && Math.max(...ts) <= (clip.e - clip.s) + 15 && Math.min(...ts) < clip.s - 15) r.items.forEach(x => { if (x.t != null) x.t += clip.s; });
+    parts.push(r);
+    if (i + 1 < n) await aiSleep(1500, signal);
+  }
+  const items = parts.flatMap(p => p.items);
+  const summary = parts.map(p => p.summary).filter(Boolean).join(' ');
+  return { summary, items };
+}
+async function geminiOnce(l, signal, key, model, lowRes, clip, useFps) {
+  const vid = { fileData: { fileUri: 'https://www.youtube.com/watch?v=' + l.videoId } };
+  if (clip) vid.videoMetadata = Object.assign({ startOffset: clip.s + 's', endOffset: clip.e + 's' }, useFps ? { fps: 0.2 } : {});
+  const body = {
+    contents: [{ role: 'user', parts: [vid, { text: aiPrompt(l, clip) }] }],
+    generationConfig: Object.assign({ temperature: 0.3, responseMimeType: 'application/json' }, lowRes ? { mediaResolution: 'MEDIA_RESOLUTION_LOW' } : {})
+  };
+  let r, j = null;
+  try {
+    r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`,
+      { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), signal });
+  } catch (e) {
+    if (e.name === 'AbortError' || (signal && signal.aborted)) throw new AiError('أُلغي.', 'abort');
+    throw new AiError('تعذّر الاتصال بخدمة Gemini. تحقّق من الإنترنت.', 'net');
+  }
+  try { j = await r.json(); } catch (e) {}
+  const msg = (j && j.error && j.error.message) || '';
+  if (r.status === 404) throw new AiError('النموذج غير متاح: ' + model, 'model');
+  if (r.status === 400 && lowRes && /media.?resolution/i.test(msg)) throw new AiError('', 'lowres');
+  if (r.status === 400 && useFps && /fps|frame/i.test(msg)) throw new AiError('', 'nofps');
+  if (!r.ok) {
+    if (/api key/i.test(msg) || r.status === 401) throw new AiError('مفتاح Gemini غير صالح. راجعه في الإعداد.', 'key');
+    if (r.status === 403) throw new AiError('المفتاح مرفوض أو غير مفعّل. راجعه في الإعداد.', 'key');
+    if (r.status === 429) throw new AiError('بلغتَ الحدّ المجاني المؤقت.', 'quota');
+    if (r.status >= 500) { const e = new AiError('خدمة Gemini مشغولة الآن.', 'busy'); e.detail = msg; throw e; }
+    throw new AiError('تعذّرت معالجة هذا الفيديو' + (msg ? ': ' + msg.slice(0, 180) : '.'), 'video');
+  }
+  const cand = j && j.candidates && j.candidates[0];
+  const txt = cand && cand.content && (cand.content.parts || []).filter(p => !p.thought).map(p => p.text || '').join('');
+  if (!txt) throw new AiError('لم يُرجِع Gemini نتيجة' + (cand && cand.finishReason ? ' (' + cand.finishReason + ')' : '') + '. أعد المحاولة.', 'empty');
+  try { return parseAI(txt, l); } catch (e) { throw new AiError('وصلت نتيجة غير مفهومة. أعد المحاولة.', 'parse'); }
 }
 let aiCtrl = null, aiResult = null, batch = null;
 function aiExtract(lid) {
