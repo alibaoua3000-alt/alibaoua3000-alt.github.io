@@ -281,9 +281,10 @@ const DB = {
   delPrefix(p) { return this.tx('blobs', 'readwrite', s => s.delete(IDBKeyRange.bound(p, p + '￿'))); }
 };
 const SKEY = 'mustakhrij_settings_v1';
-let ST = { key: '', model: 'gemini-flash-latest', author: 'علي بشير باوه', theme: 'auto', density: 'mid', via: 'key', aiNote: true };
+let ST = { key: '', model: 'gemini-flash-latest', author: 'علي بشير باوه', theme: 'auto', density: 'mid', via: 'app', aiNote: true };
 try { Object.assign(ST, JSON.parse(localStorage.getItem(SKEY) || '{}')); } catch (e) {}
 if (!ST.key) { try { const m = JSON.parse(localStorage.getItem('maktabati_sawtiya_v1') || 'null'); if (m && m.settings && m.settings.aiKey) ST.key = m.settings.aiKey; } catch (e) {} }
+if (!ST.v2) { ST.via = 'app'; ST.v2 = 1; try { localStorage.setItem(SKEY, JSON.stringify(ST)); } catch (e) {} }
 function saveST() { try { localStorage.setItem(SKEY, JSON.stringify(ST)); } catch (e) {} }
 let BOOKS = [];
 const B = id => BOOKS.find(b => b.id === id);
@@ -511,8 +512,8 @@ function svcPrompt(b, svc, run, desc, soft, app) {
 واكتب في "sec" عنوان الباب أو الفصل الذي ورد فيه العنصر إن ظهر في الصفحات، وإلا فاتركه فارغًا.`;
     schema = '{"items":[{"p":12,"type":"قول","sec":"باب كذا","text":"..."}]}';
   } else if (svc === 'summary') {
-    task = `المطلوب: لخّص هذه الصفحات تلخيصًا علميًا وافيًا، مرتبًا بحسب أبوابها وموضوعاتها: لكل باب أو موضوع عنوان قصير، ثم تلخيصه في فقرة أو في نقاط (كل نقطة في سطر يبدأ بـ «- »). احفظ الأقسام والتعاريف والأقوال المهمة والراجح عند المؤلف، واحذف الاستطراد والتكرار.${app ? '\nثم اكتب في "overall" خلاصة جامعة لما قرأته في 8 إلى 15 نقطة: مقصوده، ومنهجه، وأهم مسائله.' : ''}`;
-    schema = app ? '{"overall":"- ...\\n- ...","items":[{"p":12,"title":"...","text":"..."}]}' : '{"items":[{"p":12,"title":"...","text":"..."}]}';
+    task = `المطلوب: لخّص هذه الصفحات تلخيصًا علميًا وافيًا، مرتبًا بحسب أبوابها وموضوعاتها: لكل باب أو موضوع عنوان قصير، ثم تلخيصه في فقرة أو في نقاط (كل نقطة في سطر يبدأ بـ «- »). احفظ الأقسام والتعاريف والأقوال المهمة والراجح عند المؤلف، واحذف الاستطراد والتكرار.${app === 2 ? '\nثم اكتب في "overall" خلاصة جامعة لما قرأته في 8 إلى 15 نقطة: مقصوده، ومنهجه، وأهم مسائله.' : ''}`;
+    schema = app === 2 ? '{"overall":"- ...\\n- ...","items":[{"p":12,"title":"...","text":"..."}]}' : '{"items":[{"p":12,"title":"...","text":"..."}]}';
   } else if (svc === 'tree') {
     task = `المطلوب: شجّر مسائل هذه الصفحات تشجيرًا هرميًا كما يفعل طلاب العلم: الباب، ثم الفصل، ثم المسألة، ثم الأقسام والأقوال والأدلة والشروط. كل عقدة عبارة قصيرة (لا تزيد على 15 كلمة)، و"lvl" مستواها من 1 (الأعلى) إلى 5. حافظ على ترتيب المؤلف.`;
     schema = '{"items":[{"lvl":1,"text":"...","p":12}]}';
@@ -540,7 +541,7 @@ function svcPrompt(b, svc, run, desc, soft, app) {
 3. انقل الآيات والأحاديث كما وردت في النص.
 4. رتّب العناصر بحسب ورودها.
 5. إن كانت هذه الصفحات غلافًا أو فهرسًا أو مقدمة نشر لا علم فيها، فأرجع "items" فارغة.${soft ? '\n6. اكتب بأسلوبك مختصرًا، ولا تنقل فقرات طويلة حرفيًا.' : ''}
-أعد JSON صحيحًا فقط، دون أي كلام قبله أو بعده، بهذا الشكل:
+${app ? 'أعد النتيجة JSON صحيحًا كاملًا داخل كتلة كود واحدة تبدأ بـ ```json وتنتهي بـ ```، دون أي كلام قبلها أو بعدها، حتى أنسخها بزر النسخ. وهذا شكلها:' : 'أعد JSON صحيحًا فقط، دون أي كلام قبله أو بعده، بهذا الشكل:'}
 ${schema}`;
   return head + task + rules;
 }
@@ -645,9 +646,12 @@ function sortRes(b, svc) {
   arr.sort((x, y) => ((x.p ?? 1e9) - (y.p ?? 1e9)) || (x._o - y._o));
   arr.forEach(x => delete x._o);
 }
+function overallPrompt(b, app) {
+  const src = (b.res.summary || []).map(x => `(${pRef(b, x.p)}) ${x.title}: ${x.text}`).join('\n').slice(0, app ? 60000 : 300000);
+  return `هذه ملخصات أجزاء كتاب «${b.title}»${b.author ? ' — ' + b.author : ''}، مرتبة بحسب ورودها:\n\n${src}\n\nاكتب خلاصة جامعة للكتاب في 8 إلى 15 نقطة مرتبة، كل نقطة في سطر يبدأ بـ «- »: مقصود الكتاب، ومنهجه، وأهم مسائله وما رجّحه المؤلف. اعتمد على هذه الملخصات وحدها.\n${app ? 'أعد النتيجة JSON داخل كتلة كود واحدة تبدأ بـ ```json حتى أنسخها بزر النسخ، بهذا الشكل' : 'أعد JSON فقط بهذا الشكل'}: {"overall":"- ...\\n- ..."}`;
+}
 async function makeOverall(b, signal, say) {
-  const src = (b.res.summary || []).map(x => `(${pRef(b, x.p)}) ${x.title}: ${x.text}`).join('\n').slice(0, 300000);
-  const prompt = `هذه ملخصات أجزاء كتاب «${b.title}»${b.author ? ' — ' + b.author : ''}، مرتبة بحسب ورودها:\n\n${src}\n\nاكتب خلاصة جامعة للكتاب في 8 إلى 15 نقطة مرتبة، كل نقطة في سطر يبدأ بـ «- »: مقصود الكتاب، ومنهجه، وأهم مسائله وما رجّحه المؤلف. اعتمد على هذه الملخصات وحدها.\nأعد JSON فقط بهذا الشكل: {"overall":"- ...\\n- ..."}`;
+  const prompt = overallPrompt(b, false);
   b.overall = await aiTry(async model => {
     const { txt } = await gemini(model, [{ text: prompt }], { json: true, signal, maxTokens: 8192 });
     const j = looseJSON(txt); if (!j || !j.overall) throw new AiError('', 'parse'); return String(j.overall).trim();
@@ -772,29 +776,56 @@ async function askBook(b, q) {
     pl = { parts: [], desc: `فيما يلي نص الكتاب مقسّمًا إلى مقاطع مرقّمة بين معقوفين.\n<<<بداية النص\n${txt}\nنهاية النص>>>` };
   } else pl = await payload(b, 1, 1);
   const hist = (b.chat || []).slice(-3).map(m => `سؤال سابق: ${m.q}\nجواب سابق: ${m.a.slice(0, 1500)}`).join('\n\n');
-  const prompt = `أنت باحث أمين تساعد طالب علم شرعي.\nالكتاب: «${b.title}»${b.author ? ' — ' + b.author : ''}.\n${pl.desc}\n\n${hist ? hist + '\n\n' : ''}السؤال: ${q}\n\nأجب من هذا الكتاب وحده بعبارة واضحة مرتبة. اذكر بعد كل معلومة موضعها بين قوسين هكذا (${unitOf(b)} 12). وإن نقلت كلام المؤلف بلفظه فضعه بين «». لا تخترع أرقام صفحات ولا أقوالًا. إن لم تجد الجواب في الكتاب فقل بوضوح: «لم أجد هذا في الكتاب»، ثم لك أن تضيف فائدة من خارجه بشرط أن تبدأها بعبارة «من خارج الكتاب:».`;
+  const prompt = askPrompt(b, pl.desc, q, false, hist);
   const ans = await aiTry(async model => (await gemini(model, [...pl.parts, { text: prompt }], { tools: pl.tools, signal: ASK && ASK.signal, maxTokens: 8192 })).txt.trim(), m => { const el = $('#askWait'); if (el) el.textContent = m; }, ASK && ASK.signal);
   return note ? ans + '\n\n' + note : ans;
+}
+function askPrompt(b, desc, q, app, hist) {
+  return `أنت باحث أمين تساعد طالب علم شرعي.\nالكتاب: «${b.title}»${b.author ? ' — ' + b.author : ''}.\n${desc}\n\n${hist ? hist + '\n\n' : ''}السؤال: ${q}\n\nأجب من هذا الكتاب وحده بعبارة واضحة مرتبة. اذكر بعد كل معلومة موضعها بين قوسين هكذا (${unitOf(b)} 12). وإن نقلت كلام المؤلف بلفظه فضعه بين «». لا تخترع أرقام صفحات ولا أقوالًا. إن لم تجد الجواب في الكتاب فقل بوضوح: «لم أجد هذا في الكتاب»، ثم لك أن تضيف فائدة من خارجه بشرط أن تبدأها بعبارة «من خارج الكتاب:».`;
 }
 let ASK = null, ASKQ = '';
 
 /* ================= طريقة تطبيق Gemini ================= */
 const GEMINI_URL = 'https://gemini.google.com/app';
-async function appPrompt(b, svc, o) {
-  const run = { mode: o.mode, density: o.density };
-  let desc = '', attach = '';
-  if (b.kind === 'pdf') { desc = `أرفقتُ لك ملف الكتاب (PDF). اعمل على الصفحات من ${o.a} إلى ${o.z} بحسب ترتيب صفحات الملف، واكتب في "p" رقم الصفحة بهذا الترتيب.`; attach = `اضغط ➕ في Gemini وأرفق ملف الكتاب «${esc(b.title)}» من «الملفات»`; }
-  else if (b.kind === 'images') { desc = `أرفقتُ لك صور صفحات درس مكتوب (قد تكون بخط اليد) بالترتيب. اعمل على الصور من ${o.a} إلى ${o.z}، واكتب في "p" رقم الصورة. وإن لم تتبيّن كلمة فلا تخمّنها.`; attach = 'اضغط ➕ في Gemini وأرفق صور الصفحات نفسها بالترتيب'; }
-  else if (b.kind === 'text') {
-    const pg = await textPages(b); const txt = pg.slice(o.a - 1, o.z).map((t, i) => `[${o.a + i}]\n${t}`).join('\n\n');
-    if (txt.length <= 60000) { desc = `فيما يلي نص من الكتاب مقسّم إلى مقاطع، وقبل كل مقطع رقمه بين معقوفين. اكتب في "p" رقم المقطع.\n\n<<<بداية النص\n${txt}\nنهاية النص>>>`; attach = 'لا تحتاج إلى إرفاق شيء، فالنص داخل التعليمات'; }
-    else { desc = `أرفقتُ لك ملف الكتاب. اعمل عليه كاملًا، واكتب في "p" رقمًا تقريبيًا لموضع العنصر أو 0.`; attach = 'النص طويل: اضغط ➕ في Gemini وأرفق ملف الوورد نفسه'; }
-  } else if (b.kind === 'shamela') {
-    const urls = []; for (let i = o.a; i <= Math.min(o.z, o.a + 49); i++) urls.push(shamelaUrl(b, i));
-    desc = `افتح روابط صفحات الكتاب التالية من المكتبة الشاملة واقرأها كلها، وكل رابط صفحة واحدة ورقمها في آخره:\n${urls.join('\n')}\nاكتب في "p" رقم الصفحة.`; attach = 'لا تحتاج إلى إرفاق شيء، فالروابط داخل التعليمات';
-  } else { desc = `افتح هذا الرابط واقرأ محتواه كاملًا:\n${b.url}\nواكتب في "p" رقم الصفحة إن وُجد، وإلا 0.`; attach = 'لا تحتاج إلى إرفاق شيء، فالرابط داخل التعليمات'; }
-  return { text: svcPrompt(b, svc, run, desc, false, true), attach };
+const APP_PP = { fawaid: 15, summary: 25, tree: 25, qa: 20, nusus: 20, alam: 30, gharib: 20 };
+function appParts(b, svc, a, z, density) {
+  if (!paged(b)) return [{ a: 1, b: 1 }];
+  let pp = APP_PP[svc] || 20;
+  if (svc === 'fawaid' && density === 'max') pp = 10;
+  if (b.kind === 'images') pp = Math.min(pp, 10);
+  if (b.kind === 'shamela') pp = 15;
+  if (b.kind === 'text') pp = 25;
+  const out = []; for (let i = a; i <= z; i += pp) out.push({ a: i, b: Math.min(z, i + pp - 1) });
+  return out;
 }
+// وصف المصدر لتطبيق Gemini، والملفات التي تُرفق معه
+async function appSource(b, a, z, first, forAsk) {
+  const r = { desc: '', attach: '', files: [] };
+  if (b.kind === 'pdf') {
+    if (first) { r.attach = `أرفق ملف الكتاب: اضغط «📤 أرسل الملف إلى Gemini» واختر Gemini، أو اضغط ➕ في Gemini واختر الملف «${esc(b.title)}»`; const buf = await DB.getBlob(b.id + ':file'); if (buf) r.files = [new File([buf], safeName(b.title) + '.pdf', { type: 'application/pdf' })]; }
+    else r.attach = 'اكتب في المحادثة نفسها التي أرفقت فيها الكتاب، ولا تحتاج إلى إرفاقه مرة أخرى';
+    r.desc = (first ? 'أرفقتُ لك ملف الكتاب (PDF).' : 'ارجع إلى ملف الكتاب (PDF) الذي أرفقته لك في أول هذه المحادثة.') + (forAsk ? '' : ` اعمل على الصفحات من ${a} إلى ${z} فقط، بحسب ترتيب صفحات الملف (لا بالأرقام المطبوعة عليها)، واكتب في "p" رقم الصفحة بهذا الترتيب.`);
+  } else if (b.kind === 'images') {
+    for (let i = a; i <= z; i++) { const u8 = await DB.getBlob(b.id + ':img:' + i); if (u8) r.files.push(new File([u8], `صفحة-${i}.jpg`, { type: 'image/jpeg' })); }
+    r.attach = `أرفق صور هذا الجزء (${r.files.length} صور): اضغط «📤 أرسل الصور إلى Gemini» واختر Gemini، أو احفظها ثم أرفقها بزر ➕`;
+    r.desc = `أرفقتُ لك ${r.files.length} صور لصفحات درس مكتوب (قد تكون بخط اليد)، وهي الصفحات من ${a} إلى ${z} بالترتيب: الصورة الأولى هي الصفحة ${a}. اقرأ الخط بعناية، وإن لم تتبيّن كلمة فلا تخمّنها.${forAsk ? '' : ' اكتب في "p" رقم الصفحة.'}`;
+  } else if (b.kind === 'text') {
+    const pg = await textPages(b); const txt = pg.slice(a - 1, z).map((t, i) => `[${a + i}]\n${t}`).join('\n\n');
+    if (txt.length <= 60000) { r.desc = `فيما يلي نص من الكتاب مقسّم إلى مقاطع، وقبل كل مقطع رقمه بين معقوفين مثل [${a}].${forAsk ? '' : ' اكتب في "p" رقم المقطع الذي ورد فيه العنصر.'}\n\n<<<بداية النص\n${txt}\nنهاية النص>>>`; r.attach = 'لا تحتاج إلى إرفاق شيء، فالنص داخل التعليمات'; }
+    else { r.desc = 'أرفقتُ لك نص الكتاب في ملف، ومقاطعه مرقّمة بين معقوفين مثل [12].' + (forAsk ? '' : ' اكتب في "p" رقم المقطع.'); r.attach = 'النص طويل: اضغط «📤 أرسل الملف إلى Gemini» أو أرفقه بزر ➕'; r.files = [new File([txt], safeName(b.title) + '.txt', { type: 'text/plain' })]; }
+  } else if (b.kind === 'shamela') {
+    const urls = []; for (let i = a; i <= Math.min(z, a + 39); i++) urls.push(shamelaUrl(b, i));
+    r.desc = `افتح روابط صفحات الكتاب التالية من المكتبة الشاملة واقرأها كلها، وكل رابط صفحة واحدة ورقمها هو الرقم الذي في آخره:\n${urls.join('\n')}${forAsk ? '' : '\nاكتب في "p" رقم الصفحة.'}`;
+    r.attach = 'لا تحتاج إلى إرفاق شيء، فالروابط داخل التعليمات';
+  } else {
+    r.desc = `افتح هذا الرابط واقرأ محتواه كاملًا:\n${b.url}${forAsk ? '' : '\nواكتب في "p" رقم الصفحة إن وُجد، وإلا 0.'}`;
+    r.attach = 'لا تحتاج إلى إرفاق شيء، فالرابط داخل التعليمات';
+  }
+  return r;
+}
+const getPend = () => { try { return JSON.parse(localStorage.getItem('mustakhrij_pending') || 'null'); } catch (e) { return null; } };
+const setPend = p => { try { if (p) localStorage.setItem('mustakhrij_pending', JSON.stringify(p)); else localStorage.removeItem('mustakhrij_pending'); } catch (e) {} };
+let APPTXT = '', APPFILES = [];
 
 /* ================= العرض ================= */
 let view = { name: 'home' };
@@ -824,7 +855,9 @@ function bookMeta(b) {
   return [k.label, n, b.author].filter(Boolean).join(' · ');
 }
 function homeV() {
-  const keyBanner = !ST.key ? `<div class="banner">لتعمل الخدمات تلقائيًا أضف مفتاح Gemini (مجاني). ويمكنك بدونه أن تستعمل طريقة «تطبيق Gemini» باشتراكك.<button class="btn block" data-act="settings">⚙️ إضافة المفتاح</button></div>` : '';
+  const pend = getPend(), pb = pend && pend.kind === 'svc' && B(pend.b);
+  const keyBanner = (pb ? `<div class="banner">📱 لم يكتمل: <b>${SVC[pend.s].name}</b> — ${esc(pb.title)} (الجزء ${pend.i + 1} من ${pend.parts.length})<button class="btn block primary" data-act="appResume">أكمل عبر Gemini</button></div>` : '')
+    + (!BOOKS.length ? `<div class="banner">يعمل مباشرة مع <b>تطبيق Gemini</b> باشتراكك: تنسخ التعليمات وتلصقها في Gemini، ثم تنسخ النتيجة وتلصقها هنا، فتُرتَّب وحدها. ولا تحتاج إلى مفتاح.</div>` : '');
   const list = BOOKS.length ? BOOKS.map(b => `<div class="bk" data-act="open" data-id="${b.id}"><div class="cv" style="background:${KIND[b.kind].color}">${KIND[b.kind].icon}</div><div class="mn"><div class="tt">${esc(b.title)}</div><div class="mt">${esc(bookMeta(b))}</div><div class="badges">${runBadge(b)}${counts(b)}</div></div></div>`).join('')
     : `<div class="card empty"><div style="font-size:40px">📚</div><b style="color:var(--text)">مكتبتك فارغة</b><ol class="steps"><li>أضف كتابًا أو محاضرة أو صور درس من الأزرار أعلاه.</li><li>اختر الخدمة: الفوائد، أو التلخيص، أو التشجير، أو الأسئلة…</li><li>صدّر النتيجة PDF مرتبًا باسمك، أو وورد.</li></ol></div>`;
   return topBar('مستخرج الفوائد', 'من الكتب والمحاضرات والدروس المكتوبة', '', `<button class="icon-btn" data-act="goSearch" aria-label="بحث">🔍</button><button class="icon-btn" data-act="goStars" aria-label="المفضلة">⭐</button><button class="icon-btn" data-act="settings" aria-label="الإعدادات">⚙️</button>`)
@@ -841,6 +874,7 @@ function homeV() {
 function svcStatus(b, s) {
   const r = b.runs[s], n = (b.res[s] || []).length;
   if (RUN && RUN.id === b.id && RUN.svc === s) return `<span class="st">⏳ جارٍ ${RUN.done}/${RUN.n}</span>`;
+  if (r && r.status === 'app') return `<span class="st">📱 ${r.parts.filter(p => p.done).length} من ${r.parts.length} أجزاء</span>`;
   if (r && (r.status === 'paused' || r.status === 'error')) return `<span class="st">⏸ لم يكتمل (${r.parts.filter(p => p.done).length}/${r.parts.length})</span>`;
   if (n) return `<span class="st done">✓ ${n}${r && paged(b) && r.a ? ` · ${unitOf(b)} ${r.a}–${r.z}` : ''}</span>`;
   return '<span class="st" style="color:var(--muted);font-weight:500">لم يُستخرج بعد</span>';
@@ -848,7 +882,9 @@ function svcStatus(b, s) {
 function bookV(b) {
   const r = b.range;
   const err = Object.entries(b.runs || {}).filter(([s, v]) => (v.status === 'error' || v.status === 'paused') && !(RUN && RUN.id === b.id && RUN.svc === s));
-  const errB = err.map(([s, v]) => `<div class="banner ${v.status === 'error' ? 'err' : ''}"><b>${SVC[s].icon} ${SVC[s].name}</b>: ${v.status === 'error' ? esc(v.err || 'توقّف') : 'أُوقف قبل أن يكتمل'} (اكتمل ${v.parts.filter(p => p.done).length} من ${v.parts.length} أجزاء)<div class="row"><button class="btn sm primary" data-act="resume" data-s="${s}">↻ استكمال</button>${v.status === 'error' ? `<button class="btn sm" data-act="runSheet" data-s="${s}" data-via="app">📱 عبر تطبيق Gemini</button>` : ''}</div></div>`).join('');
+  const pend = getPend();
+  const appB = pend && pend.kind === 'svc' && pend.b === b.id ? `<div class="banner">📱 <b>${SVC[pend.s].icon} ${SVC[pend.s].name}</b>: بقي الجزء ${pend.i + 1} من ${pend.parts.length}<button class="btn block primary" data-act="appResume">أكمل عبر Gemini</button></div>` : '';
+  const errB = appB + err.map(([s, v]) => `<div class="banner ${v.status === 'error' ? 'err' : ''}"><b>${SVC[s].icon} ${SVC[s].name}</b>: ${v.status === 'error' ? esc(v.err || 'توقّف') : 'أُوقف قبل أن يكتمل'} (اكتمل ${v.parts.filter(p => p.done).length} من ${v.parts.length} أجزاء)<div class="row"><button class="btn sm primary" data-act="resume" data-s="${s}">↻ استكمال</button>${v.status === 'error' ? `<button class="btn sm" data-act="runSheet" data-s="${s}" data-via="app">📱 عبر تطبيق Gemini</button>` : ''}</div></div>`).join('');
   const imgs = b.kind === 'images' ? `<div class="thumbs" id="thumbs"></div>` : '';
   setTimeout(() => paintThumbs(b), 0);
   return topBar(esc(b.title), esc(bookMeta(b)), 'goHome', `<button class="icon-btn" data-act="bookMenu" aria-label="المزيد">⋯</button>`)
@@ -943,9 +979,11 @@ function cardsV(b) {
 const fmtAns = t => esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/^#+\s*(.+)$/gm, '<b>$1</b>').replace(/^\s*[*]\s+/gm, '• ');
 function askV(b) {
   const msgs = (b.chat || []).map((m, i) => `<div class="msg me">${esc(m.q)}</div><div class="msg ai" data-act="ansMenu" data-i="${i}">${fmtAns(m.a)}</div>`).join('');
+  const via = (!ST.key || ST.via === 'app') ? 'app' : 'key';
+  const meth = `<div class="seg" style="margin:-4px 0 10px"><button class="${via === 'app' ? 'on' : ''}" data-act="askVia" data-v="app">📱 عبر تطبيق Gemini</button><button class="${via === 'key' ? 'on' : ''}" data-act="askVia" data-v="key">⚡ تلقائي بالمفتاح</button></div>`;
   const rng = paged(b) && b.kind !== 'text' ? `<div class="hint" style="margin:-6px 0 10px">يبحث في: ${unitOf(b)} ${(b.askR || b.range || { a: 1 }).a}–${(b.askR || b.range || { z: b.pages }).z} <button class="btn sm" data-act="askRange" style="min-height:28px">تغيير</button></div>` : '';
   return topBar('🔎 اسأل الكتاب', esc(b.title), 'backBook', b.chat && b.chat.length ? `<button class="icon-btn" data-act="clearChat" aria-label="مسح">🗑</button>` : '')
-    + rng + `<div class="chat">${msgs || `<div class="card empty">اكتب سؤالك عن أي مسألة في الكتاب، مثل:<br>«ما شروط الصلاة عند المؤلف؟» أو «ما الذي رجّحه في مسألة كذا؟» أو «اذكر الأدلة على كذا».</div>`}
+    + meth + rng + `<div class="chat">${msgs || `<div class="card empty">اكتب سؤالك عن أي مسألة في الكتاب، مثل:<br>«ما شروط الصلاة عند المؤلف؟» أو «ما الذي رجّحه في مسألة كذا؟» أو «اذكر الأدلة على كذا».</div>`}
     ${ASK ? `<div class="msg me">${esc(ASKQ)}</div><div class="msg ai"><span class="spin" style="display:inline-block;vertical-align:middle"></span> <span id="askWait">يقرأ الكتاب ويبحث…</span></div>` : ''}</div>
     <div class="askbox"><textarea id="askIn" rows="1" placeholder="اكتب سؤالك…" ${ASK ? 'disabled' : ''}></textarea><button class="btn primary" data-act="${ASK ? 'askStop' : 'askGo'}">${ASK ? 'إيقاف' : 'اسأل'}</button></div>`;
 }
@@ -1019,46 +1057,91 @@ function runSheet(b, s, via) {
   SS = Object.assign({ b: b.id, s, mode: 'all', density: ST.density || 'mid', via: via || ST.via || 'key' }, SS.b === b.id && SS.s === s ? SS : {}, via ? { via } : {});
   const rg = b.range || { a: 1, z: b.pages || 1 };
   const unfinished = (r.status === 'paused' || r.status === 'error') && r.parts;
-  let pend = null; try { pend = JSON.parse(localStorage.getItem('mustakhrij_pending') || 'null'); } catch (e) {}
+  const pend = getPend();
   const nParts = paged(b) ? makeParts(b, s, rg.a, rg.z, SS.density).length : 1;
+  const appN = appParts(b, s, rg.a, rg.z, SS.density).length;
   openSheet(`<h3>${SVC[s].icon} ${SVC[s].name}</h3><p class="hint" style="margin-top:-6px">${SVC[s].sub}</p>
     ${s === 'fawaid' ? `<div class="set-row"><div class="lab">ماذا تستخرج؟</div><div class="seg">${Object.entries(FMODES).map(([k, m]) => `<button class="${SS.mode === k ? 'on' : ''}" data-act="ss" data-k="mode" data-v="${k}">${k === 'all' ? '✨' : TICON[k]} ${m.label}</button>`).join('')}</div></div>
       ${SS.mode === 'all' ? `<div class="set-row"><div class="lab">الكثافة</div><div class="seg">${Object.entries(DENS).map(([k, l]) => `<button class="${SS.density === k ? 'on' : ''}" data-act="ss" data-k="density" data-v="${k}">${l}</button>`).join('')}</div></div>` : ''}` : ''}
     ${paged(b) ? `<div class="two"><label class="fld"><span>من ${unitOf(b)}</span><input id="rA" type="number" inputmode="numeric" value="${rg.a}"></label><label class="fld"><span>إلى ${unitOf(b)}</span><input id="rZ" type="number" inputmode="numeric" value="${rg.z}"></label></div>` : ''}
-    <div class="set-row"><div class="lab">الطريقة</div><div class="seg"><button class="${SS.via === 'key' ? 'on' : ''}" data-act="ss" data-k="via" data-v="key">⚡ تلقائي بالمفتاح</button><button class="${SS.via === 'app' ? 'on' : ''}" data-act="ss" data-k="via" data-v="app">📱 تطبيق Gemini (اشتراكك)</button></div></div>
+    <div class="set-row"><div class="lab">الطريقة</div><div class="seg"><button class="${SS.via === 'app' ? 'on' : ''}" data-act="ss" data-k="via" data-v="app">📱 تطبيق Gemini (اشتراكك)</button><button class="${SS.via === 'key' ? 'on' : ''}" data-act="ss" data-k="via" data-v="key">⚡ تلقائي بالمفتاح</button></div></div>
     ${SS.via === 'key' ? `<p class="hint">${paged(b) && nParts > 1 ? `يُقسَّم النطاق إلى نحو ${nParts} أجزاء، ويُرسل كل جزء إلى Gemini على حدة، ثم تُجمع النتائج. ` : ''}${b.res[s] && b.res[s].length ? 'تُستبدل النتائج السابقة التي في هذا النطاق فقط.' : ''}</p>
       <div class="sheet-actions"><button class="btn primary" data-act="startRun">▶ ابدأ</button></div>`
-    : `<p class="hint">يعمل Gemini باشتراكك المدفوع، فهو أسرع ولا يقول «مشغول». ورده محدود الطول، فاختر نطاقًا صغيرًا (نحو 30 صفحة) في كل مرة.</p>
-      <div class="sheet-actions"><button class="btn primary" data-act="appGo">التالي ←</button></div>`}
+    : `<p class="hint">يعمل Gemini باشتراكك المدفوع: تنسخ التعليمات وتلصقها في Gemini، ثم تنسخ النتيجة وتلصقها هنا، فتُوزَّع وحدها.${appN > 1 ? ` يُقسَّم النطاق إلى ${appN} أجزاء حتى لا يقطع Gemini ردّه، وبعد كل جزء ينقلك التطبيق إلى الذي يليه.` : ''}</p>
+      <div class="sheet-actions"><button class="btn primary" data-act="appGo">▶ ابدأ</button></div>`}
     ${unfinished ? `<button class="btn block" style="margin-top:10px" data-act="resume" data-s="${s}">↻ استكمال العملية السابقة (${r.parts.filter(p => p.done).length} من ${r.parts.length})</button>` : ''}
-    ${pend && pend.b === b.id && pend.s === s ? `<button class="btn block" style="margin-top:10px" data-act="appPaste">📥 عندي رد من Gemini، أريد لصقه</button>` : ''}`);
+    ${pend && pend.kind === 'svc' && pend.b === b.id && pend.s === s ? `<button class="btn block" style="margin-top:10px" data-act="appResume">📱 أكمل عبر Gemini (الجزء ${pend.i + 1} من ${pend.parts.length})</button>` : ''}`);
 }
-async function appSheet(b, s, o) {
-  const pr = await appPrompt(b, s, o);
-  APPTXT = pr.text;
-  try { localStorage.setItem('mustakhrij_pending', JSON.stringify({ b: b.id, s, a: o.a, z: o.z, mode: o.mode, density: o.density })); } catch (e) {}
-  openSheet(`<h3>📱 ${SVC[s].name} عبر Gemini</h3>
-    <div class="step"><b>١</b><div>اضغط الزر: تُنسخ التعليمات ويُفتح Gemini.<a class="btn primary" href="${GEMINI_URL}" target="_blank" rel="noopener" data-act="appCopy">📋 انسخ التعليمات وافتح Gemini</a></div></div>
-    <div class="step"><b>٢</b><div>في Gemini: ${pr.attach}، ثم اضغط مطوّلًا في خانة الكتابة واختر <b>لصق</b>، وأرسل. انتظر حتى يكتمل الرد، ثم اضغط زر <b>النسخ</b> تحته.</div></div>
-    <div class="step"><b>٣</b><div>ارجع إلى هنا والصق الرد:</div></div>
-    <label class="fld"><textarea id="apIn" rows="4" dir="auto" placeholder="الصق رد Gemini هنا…"></textarea></label>
-    <div class="row"><button class="btn" data-act="pasteAp">📥 لصق</button><button class="btn primary" data-act="appApply">إضافة النتائج</button></div>
+// ورقة الخطوات: انسخ ← Gemini ← الصق
+function appStepsSheet(o) {
+  APPTXT = o.prompt; APPFILES = o.files || [];
+  const fileBtn = APPFILES.length ? `<button class="btn" style="width:100%;margin-top:8px" data-act="appShare">📤 أرسل ${APPFILES.length > 1 || APPFILES[0].type.startsWith('image') ? 'الصور' : 'الملف'} إلى Gemini</button>` : '';
+  openSheet(`<h3>📱 ${o.title}</h3>${o.sub || ''}
+    <div class="step"><b>١</b><div>اضغط الزر: تُنسخ التعليمات ويُفتح Gemini.<a class="btn primary" href="${GEMINI_URL}" target="_blank" rel="noopener" data-act="appCopy">📋 انسخ التعليمات وافتح Gemini</a>${fileBtn}</div></div>
+    <div class="step"><b>٢</b><div>في Gemini: ${o.attach}، ثم اضغط مطوّلًا في خانة الكتابة واختر <b>لصق</b>، وأرسل. انتظر حتى يكتمل الرد، ثم اضغط زر <b>النسخ</b> ${o.code ? 'الذي في أعلى صندوق الكود' : 'تحت الرد'}.</div></div>
+    <div class="step"><b>٣</b><div>ارجع إلى هنا واضغط:<button class="btn primary" data-act="appPasteGo">📥 الصق النتيجة وأضِفها</button></div></div>
+    <label class="fld"><textarea id="apIn" rows="3" dir="auto" placeholder="أو الصق رد Gemini هنا بيدك ثم اضغط «إضافة»"></textarea></label>
+    <div class="row"><button class="btn" data-act="appApply">إضافة</button>${o.skip ? '<button class="btn" data-act="appSkip">⏭ تخطَّ هذا الجزء</button>' : ''}<button class="btn" data-act="appCancel">إنهاء</button></div>
     <p class="hint">إن لم يفتح الزر Gemini فافتحه بنفسك والصق فيه؛ فالتعليمات منسوخة.</p>`);
 }
-let APPTXT = '';
-async function appApply(txt) {
-  let pend = null; try { pend = JSON.parse(localStorage.getItem('mustakhrij_pending') || 'null'); } catch (e) {}
-  const b = pend && B(pend.b); if (!b) { toast('لم أجد الكتاب'); return; }
-  const j = looseJSON(txt); if (!j) { toast('لم أفهم الرد. انسخه كاملًا بزر النسخ تحت رد Gemini', 4000); return; }
-  const s = pend.s, items = normItems(b, s, j, pend.a, pend.z);
-  if (!items.length && !(j.overall)) { toast('الرد لا يحتوي نتائج', 3500); return; }
-  clearRange(b, s, pend.a, pend.z, s === 'fawaid' ? (FMODES[pend.mode] || FMODES.all).types : null);
-  if (paged(b)) items.forEach(x => { if (x.p == null) x.p = pend.a; });
-  b.res[s] = (b.res[s] || []).concat(items); sortRes(b, s);
-  if (s === 'summary' && j.overall) b.overall = String(j.overall).trim();
-  b.runs[s] = { status: 'done', a: pend.a, z: pend.z, mode: pend.mode, density: pend.density, parts: [{ a: pend.a, b: pend.z, done: true }], via: 'app' };
-  await save(b); try { localStorage.removeItem('mustakhrij_pending'); } catch (e) {}
-  closeSheet(); toast(`أُضيف ${items.length} عنصرًا ✓`); go('svc', b.id, s);
+async function appStart(b, s, o) {
+  const parts = appParts(b, s, o.a, o.z, o.density);
+  const pend = { kind: 'svc', b: b.id, s, a: o.a, z: o.z, mode: o.mode || 'all', density: o.density || 'mid', parts, i: 0 };
+  setPend(pend); await appShow(pend);
+}
+async function appShow(pend) {
+  const b = B(pend.b); if (!b) { setPend(null); return; }
+  if (pend.kind === 'overall') {
+    appStepsSheet({ title: 'الخلاصة الجامعة عبر Gemini', prompt: overallPrompt(b, true), attach: 'لا تحتاج إلى إرفاق شيء، فالملخصات داخل التعليمات', code: true });
+    return;
+  }
+  if (pend.kind === 'ask') {
+    const r = await appSource(b, pend.a, pend.z, true, true);
+    appStepsSheet({ title: 'اسأل الكتاب عبر Gemini', sub: `<p class="hint" style="margin-top:-6px">${esc(pend.q)}</p>`, prompt: askPrompt(b, r.desc, pend.q, true), attach: r.attach, files: r.files });
+    return;
+  }
+  const s = pend.s, part = pend.parts[pend.i], n = pend.parts.length;
+  const r = await appSource(b, part.a, part.b, pend.i === 0, false);
+  const run = { mode: pend.mode, density: pend.density };
+  appStepsSheet({
+    title: `${SVC[s].name} عبر Gemini`,
+    sub: n > 1 ? `<div class="hint" style="margin-top:-6px">الجزء <b>${pend.i + 1}</b> من ${n} · ${unitOf(b)} ${part.a}–${part.b}</div><div class="bar" style="margin:6px 0 4px"><i style="width:${Math.max(3, Math.round(pend.i / n * 100))}%"></i></div>` : (paged(b) ? `<div class="hint" style="margin-top:-6px">${unitOf(b)} ${part.a}–${part.b}</div>` : ''),
+    prompt: svcPrompt(b, s, run, r.desc, false, s === 'summary' && n === 1 ? 2 : 1),
+    attach: r.attach, files: r.files, code: true, skip: n > 1
+  });
+}
+async function appApply(txt, skip) {
+  const pend = getPend(); const b = pend && B(pend.b);
+  if (!b) { toast('لم أجد الكتاب'); setPend(null); closeSheet(); return; }
+  txt = String(txt || '').trim();
+  if (!skip && !txt) { toast('لم أجد نصًا. انسخ رد Gemini أولًا', 3500); return; }
+  if (pend.kind === 'ask') {
+    b.chat = b.chat || []; b.chat.push({ q: pend.q, a: txt, t: Date.now(), via: 'app' }); await save(b); setPend(null); closeSheet(); go('ask', b.id); toast('حُفظ الجواب ✓'); return;
+  }
+  let j = null;
+  if (!skip) { j = looseJSON(txt); if (!j) { toast('لم أفهم الرد. انسخه كاملًا بزر النسخ في أعلى صندوق الكود', 4500); return; } }
+  if (pend.kind === 'overall') {
+    if (!j.overall) { toast('الرد لا يحتوي الخلاصة', 3500); return; }
+    b.overall = String(j.overall).trim(); await save(b); setPend(null); closeSheet(); go('svc', b.id, 'summary'); toast('✓'); return;
+  }
+  const s = pend.s, part = pend.parts[pend.i], n = pend.parts.length;
+  let items = [];
+  if (!skip) {
+    items = normItems(b, s, j, part.a, part.b);
+    if (!items.length && !j.overall) { toast('الرد لا يحتوي نتائج. تأكد أنك نسخت الرد كاملًا، أو تخطَّ هذا الجزء', 4500); return; }
+    clearRange(b, s, part.a, part.b, s === 'fawaid' ? (FMODES[pend.mode] || FMODES.all).types : null);
+    if (paged(b)) items.forEach(x => { if (x.p == null) x.p = part.a; });
+    b.res[s] = (b.res[s] || []).concat(items); sortRes(b, s);
+    if (s === 'summary' && j.overall) b.overall = String(j.overall).trim();
+  }
+  pend.i++;
+  const done = pend.i >= n;
+  b.runs[s] = { status: done ? 'done' : 'app', via: 'app', a: pend.a, z: pend.z, mode: pend.mode, density: pend.density, parts: pend.parts.map((p, k) => ({ a: p.a, b: p.b, done: k < pend.i })) };
+  await save(b);
+  if (!done) { setPend(pend); toast(`${skip ? 'تُخطّي الجزء' : `أُضيف ${items.length} عنصرًا ✓`} — الآن الجزء ${pend.i + 1} من ${n}`, 3500); render(); await appShow(pend); return; }
+  setPend(null); closeSheet();
+  toast(`${skip ? 'انتهى' : `أُضيف ${items.length} عنصرًا ✓`}${n > 1 ? ' — اكتملت الأجزاء كلها' : ''}`, 3500);
+  go('svc', b.id, s);
 }
 function itemSheet(b, s, id) {
   const x = (b.res[s] || []).find(y => y.id === id); if (!x) return;
@@ -1190,11 +1273,23 @@ const ACT = {
     if (paged(b)) { if (!b.pages && b.kind === 'shamela' && !toInt($('#rZ').value)) { toast('أدخل رقم آخر صفحة'); return; } ({ a, z } = readRange(b, '#rA', '#rZ')); b.range = { a, z }; }
     closeSheet(); startRun(b, s, { a, z, mode: SS.mode, density: SS.density }); if (view.name !== 'svc') go('book', b.id);
   },
-  appGo: async () => { const b = B(SS.b); let a = 1, z = 1; if (paged(b)) { ({ a, z } = readRange(b, '#rA', '#rZ')); b.range = { a, z }; save(b); } await appSheet(b, SS.s, { a, z, mode: SS.mode, density: SS.density }); },
+  appGo: async () => { const b = B(SS.b); let a = 1, z = 1; if (paged(b)) { if (!b.pages && b.kind === 'shamela' && !toInt($('#rZ').value)) { toast('أدخل رقم آخر صفحة'); return; } ({ a, z } = readRange(b, '#rA', '#rZ')); b.range = { a, z }; save(b); } await appStart(b, SS.s, { a, z, mode: SS.mode, density: SS.density }); },
   appCopy: () => copyText(APPTXT, 'نُسخت التعليمات ✓ الصقها في Gemini'),
-  appPaste: () => { let p = null; try { p = JSON.parse(localStorage.getItem('mustakhrij_pending') || 'null'); } catch (e) {} const b = p && B(p.b); if (!b) return; appSheet(b, p.s, { a: p.a, z: p.z, mode: p.mode, density: p.density }); },
-  pasteAp: async () => { try { $('#apIn').value = await navigator.clipboard.readText(); } catch (e) { toast('اضغط مطوّلًا في الخانة واختر «لصق»'); } },
+  appShare: async () => {
+    const files = APPFILES; if (!files.length) return;
+    if (navigator.canShare && navigator.canShare({ files })) { try { await navigator.share({ files }); } catch (e) {} return; }
+    files.forEach(f => { const a = document.createElement('a'); a.href = URL.createObjectURL(f); a.download = f.name; document.body.appendChild(a); a.click(); setTimeout(() => a.remove(), 3000); });
+  },
+  appResume: async () => { const p = getPend(); if (p) await appShow(p); },
+  appPasteGo: async () => {
+    let t = '';
+    try { t = await navigator.clipboard.readText(); } catch (e) { const ta = $('#apIn'); if (ta) ta.focus(); toast('اضغط مطوّلًا في الخانة واختر «لصق»، ثم «إضافة»', 4000); return; }
+    if ($('#apIn')) $('#apIn').value = t;
+    await appApply(t);
+  },
   appApply: () => appApply($('#apIn').value),
+  appSkip: () => appApply('', true),
+  appCancel: () => { closeSheet(); const p = getPend(); if (p && p.kind === 'svc' && p.i > 0) toast('حُفظ ما أضفته. تكمل الباقي متى شئت من زر «أكمل عبر Gemini»', 4500); if (p && p.kind !== 'svc') setPend(null); render(); },
   resume: d => { const b = curB(); if (!ST.key) { toast('أضف مفتاح Gemini أولًا'); return; } closeSheet(); startRun(b, d.s, { resume: true }); },
   stopRun: () => { if (RUN) RUN.ctrl.abort(); },
   bookMenu: () => { const b = curB(); openSheet(`<h3 class="ellip">${esc(b.title)}</h3>
@@ -1231,7 +1326,8 @@ const ACT = {
   itSave: async () => { const b = B(SS.b), x = b.res[SS.s].find(y => y.id === SS.id); document.querySelectorAll('[id^=ed_]').forEach(t => { x[t.id.slice(3)] = t.value.trim(); }); await save(b); closeSheet(); render(); toast('حُفظ ✓'); },
   copySvc: () => { const b = curB(); copyText(docText(b, { secs: [view.svc], ord: VS.ord || 'type', pg: true, note: false }), 'نُسخ ✓'); },
   overall: async () => {
-    const b = curB(); if (!ST.key) { toast('أضف مفتاح Gemini أولًا'); return; }
+    const b = curB();
+    if (!ST.key || ST.via === 'app') { const p = { kind: 'overall', b: b.id }; setPend(p); await appShow(p); return; }
     toast('يكتب الخلاصة…', 20000);
     try { await makeOverall(b, null, () => {}); await save(b); render(); toast('✓'); } catch (e) { toast(e.message, 4000); }
   },
@@ -1251,12 +1347,17 @@ const ACT = {
   askRangeSave: async () => { const b = curB(); b.askR = readRange(b, '#aA', '#aZ'); await save(b); closeSheet(); render(); },
   askGo: async () => {
     const b = curB(), q = $('#askIn').value.trim(); if (!q) return;
-    if (!ST.key) { toast('أضف مفتاح Gemini أولًا من الإعدادات'); return; }
+    if (!ST.key || ST.via === 'app') {
+      let a = 1, z = 1;
+      if (paged(b)) { const r = b.askR || b.range || { a: 1, z: b.pages || 1 }; a = r.a; z = r.z; if (b.kind === 'images') z = Math.min(z, a + 9); if (b.kind === 'pdf') { a = 1; z = b.pages || z; } }
+      const p = { kind: 'ask', b: b.id, q, a, z }; setPend(p); $('#askIn').value = ''; await appShow(p); return;
+    }
     ASK = new AbortController(); ASKQ = q; b.chat = b.chat || []; const pendQ = q; render(); window.scrollTo(0, document.body.scrollHeight);
     try { const a = await askBook(b, pendQ); b.chat.push({ q: pendQ, a, t: Date.now() }); await save(b); }
     catch (e) { if (e.code !== 'abort') toast(e.message, 5000); }
     ASK = null; if (view.name === 'ask') { render(); window.scrollTo(0, document.body.scrollHeight); }
   },
+  askVia: d => { if (d.v === 'key' && !ST.key) { toast('أضف مفتاح Gemini أولًا من الإعدادات ⚙️'); return; } ST.via = d.v; saveST(); render(); },
   askStop: () => { if (ASK) ASK.abort(); },
   clearChat: async () => { const b = curB(); b.chat = []; await save(b); render(); },
   ansMenu: d => { const b = curB(), m = b.chat[+d.i]; openSheet(`<h3>الجواب</h3><p class="hint">${esc(m.q)}</p><button class="menu-item" data-act="ansCopy" data-i="${d.i}">📋 نسخ الجواب</button><button class="menu-item" data-act="ansSave" data-i="${d.i}">💡 حفظه في الفوائد</button><button class="menu-item danger" data-act="ansDel" data-i="${d.i}">🗑 حذف</button>`); },
