@@ -179,6 +179,30 @@ input,select,textarea{font-size:16px}
 .thumbs{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:6px;margin-top:10px}
 .thumbs img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
 
+/* booklet in app */
+.tabs{display:flex;gap:4px;margin:14px 0 12px;background:var(--card2);border:1px solid var(--line);border-radius:14px;padding:4px;position:sticky;top:calc(var(--safe-t) + 4px);z-index:5}
+.tabs button{flex:1;padding:9px 4px;border-radius:10px;font-weight:600;font-size:14px;white-space:nowrap}
+.tabs button.on{background:var(--accent);color:var(--accent-ink)}
+.cta{min-height:54px;font-size:16.5px;border-radius:14px}
+.stat{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+.stat span{flex:1;min-width:90px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;text-align:center;font-size:12.5px;color:var(--muted)}
+.stat b{display:block;font-size:20px;color:var(--accent)}
+.pt{margin:16px 0 8px}
+.pt-h{display:flex;align-items:center;gap:8px;background:var(--accent);color:var(--accent-ink);border-radius:12px;padding:10px 14px;font-weight:700;font-size:16px}
+.pt-h small{margin-inline-start:auto;opacity:.9;font-weight:500;font-size:12.5px}
+.pt-sum{background:var(--accent-soft);border-radius:12px;padding:10px 14px;margin:8px 0 10px;font-family:"Noto Naskh Arabic",serif;font-size:16px;line-height:1.85}
+.pt-sum summary{font-family:"IBM Plex Sans Arabic",sans-serif;font-weight:700;color:var(--accent);cursor:pointer;font-size:14.5px}
+.pt-sum .sh{font-weight:700;color:var(--accent);margin-top:6px}
+.pt-sum ul{margin:2px 0;padding-inline-start:20px}
+.pt-sum p{margin:2px 0}
+.fw{display:flex;gap:10px;background:var(--card);border:1px solid var(--line);border-inline-start:4px solid var(--c);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.fn{min-width:30px;height:30px;border-radius:15px;background:var(--c);color:#fff;display:grid;place-items:center;font-weight:700;font-size:13px;flex:none;padding:0 5px}
+.fb{flex:1;min-width:0}
+.ft2{display:flex;gap:6px;align-items:center;margin-bottom:2px;flex-wrap:wrap}
+.ftg{font-size:12px;font-weight:700;color:var(--c)}
+.fx{white-space:pre-line;font-family:"Noto Naskh Arabic",serif;font-size:17px;line-height:1.85}
+.rn{color:var(--muted);font-size:14.5px;margin-top:2px}
+
 /* ===== print / PDF ===== */
 #print{display:none}
 @page{size:A4;margin:16mm 15mm 16mm 15mm}
@@ -188,7 +212,7 @@ input,select,textarea{font-size:16px}
   body>*:not(#print){display:none!important}
   #print{display:block!important}
 }
-.doc{font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;color:#1a1a1a;font-size:13.5pt;line-height:1.9;direction:rtl}
+.doc{-webkit-print-color-adjust:exact;print-color-adjust:exact;font-family:"Noto Naskh Arabic","Amiri","Traditional Arabic",serif;color:#1a1a1a;font-size:13.5pt;line-height:1.9;direction:rtl}
 .doc .cover{min-height:255mm;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;border:3px double #8a3b12;padding:20mm 14mm;page-break-after:always;break-after:page}
 .doc .cover .bas{font-family:"Amiri",serif;font-size:17pt;color:#8a3b12;margin-bottom:18mm}
 .doc .cover h1{font-family:"Amiri",serif;font-size:30pt;margin:0 0 6mm;color:#5a2408;line-height:1.5}
@@ -218,6 +242,19 @@ input,select,textarea{font-size:16px}
 .doc .qq{font-weight:700}
 .doc .qa{margin-bottom:4mm;break-inside:avoid;page-break-inside:avoid}
 .doc .qa .an{white-space:pre-line;padding-inline-start:6mm}
+.doc .kph{background:#8a3b12;color:#fff;font-family:"Amiri",serif;font-size:17pt;padding:2mm 5mm;border-radius:2mm;margin:2mm 0 3mm;break-after:avoid;page-break-after:avoid}
+.doc .kph span{font-size:12pt;font-family:"IBM Plex Sans Arabic",sans-serif}
+.doc .kp{margin-bottom:6mm}
+.doc .kp+.kp{page-break-before:always;break-before:page}
+.doc .ksum{background:#f7efe7;border:1px solid #e3cdb8;border-radius:2mm;padding:3mm 5mm;margin-bottom:4mm}
+.doc .ksh{font-weight:700;color:#8a3b12;margin-bottom:1mm;font-size:14pt}
+.doc .ksum .sh{font-weight:700;color:#5a2408;margin-top:1.5mm}
+.doc .ksum ul{margin:0;padding-inline-start:7mm}
+.doc .ksum p{margin:0}
+.doc .ksh2{font-weight:700;color:#8a3b12;font-size:14pt;margin:4mm 0 2mm;border-bottom:1.5px solid #e3cdb8;break-after:avoid}
+.doc .kf{display:flex;gap:3mm;margin-bottom:2.5mm;padding-inline-start:2mm;border-inline-start:2.5px solid;break-inside:avoid;page-break-inside:avoid}
+.doc .kn{flex:none;min-width:7.5mm;height:7.5mm;border-radius:4mm;color:#fff;font-size:10pt;font-weight:700;display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Sans Arabic",sans-serif;margin-top:1mm;padding:0 1mm}
+.doc .kc{flex:1;white-space:pre-line}
 .doc .end{text-align:center;margin-top:12mm;font-family:"Amiri",serif;font-size:15pt;color:#5a2408}
 </style>
 </head>
@@ -855,8 +892,8 @@ function bookMeta(b) {
   return [k.label, n, b.author].filter(Boolean).join(' · ');
 }
 function homeV() {
-  const pend = getPend(), pb = pend && pend.kind === 'svc' && B(pend.b);
-  const keyBanner = (pb ? `<div class="banner">📱 لم يكتمل: <b>${SVC[pend.s].name}</b> — ${esc(pb.title)} (الجزء ${pend.i + 1} من ${pend.parts.length})<button class="btn block primary" data-act="appResume">أكمل عبر Gemini</button></div>` : '')
+  const pend = getPend(), pb = pend && (pend.kind === 'svc' || pend.kind === 'shamil') && B(pend.b);
+  const keyBanner = (pb ? `<div class="banner">📱 لم يكتمل: <b>${pendLabel(pend)}</b> — ${esc(pb.title)} (${partName(pend.i)} من ${pend.parts.length})<button class="btn block primary" data-act="appResume">أكمل عبر Gemini</button></div>` : '')
     + (!BOOKS.length ? `<div class="banner">يعمل مباشرة مع <b>تطبيق Gemini</b> باشتراكك: تنسخ التعليمات وتلصقها في Gemini، ثم تنسخ النتيجة وتلصقها هنا، فتُرتَّب وحدها. ولا تحتاج إلى مفتاح.</div>` : '');
   const list = BOOKS.length ? BOOKS.map(b => `<div class="bk" data-act="open" data-id="${b.id}"><div class="cv" style="background:${KIND[b.kind].color}">${KIND[b.kind].icon}</div><div class="mn"><div class="tt">${esc(b.title)}</div><div class="mt">${esc(bookMeta(b))}</div><div class="badges">${runBadge(b)}${counts(b)}</div></div></div>`).join('')
     : `<div class="card empty"><div style="font-size:40px">📚</div><b style="color:var(--text)">مكتبتك فارغة</b><ol class="steps"><li>أضف كتابًا أو محاضرة أو صور درس من الأزرار أعلاه.</li><li>اختر الخدمة: الفوائد، أو التلخيص، أو التشجير، أو الأسئلة…</li><li>صدّر النتيجة PDF مرتبًا باسمك، أو وورد.</li></ol></div>`;
@@ -881,21 +918,37 @@ function svcStatus(b, s) {
 }
 function bookV(b) {
   const r = b.range;
-  const err = Object.entries(b.runs || {}).filter(([s, v]) => (v.status === 'error' || v.status === 'paused') && !(RUN && RUN.id === b.id && RUN.svc === s));
+  const err = Object.entries(b.runs || {}).filter(([s, v]) => SVC[s] && (v.status === 'error' || v.status === 'paused') && !(RUN && RUN.id === b.id && RUN.svc === s));
   const pend = getPend();
-  const appB = pend && pend.kind === 'svc' && pend.b === b.id ? `<div class="banner">📱 <b>${SVC[pend.s].icon} ${SVC[pend.s].name}</b>: بقي الجزء ${pend.i + 1} من ${pend.parts.length}<button class="btn block primary" data-act="appResume">أكمل عبر Gemini</button></div>` : '';
+  const appB = pend && (pend.kind === 'svc' || pend.kind === 'shamil') && pend.b === b.id ? `<div class="banner">📱 <b>${pendLabel(pend)}</b>: بقي ${partName(pend.i)} من ${pend.parts.length}<button class="btn block primary" data-act="appResume">أكمل عبر Gemini</button></div>` : '';
   const errB = appB + err.map(([s, v]) => `<div class="banner ${v.status === 'error' ? 'err' : ''}"><b>${SVC[s].icon} ${SVC[s].name}</b>: ${v.status === 'error' ? esc(v.err || 'توقّف') : 'أُوقف قبل أن يكتمل'} (اكتمل ${v.parts.filter(p => p.done).length} من ${v.parts.length} أجزاء)<div class="row"><button class="btn sm primary" data-act="resume" data-s="${s}">↻ استكمال</button>${v.status === 'error' ? `<button class="btn sm" data-act="runSheet" data-s="${s}" data-via="app">📱 عبر تطبيق Gemini</button>` : ''}</div></div>`).join('');
   const imgs = b.kind === 'images' ? `<div class="thumbs" id="thumbs"></div>` : '';
   setTimeout(() => paintThumbs(b), 0);
-  return topBar(esc(b.title), esc(bookMeta(b)), 'goHome', `<button class="icon-btn" data-act="bookMenu" aria-label="المزيد">⋯</button>`)
-    + `<div class="card">${b.kind === 'url' ? `<div class="hint" style="margin:0;direction:ltr;text-align:left;word-break:break-all">${esc(b.url)}</div>` : `<div class="row" style="justify-content:space-between"><span>النطاق المختار: <b>${r ? `${unitOf(b)} ${r.a} – ${r.z}` : 'لم يُحدّد'}</b>${b.pages ? ` <small style="color:var(--muted)">من ${b.pages}</small>` : ''}</span><button class="btn sm" data-act="${b.kind === 'shamela' ? 'bookInfo' : 'rangeSheet'}">تغيير</button></div>`}
+  const nf = (b.res.fawaid || []).length, nr = alamMerged(b).length, np = (b.parts || []).length;
+  VS.tab = VS.tab || 'fw';
+  let body = '';
+  if (VS.tab === 'fw') {
+    if (!nf && !np) body = `<div class="card empty"><div style="font-size:38px">📖</div><b style="color:var(--text)">لم تُستخرج فوائد هذا الكتاب بعد</b><ol class="steps"><li>اضغط «✨ استخراج الفوائد والملخص والرجال».</li><li>انسخ التعليمات إلى Gemini، وأرفق الكتاب، وأرسل.</li><li>انسخ رد Gemini والصقه هنا، فتظهر الفوائد هنا مرقّمة ومرتّبة بالأجزاء، ومع كل جزء ملخصه.</li></ol></div>`;
+    else {
+      const cnt = {}; (b.res.fawaid || []).forEach(x => cnt[x.type] = (cnt[x.type] || 0) + 1);
+      VS.f = VS.f || 'all';
+      body = `<div class="stat"><span><b>${nf}</b>فائدة</span>${np ? `<span><b>${np}</b>${np > 2 && np < 11 ? 'أجزاء' : 'جزء'}</span>` : ''}<span><b>${nr}</b>من الرجال</span></div>
+        <input class="search" style="margin-top:10px" placeholder="ابحث في الفوائد…" value="${esc(VS.q || '')}" data-inp="bq">
+        <div class="chips"><button class="chip ${VS.f === 'all' ? 'on' : ''}" data-act="bfilt" data-v="all">الكل</button><button class="chip ${VS.f === 'star' ? 'on' : ''}" data-act="bfilt" data-v="star">⭐</button>${TYPES.filter(t => cnt[t]).map(t => `<button class="chip ${VS.f === t ? 'on' : ''}" data-act="bfilt" data-v="${t}" style="${VS.f === t ? '' : `color:${TCOLOR[t]}`}">${TICON[t]} ${TPLURAL[t]} ${cnt[t]}</button>`).join('')}</div>
+        <div id="bk"></div>`;
+      setTimeout(paintBooklet, 0);
+    }
+  } else if (VS.tab === 'rj') body = rijalHTML(b);
+  else body = `<div class="svc-grid">` + SVC_ORDER.map(s => `<button class="svc" data-act="svc" data-s="${s}"><span class="si">${SVC[s].icon}</span><b>${SVC[s].name}</b><small>${SVC[s].sub}</small>${svcStatus(b, s)}</button>`).join('')
+    + `<button class="svc wide" data-act="goAsk"><span class="si">🔎</span><span><b>اسأل الكتاب</b><small style="display:block">اسأل عن أي مسألة فيجيبك من الكتاب نفسه مع رقم الصفحة</small></span></button></div>`;
+  return topBar(esc(b.title), esc(bookMeta(b)), 'goHome', `<button class="icon-btn" data-act="exportSheet" aria-label="تصدير">📄</button><button class="icon-btn" data-act="bookMenu" aria-label="المزيد">⋯</button>`)
+    + `<div class="card">${b.kind === 'url' ? `<div class="hint" style="margin:0;direction:ltr;text-align:left;word-break:break-all">${esc(b.url)}</div>` : `<div class="row" style="justify-content:space-between"><span>النطاق: <b>${r ? `${unitOf(b)} ${r.a} – ${r.z}` : 'لم يُحدّد'}</b>${b.pages ? ` <small style="color:var(--muted)">من ${b.pages}</small>` : ''}</span><button class="btn sm" data-act="${b.kind === 'shamela' ? 'bookInfo' : 'rangeSheet'}">تغيير</button></div>`}
       ${b.kind === 'shamela' ? '<p class="hint">أرقام الصفحات هنا هي ترقيم صفحات الشاملة (الرقم في آخر الرابط).</p>' : ''}
-      ${b.kind === 'images' ? `<button class="btn block" style="margin-top:10px" data-act="moreImgs">➕ إضافة صور أخرى لهذا الدرس</button>` : ''}${imgs}</div>`
+      ${b.kind === 'images' ? `<button class="btn block" style="margin-top:10px" data-act="moreImgs">➕ إضافة صور أخرى لهذا الدرس</button>` : ''}${imgs}
+      <button class="btn primary block cta" style="margin-top:12px" data-act="shamilSheet">✨ ${nf || np ? 'استخراج أجزاء أخرى أو إعادتها' : 'استخراج الفوائد والملخص والرجال'}</button></div>`
     + errB
-    + `<div class="section-h">الخدمات</div><div class="svc-grid">`
-    + SVC_ORDER.map(s => `<button class="svc" data-act="svc" data-s="${s}"><span class="si">${SVC[s].icon}</span><b>${SVC[s].name}</b><small>${SVC[s].sub}</small>${svcStatus(b, s)}</button>`).join('')
-    + `<button class="svc wide" data-act="goAsk"><span class="si">🔎</span><span><b>اسأل الكتاب</b><small style="display:block">اسأل عن أي مسألة فيجيبك من الكتاب نفسه مع رقم الصفحة</small></span></button>
-      <button class="svc wide" data-act="exportSheet"><span class="si">📄</span><span><b>تصدير PDF أو وورد</b><small style="display:block">كتيّب مرتب باسمك: غلاف، وفهرس، وكل ما استُخرج</small></span></button></div>`;
+    + `<div class="tabs"><button class="${VS.tab === 'fw' ? 'on' : ''}" data-act="tab" data-v="fw">📖 الفوائد${nf ? ' ' + nf : ''}</button><button class="${VS.tab === 'rj' ? 'on' : ''}" data-act="tab" data-v="rj">👤 الرجال${nr ? ' ' + nr : ''}</button><button class="${VS.tab === 'more' ? 'on' : ''}" data-act="tab" data-v="more">🧰 خدمات أخرى</button></div>`
+    + body;
 }
 async function paintThumbs(b) {
   const el = $('#thumbs'); if (!el || b.kind !== 'images') return;
@@ -1081,7 +1134,7 @@ function appStepsSheet(o) {
     <div class="step"><b>٢</b><div>في Gemini: ${o.attach}، ثم اضغط مطوّلًا في خانة الكتابة واختر <b>لصق</b>، وأرسل. انتظر حتى يكتمل الرد، ثم اضغط زر <b>النسخ</b> ${o.code ? 'الذي في أعلى صندوق الكود' : 'تحت الرد'}.</div></div>
     <div class="step"><b>٣</b><div>ارجع إلى هنا واضغط:<button class="btn primary" data-act="appPasteGo">📥 الصق النتيجة وأضِفها</button></div></div>
     <label class="fld"><textarea id="apIn" rows="3" dir="auto" placeholder="أو الصق رد Gemini هنا بيدك ثم اضغط «إضافة»"></textarea></label>
-    <div class="row"><button class="btn" data-act="appApply">إضافة</button>${o.skip ? '<button class="btn" data-act="appSkip">⏭ تخطَّ هذا الجزء</button>' : ''}<button class="btn" data-act="appCancel">إنهاء</button></div>
+    <div class="row"><button class="btn" data-act="appApply">إضافة</button>${o.skip ? `<button class="btn" data-act="appSkip">${o.skipLabel || '⏭ تخطَّ هذا الجزء'}</button>` : ''}<button class="btn" data-act="appCancel">إنهاء</button></div>
     <p class="hint">إن لم يفتح الزر Gemini فافتحه بنفسك والصق فيه؛ فالتعليمات منسوخة.</p>`);
 }
 async function appStart(b, s, o) {
@@ -1091,6 +1144,7 @@ async function appStart(b, s, o) {
 }
 async function appShow(pend) {
   const b = B(pend.b); if (!b) { setPend(null); return; }
+  if (pend.kind === 'shamil') { await shamilShow(pend, b); return; }
   if (pend.kind === 'overall') {
     appStepsSheet({ title: 'الخلاصة الجامعة عبر Gemini', prompt: overallPrompt(b, true), attach: 'لا تحتاج إلى إرفاق شيء، فالملخصات داخل التعليمات', code: true });
     return;
@@ -1115,6 +1169,7 @@ async function appApply(txt, skip) {
   if (!b) { toast('لم أجد الكتاب'); setPend(null); closeSheet(); return; }
   txt = String(txt || '').trim();
   if (!skip && !txt) { toast('لم أجد نصًا. انسخ رد Gemini أولًا', 3500); return; }
+  if (pend.kind === 'shamil') { await shamilApply(pend, b, txt, skip); return; }
   if (pend.kind === 'ask') {
     b.chat = b.chat || []; b.chat.push({ q: pend.q, a: txt, t: Date.now(), via: 'app' }); await save(b); setPend(null); closeSheet(); go('ask', b.id); toast('حُفظ الجواب ✓'); return;
   }
@@ -1143,6 +1198,199 @@ async function appApply(txt, skip) {
   toast(`${skip ? 'انتهى' : `أُضيف ${items.length} عنصرًا ✓`}${n > 1 ? ' — اكتملت الأجزاء كلها' : ''}`, 3500);
   go('svc', b.id, s);
 }
+/* ================= الاستخراج الشامل: ملخص + فوائد مرقمة + رجال، جزءًا جزءًا ================= */
+const ORD = ['الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر', 'الحادي عشر', 'الثاني عشر', 'الثالث عشر', 'الرابع عشر', 'الخامس عشر', 'السادس عشر', 'السابع عشر', 'الثامن عشر', 'التاسع عشر', 'العشرون'];
+const partName = i => 'الجزء ' + (ORD[i] || NUM(i + 1));
+const SH_SIZES = { pdf: [25, 50], images: [5, 10], shamela: [10, 20], text: [20, 30], url: [1] };
+const SH_CONT = 'أكمل من حيث توقفت تمامًا، بالشكل نفسه وداخل كتلة كود واحدة، دون أن تعيد شيئًا مما كتبته. وإن كنت أنهيت قسم الفوائد فأكمل قسم @رجال، ثم اختم بسطر @انتهى.';
+const pendLabel = p => p.kind === 'shamil' ? '✨ الفوائد والملخص والرجال' : (SVC[p.s] ? SVC[p.s].icon + ' ' + SVC[p.s].name : '');
+function shamilPrompt(b, desc, part, dens) {
+  const u = b.kind === 'text' ? 'مقطع' : 'ص';
+  const range = paged(b) ? `${b.kind === 'pdf' ? `اعمل على الصفحات من ${part.a} إلى ${part.b} فقط، بحسب ترتيب صفحات الملف (لا بالأرقام المطبوعة عليها).` : `اعمل على ${b.kind === 'text' ? 'المقاطع' : 'الصفحات'} من ${part.a} إلى ${part.b}.`}` : '';
+  const many = dens === 'mid' ? 'نحو فائدتين عن كل صفحة فيها علم' : 'أكبر عدد ممكن: لا تقل عن ثلاث فوائد عن كل صفحة فيها علم، واستخرج كل قول وكل تعريف وكل تقسيم وكل قاعدة دون استثناء، ولا تختصر';
+  return `أنت مساعد علمي دقيق لطالب علم شرعي.
+الكتاب: «${b.title}»${b.author ? ' — ' + b.author : ''}.
+${desc}
+${range}
+
+المطلوب ثلاثة أقسام، بهذا الترتيب وبهذا الشكل تمامًا:
+
+@ملخص
+لخّص هذا الجزء وحده تلخيصًا علميًا وافيًا مرتبًا بحسب أبوابه: عنوان كل باب أو موضوع في سطر يبدأ بـ «# »، ثم نقاطه، كل نقطة في سطر يبدأ بـ «- ».
+
+@فوائد
+استخرج الفوائد العلمية في هذا الجزء: ${many}. رتّبها بحسب ورودها في الكتاب، وكل فائدة في سطر واحد بهذا الشكل:
+[${u} 12] [النوع] نص الفائدة
+والنوع واحد من: ${TYPES.join('، ')}.
+- القول: «قال فلان: ...» كما نسبه المؤلف، ولا تنسب قولًا إلى أحد لم ينسبه المؤلف إليه، وإن لم يسمِّه فاكتب «قال بعض العلماء: ...».
+- التعريف: «تعريف كذا: لغةً ... واصطلاحًا ...».
+- التقسيم: «ينقسم كذا إلى ثلاثة أقسام: ١- ... ٢- ... ٣- ...» في السطر نفسه.
+- الخلاف: المسألة، ثم الأقوال ومن قال بكل قول، ثم الراجح عند المؤلف إن ذكره.
+
+@رجال
+كل علم ذُكر في هذا الجزء (صحابي، أو إمام، أو عالم، أو راوٍ، أو مؤلف)، بترتيب وروده، كل واحد في سطر بهذا الشكل:
+[${u} 12] الاسم كما ورد: ما ذكره المؤلف عنه في جملة قصيرة إن ذكر شيئًا
+
+@انتهى
+
+الشروط:
+1. اعتمد على الكتاب وحده، ولا تضف معلومات من خارجه.
+2. لا تخترع أرقام صفحات ولا أقوالًا ولا أسماء كتب ولا تخريجًا ولا حكمًا على حديث.
+3. "${u}" هو رقم ${b.kind === 'text' ? 'المقطع المكتوب بين معقوفين' : b.kind === 'pdf' ? 'الصفحة بحسب ترتيب صفحات الملف' : 'الصفحة'}.
+4. اكتب الرد كله داخل كتلة كود واحدة تبدأ بـ \`\`\` وتنتهي بـ \`\`\`، دون أي كلام قبلها أو بعدها، حتى أنسخه بزر النسخ.
+5. لا تختصر الفوائد لأجل طول الرد؛ فإن انقطع ردك فسأكتب لك «أكمل» فتكمل من حيث توقفت بالشكل نفسه.`;
+}
+function parseShamil(txt, startSec) {
+  const out = { sum: [], fw: [], rj: [], lead: [], ended: false, last: startSec || '' };
+  let sec = startSec || '';
+  const pageRe = /^\s*[-*•]?\s*(?:[\d٠-٩]+\s*[.)\-–]\s*)?[\[(]\s*(?:ص|صفحة|الصفحة|مقطع|المقطع)?\s*\.?\s*([\d٠-٩]+)(?:\s*[-–]\s*[\d٠-٩]+)?\s*[\])]\s*/;
+  String(txt || '').replace(/\r/g, '').replace(/```[^\n]*/g, '\n').split('\n').forEach(line => {
+    const L = line.replace(/\*\*/g, '').trim(); if (!L) return;
+    const h = L.replace(/^[@#\s]+/, '').replace(/[:：]\s*$/, '').trim();
+    if (L.startsWith('@') || (/^#{1,3}\s/.test(L) && /^(الملخص|ملخص|التلخيص|الفوائد|فوائد|الرجال|رجال|الأعلام|أعلام|انتهى)$/.test(h))) {
+      if (/انتهى/.test(h)) out.ended = true;
+      else if (/ملخص|تلخيص/.test(h)) sec = 'sum';
+      else if (/فوائد|فائدة/.test(h)) sec = 'fw';
+      else if (/رجال|أعلام|اعلام/.test(h)) sec = 'rj';
+      return;
+    }
+    if (sec === 'sum') { out.sum.push(L); return; }
+    if (sec === 'fw') {
+      const m = L.match(pageRe);
+      if (m) {
+        let rest = L.slice(m[0].length), type = 'فائدة';
+        const tm = rest.match(/^[\[(]\s*([^\])]{2,12})\s*[\])]\s*[-–:]?\s*/);
+        if (tm) { const tt = tm[1].trim(); const f = TYPES.find(x => tt === x || tt.includes(x)) || (/أقوال/.test(tt) ? 'قول' : /تعريف/.test(tt) ? 'تعريف' : /تقسيم|أقسام/.test(tt) ? 'تقسيم' : null); if (f) { type = f; rest = rest.slice(tm[0].length); } }
+        rest = rest.replace(/^[-–:]\s*/, '').trim();
+        if (rest) out.fw.push({ p: toInt(m[1]), type, text: rest });
+      } else if (out.fw.length) out.fw[out.fw.length - 1].text += '\n' + L;
+      else { if (!out.lead.length) out.leadSp = /^[ \t]/.test(line); out.lead.push(L); }
+      return;
+    }
+    if (sec === 'rj') {
+      const m = L.match(pageRe);
+      let rest = (m ? L.slice(m[0].length) : L.replace(/^[-*•\s]*(?:[\d٠-٩]+\s*[.)\-–]\s*)?/, '')).replace(/^[-–]\s*/, '').trim();
+      if (!rest) return;
+      const k = rest.search(/[:：]|\s[—–-]\s/);
+      const name = (k > 0 ? rest.slice(0, k) : rest).trim(), note = k > 0 ? rest.slice(k + 1).replace(/^[—–\-\s]+/, '').trim() : '';
+      if (name && name.length <= 80) out.rj.push({ p: m ? toInt(m[1]) : null, name, note });
+      return;
+    }
+    if (!sec) { const m = L.match(pageRe); if (m && L.slice(m[0].length).trim()) { sec = 'fw'; out.fw.push({ p: toInt(m[1]), type: 'فائدة', text: L.slice(m[0].length).trim() }); } }
+  });
+  out.last = sec;
+  return out;
+}
+function shamilSheet(b) {
+  const sizes = SH_SIZES[b.kind] || [50];
+  SS = Object.assign({ b: b.id, k: 'sh', ps: sizes[sizes.length - 1], dens: 'max' }, SS.b === b.id && SS.k === 'sh' ? SS : {});
+  const rg = b.range || { a: 1, z: b.pages || 1 };
+  const n = paged(b) ? Math.ceil((rg.z - rg.a + 1) / SS.ps) : 1;
+  const pend = getPend();
+  const u = b.kind === 'text' ? 'مقطعًا' : b.kind === 'images' ? 'صور' : 'صفحة';
+  openSheet(`<h3>✨ الفوائد والملخص والرجال</h3>
+    <p class="hint" style="margin-top:-6px">يُقسَّم الكتاب أجزاءً. ولكل جزء: ملخص مستقل، ثم فوائده مرقّمة وملوّنة بحسب أنواعها، ثم الرجال المذكورون فيه. ويعمل مع تطبيق Gemini باشتراكك، دون مفتاح.</p>
+    ${paged(b) ? `<div class="two"><label class="fld"><span>من ${unitOf(b)}</span><input id="rA" type="number" inputmode="numeric" value="${rg.a}"></label><label class="fld"><span>إلى ${unitOf(b)}</span><input id="rZ" type="number" inputmode="numeric" value="${rg.z}"></label></div>
+    ${sizes.length > 1 ? `<div class="set-row"><div class="lab">حجم كل جزء</div><div class="seg">${sizes.map(v => `<button class="${SS.ps === v ? 'on' : ''}" data-act="ssh" data-k="ps" data-v="${v}">${v} ${u}</button>`).join('')}</div></div>` : ''}` : ''}
+    <div class="set-row"><div class="lab">عدد الفوائد</div><div class="seg"><button class="${SS.dens === 'max' ? 'on' : ''}" data-act="ssh" data-k="dens" data-v="max">كثيرة جدًا</button><button class="${SS.dens === 'mid' ? 'on' : ''}" data-act="ssh" data-k="dens" data-v="mid">متوسطة</button></div></div>
+    <p class="hint">${n > 1 ? `سيكون عندك <b>${n}</b> أجزاء. تنسخ تعليمات كل جزء إلى Gemini، وتلصق نتيجته هنا، فيرتّبها التطبيق وينقلك إلى الجزء التالي.` : 'تنسخ التعليمات إلى Gemini، وتلصق نتيجته هنا، فيرتّبها التطبيق.'}${(b.parts || []).length ? ' والأجزاء التي سبق استخراجها في هذا النطاق تُستبدل.' : ''}</p>
+    <div class="sheet-actions"><button class="btn primary" data-act="shamilGo">▶ ابدأ</button></div>
+    ${pend && pend.kind === 'shamil' && pend.b === b.id ? `<button class="btn block" style="margin-top:10px" data-act="appResume">📱 أكمل من حيث توقفت (${partName(pend.i)} من ${pend.parts.length})</button>` : ''}`);
+}
+async function shamilShow(pend, b, note) {
+  const part = pend.parts[pend.i], n = pend.parts.length;
+  const sub = `<div class="hint" style="margin-top:-6px"><b>${partName(pend.i)}</b>${n > 1 ? ` من ${n}` : ''}${paged(b) ? ` · ${unitOf(b)} ${part.a}–${part.b}` : ''}</div>${n > 1 ? `<div class="bar" style="margin:6px 0 4px"><i style="width:${Math.max(3, Math.round(pend.i / n * 100))}%"></i></div>` : ''}${note || ''}`;
+  if (pend.cont) {
+    appStepsSheet({ title: 'تكملة رد Gemini', sub, prompt: SH_CONT, attach: 'اكتب في المحادثة نفسها', code: true, skip: true, skipLabel: '⏭ الرد كامل، انتقل إلى التالي' });
+    return;
+  }
+  const r = await appSource(b, part.a, part.b, pend.i === 0, true);
+  appStepsSheet({ title: 'الفوائد والملخص والرجال', sub, prompt: shamilPrompt(b, r.desc, part, pend.dens), attach: r.attach, files: r.files, code: true, skip: n > 1 });
+}
+async function shamilApply(pend, b, txt, skip) {
+  const part = pend.parts[pend.i], n = pend.parts.length;
+  let note = '';
+  if (!skip) {
+    const R = parseShamil(txt, pend.cont ? pend.last : '');
+    if (!R.sum.length && !R.fw.length && !R.rj.length && !R.lead.length) { toast('لم أفهم الرد. انسخه كاملًا بزر النسخ في أعلى صندوق الكود', 4500); return; }
+    b.parts = b.parts || [];
+    const inPart = x => x.pt != null ? x.pt === part.a : (x.p != null && x.p >= part.a && x.p <= part.b);
+    if (!pend.cont) {
+      b.parts = b.parts.filter(q => !(q.a <= part.b && q.b >= part.a));
+      b.res.fawaid = (b.res.fawaid || []).filter(x => !inPart(x));
+      b.res.alam = (b.res.alam || []).filter(x => !inPart(x));
+      b.parts.push({ a: part.a, b: part.b, sum: R.sum.join('\n') });
+      b.parts.sort((x, y) => x.a - y.a);
+    } else {
+      const P = b.parts.find(q => q.a === part.a);
+      if (P && R.sum.length) P.sum = (P.sum ? P.sum + '\n' : '') + R.sum.join('\n');
+      if (R.lead.length) { const last = (b.res.fawaid || []).filter(x => x.pt === part.a).pop(); if (last) last.text += (R.leadSp ? ' ' : '') + R.lead.join('\n'); }
+    }
+    const fix = p => { if (p == null) return null; if (paged(b) && part.a > 1 && (p < part.a - 2 || p > part.b + 2) && p >= 1 && p <= part.b - part.a + 1 && b.kind !== 'pdf') return part.a + p - 1; return p; };
+    const seen = new Set((b.res.fawaid || []).filter(x => x.pt === part.a).map(x => normAr(x.text)));
+    const fw = R.fw.filter(x => { const k = normAr(x.text); if (seen.has(k)) return false; seen.add(k); return true; }).map(x => ({ id: uid(), p: fix(x.p), type: x.type, sec: '', text: x.text, pt: part.a }));
+    const rj = R.rj.map(x => ({ id: uid(), p: fix(x.p), name: x.name, note: x.note, pt: part.a }));
+    b.res.fawaid = (b.res.fawaid || []).concat(fw);
+    b.res.alam = (b.res.alam || []).concat(rj);
+    await save(b);
+    pend.last = R.last;
+    note = `أُضيف ${fw.length} فائدة${rj.length ? ` و${rj.length} علمًا` : ''}${R.sum.length ? ' والملخص' : ''} ✓`;
+    if (!R.ended) {
+      pend.cont = true; setPend(pend); render();
+      await shamilShow(pend, b, `<div class="banner">${note}. لكن رد Gemini لم يصل إلى آخره (لم يكتب @انتهى)، فاطلب منه التكملة. وإن كان الرد كاملًا فاضغط «الرد كامل، انتقل إلى التالي».</div>`);
+      return;
+    }
+  }
+  pend.cont = false; pend.last = ''; pend.i++;
+  if (pend.i < n) { setPend(pend); render(); toast(`${note || 'تُخطّي'} — الآن ${partName(pend.i)}`, 3500); await shamilShow(pend, b); return; }
+  setPend(null); closeSheet(); toast(`${note ? note + ' — ' : ''}اكتمل الكتاب ✓`, 4000); go('book', b.id);
+}
+function bookletModel(b) {
+  const fw = (b.res.fawaid || []).slice();
+  const parts = (b.parts || []).slice().sort((x, y) => x.a - y.a);
+  const groups = parts.map(q => ({ a: q.a, b: q.b, sum: q.sum || '', items: [] }));
+  const other = { a: null, b: null, sum: '', items: [] };
+  fw.forEach(x => { const g = groups.find(g => x.pt != null ? x.pt === g.a : (x.p != null && x.p >= g.a && x.p <= g.b)); (g || other).items.push(x); });
+  if (other.items.length) groups.push(other);
+  const num = new Map(); let k = 0; groups.forEach(g => g.items.forEach(x => num.set(x.id, ++k)));
+  return { groups, num, total: k, hasParts: parts.length > 0 };
+}
+function sumHTML(t) {
+  let h = '', ul = false;
+  String(t || '').split('\n').forEach(l => {
+    l = l.trim().replace(/\*\*/g, ''); if (!l) return;
+    if (/^#+\s*/.test(l)) { if (ul) { h += '</ul>'; ul = false; } h += `<div class="sh">${esc(l.replace(/^#+\s*/, ''))}</div>`; }
+    else if (/^[-•*]\s*/.test(l)) { if (!ul) { h += '<ul>'; ul = true; } h += `<li>${esc(l.replace(/^[-•*]\s*/, ''))}</li>`; }
+    else { if (ul) { h += '</ul>'; ul = false; } h += `<p>${esc(l)}</p>`; }
+  });
+  return h + (ul ? '</ul>' : '');
+}
+const fmtFw = t => esc(t).replace(/\s+(?=(?:[١-٩][٠-٩]?|[1-9]\d?)\s*[-–)]\s)/g, '\n');
+const fwHTML = (b, x, n) => `<div class="fw" data-act="item" data-s="fawaid" data-i="${x.id}" style="--c:${TCOLOR[x.type]}"><span class="fn">${n}</span><div class="fb"><div class="ft2"><span class="ftg">${TICON[x.type]} ${x.type}</span>${x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : ''}${x.star ? '<span>⭐</span>' : ''}</div><div class="fx">${fmtFw(x.text)}</div></div></div>`;
+function paintBooklet() {
+  const el = $('#bk'); if (!el) return;
+  const b = B(view.id); if (!b) return;
+  const M = bookletModel(b), q = VS.q || '', f = VS.f || 'all';
+  const ok = x => (f === 'all' || (f === 'star' ? x.star : x.type === f)) && qMatch(x.text, q);
+  let h = '';
+  M.groups.forEach((g, gi) => {
+    const items = g.items.filter(ok), showSum = g.sum && !q && f === 'all';
+    if (!items.length && !showSum) return;
+    h += `<div class="pt"><div class="pt-h">📘 ${g.a != null ? partName(gi) : (M.hasParts ? 'فوائد أخرى' : 'الفوائد')}${g.a != null && paged(b) ? `<small>${unitOf(b)} ${g.a}–${g.b} · ${g.items.length} فائدة</small>` : `<small>${g.items.length} فائدة</small>`}</div>`;
+    if (showSum) h += `<details class="pt-sum" ${gi === 0 ? 'open' : ''}><summary>📝 ملخص هذا الجزء</summary>${sumHTML(g.sum)}</details>`;
+    h += items.map(x => fwHTML(b, x, M.num.get(x.id))).join('') + '</div>';
+  });
+  el.innerHTML = h || '<div class="empty">لا نتائج</div>';
+}
+function rijalHTML(b) {
+  const L = alamMerged(b);
+  if (!L.length) return `<div class="card empty">لم يُستخرج الرجال بعد. اضغط «✨ استخراج الفوائد والملخص والرجال» أعلاه.</div>`;
+  VS.ro = VS.ro || 'p';
+  const list = VS.ro === 'p' ? L.slice().sort((x, y) => (x.pages[0] ?? 1e9) - (y.pages[0] ?? 1e9)) : L;
+  return `<div class="seg" style="margin-bottom:10px"><button class="${VS.ro === 'p' ? 'on' : ''}" data-act="ro" data-v="p">بترتيب ورودهم في الكتاب</button><button class="${VS.ro === 'a' ? 'on' : ''}" data-act="ro" data-v="a">بترتيب حروف المعجم</button></div>`
+    + list.map((o, i) => `<div class="fw" style="--c:var(--accent)" data-act="item" data-s="alam" data-i="${o.ids[0]}"><span class="fn">${i + 1}</span><div class="fb"><b style="font-size:16.5px">${esc(o.name)}</b>${o.notes.length ? `<div class="rn">${esc(o.notes.join(' — '))}</div>` : ''}${o.pages.length ? `<div style="margin-top:4px"><span class="pg">${unitOf(b)} ${o.pages.join('، ')}</span></div>` : ''}</div></div>`).join('');
+}
+
 function itemSheet(b, s, id) {
   const x = (b.res[s] || []).find(y => y.id === id); if (!x) return;
   SS = { b: b.id, s, id };
@@ -1155,21 +1403,25 @@ function itemSheet(b, s, id) {
     <div class="sheet-actions"><button class="btn" style="color:var(--danger)" data-act="itDel">🗑 حذف</button><button class="btn primary" data-act="itSave">حفظ التعديل</button></div>`);
 }
 function exportSheet(b, only) {
-  const avail = SVC_ORDER.filter(s => (b.res[s] || []).length);
+  const hasK = (b.parts || []).length || (b.res.fawaid || []).length;
+  const avail = (hasK ? ['kutayyib'] : []).concat(SVC_ORDER.filter(s => (b.res[s] || []).length));
   if (!avail.length) { toast('لا توجد نتائج لتصديرها بعد'); return; }
-  SS = { b: b.id, ord: 'type' };
+  SS = { b: b.id, ord: 'type', ro: 'p' };
+  const lbl = { kutayyib: '📖 الفوائد مرقّمة مع ملخص كل جزء', alam: '👤 الرجال والأعلام', fawaid: '💡 الفوائد مرتبة بالنوع' };
+  const def = s => only ? only === s : (hasK ? ['kutayyib', 'alam'].includes(s) : true);
   openSheet(`<h3>📄 تصدير «${esc(b.title)}»</h3>
     <div class="lab hint" style="margin:0 0 4px">الأقسام:</div>
-    ${avail.map(s => `<label class="chk"><input type="checkbox" class="exS" value="${s}" ${!only || only === s ? 'checked' : ''}> ${SVC[s].icon} ${SVC[s].name}<small>${(b.res[s] || []).length}</small></label>`).join('')}
+    ${avail.map(s => `<label class="chk"><input type="checkbox" class="exS" value="${s}" ${def(s) ? 'checked' : ''}> ${lbl[s] || SVC[s].icon + ' ' + SVC[s].name}<small>${s === 'kutayyib' ? (b.res.fawaid || []).length : s === 'alam' ? alamMerged(b).length : (b.res[s] || []).length}</small></label>`).join('')}
     <label class="chk"><input type="checkbox" id="exStar"> ⭐ المميَّز فقط</label>
-    ${avail.includes('fawaid') ? `<div class="set-row"><div class="lab">ترتيب الفوائد</div><div class="seg"><button class="on" data-act="exOrd" data-v="type">بحسب النوع</button><button data-act="exOrd" data-v="page">بترتيب الكتاب</button></div></div>` : ''}
+    ${avail.includes('alam') ? `<div class="set-row"><div class="lab">ترتيب الرجال</div><div class="seg"><button class="on" data-act="exRo" data-v="p">بترتيب ورودهم</button><button data-act="exRo" data-v="a">بحروف المعجم</button></div></div>` : ''}
+    ${avail.includes('fawaid') ? `<div class="set-row"><div class="lab">ترتيب «الفوائد مرتبة بالنوع»</div><div class="seg"><button class="on" data-act="exOrd" data-v="type">بحسب النوع</button><button data-act="exOrd" data-v="page">بترتيب الكتاب</button></div></div>` : ''}
     <label class="chk"><input type="checkbox" id="exPg" checked> إظهار أرقام الصفحات</label>
     <label class="chk"><input type="checkbox" id="exNote" ${ST.aiNote ? 'checked' : ''}> تنبيه على الغلاف بأنها مستخرجة بمساعدة Gemini</label>
     <div class="sheet-actions"><button class="btn primary" data-act="doPdf">📄 PDF</button><button class="btn" data-act="doWord">📝 وورد</button><button class="btn" data-act="doCopy">📋 نص</button></div>
     <p class="hint">PDF: تظهر صفحة الطباعة، فاضغط زر المشاركة ⬆️ في أعلاها ثم «حفظ في الملفات»، فيُحفظ الملف PDF.</p>`);
 }
 function exportOpts() {
-  return { secs: [...document.querySelectorAll('.exS')].filter(i => i.checked).map(i => i.value), star: $('#exStar') && $('#exStar').checked, ord: SS.ord || 'type', pg: !$('#exPg') || $('#exPg').checked, note: $('#exNote') && $('#exNote').checked };
+  return { secs: [...document.querySelectorAll('.exS')].filter(i => i.checked).map(i => i.value), star: $('#exStar') && $('#exStar').checked, ord: SS.ord || 'type', ro: SS.ro || 'p', pg: !$('#exPg') || $('#exPg').checked, note: $('#exNote') && $('#exNote').checked };
 }
 
 /* ================= بناء الكتيّب (PDF / وورد / نص) ================= */
@@ -1178,8 +1430,8 @@ function hijri() { try { return new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umal
 function buildDoc(b, o) {
   const pick = s => (b.res[s] || []).filter(x => !o.star || x.star);
   const ref = x => o.pg && x.p ? ` <span class="ref">[${pRef(b, x.p)}]</span>` : '';
-  const secs = o.secs.filter(s => s === 'alam' ? pick(s).length : pick(s).length || (s === 'summary' && b.overall && !o.star));
-  const titles = { summary: 'التلخيص', fawaid: 'الفوائد', tree: 'التشجير', qa: 'أسئلة المراجعة', nusus: 'فهرس الآيات والأحاديث والآثار', alam: 'فهرس الأعلام', gharib: 'المصطلحات وغريب الألفاظ' };
+  const secs = o.secs.filter(s => s === 'kutayyib' ? ((b.res.fawaid || []).some(x => !o.star || x.star) || ((b.parts || []).length && !o.star)) : pick(s).length || (s === 'summary' && b.overall && !o.star));
+  const titles = { kutayyib: 'الفوائد والملخصات', summary: 'التلخيص', fawaid: 'الفوائد مرتبة بالنوع', tree: 'التشجير', qa: 'أسئلة المراجعة', nusus: 'فهرس الآيات والأحاديث والآثار', alam: 'الرجال والأعلام', gharib: 'المصطلحات وغريب الألفاظ' };
   let h = `<div class="doc"><div class="cover"><div class="bas">بسم الله الرحمن الرحيم</div><h1>${esc(b.title)}</h1>${b.author ? `<div class="au">${esc(b.author)}</div>` : ''}
     <div class="what">${secs.map(s => titles[s]).join(' · ')}</div>
     ${ST.author ? `<div class="by">استخراج وترتيب<br><b>${esc(ST.author)}</b></div>` : ''}<div class="dt">${hijri()}${hijri() ? ' — ' : ''}${new Date().toLocaleDateString('ar-DZ', { day: 'numeric', month: 'long', year: 'numeric' })}</div>
@@ -1188,7 +1440,17 @@ function buildDoc(b, o) {
   secs.forEach((s, si) => {
     h += `<div class="part ${si === 0 ? 'first' : ''}"><h2>${titles[s]}</h2>`;
     const items = pick(s);
-    if (s === 'summary') {
+    if (s === 'kutayyib') {
+      const M = bookletModel(b);
+      M.groups.forEach((g, gi) => {
+        const its = g.items.filter(x => !o.star || x.star), sm = g.sum && !o.star;
+        if (!its.length && !sm) return;
+        h += `<div class="kp"><div class="kph">${g.a != null ? partName(gi) : (M.hasParts ? 'فوائد أخرى' : 'الفوائد')}${g.a != null && paged(b) ? ` <span>(${unitOf(b)} ${g.a}–${g.b})</span>` : ''}</div>`;
+        if (sm) h += `<div class="ksum"><div class="ksh">ملخص هذا الجزء</div>${sumHTML(g.sum)}</div>`;
+        if (its.length) h += `<div class="ksh2">الفوائد</div>` + its.map(x => { const c = TCOLOR[x.type]; return `<div class="kf" style="border-color:${c}"><span class="kn" style="background:${c}">${NUM(M.num.get(x.id))}</span><div class="kc"><span class="tg" style="color:${c};border-color:${c}">${x.type}</span>${fmtFw(x.text)}${ref(x)}</div></div>`; }).join('');
+        h += '</div>';
+      });
+    } else if (s === 'summary') {
       if (b.overall && !o.star) h += `<div class="ov"><b>الخلاصة الجامعة:</b>\n${esc(b.overall)}</div>`;
       h += items.map(x => `<div class="sumb">${x.title ? `<h4>${esc(x.title)}${ref(x)}</h4>` : ''}<div>${esc(x.text)}${x.title ? '' : ref(x)}</div></div>`).join('');
     } else if (s === 'fawaid') {
@@ -1202,7 +1464,8 @@ function buildDoc(b, o) {
       [['آية', 'الآيات'], ['حديث', 'الأحاديث'], ['أثر', 'الآثار']].forEach(([k, l]) => { const g = items.filter(x => x.kind === k); if (!g.length) return; h += `<h3>${l}</h3>` + g.map((x, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span>${k === 'آية' ? '﴿' + esc(x.text.replace(/^[﴿{(«]+|[﴾})»]+$/g, '')) + '﴾' : esc(x.text)}${x.ref ? ` <span class="ref">(${esc(x.ref)})</span>` : ''}${ref(x)}</div>`).join(''); });
     } else if (s === 'alam') {
       const src = o.star ? { res: { alam: items } } : b;
-      h += alamMerged(Object.assign({}, b, src)).map((a, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span><b>${esc(a.name)}</b>${a.notes.length ? ': ' + esc(a.notes.join(' — ')) : ''}${o.pg && a.pages.length ? ` <span class="ref">[${unitOf(b)} ${a.pages.join('، ')}]</span>` : ''}</div>`).join('');
+      let AL = alamMerged(Object.assign({}, b, src)); if (o.ro !== 'a') AL = AL.sort((x, y) => (x.pages[0] ?? 1e9) - (y.pages[0] ?? 1e9));
+      h += AL.map((a, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span><b>${esc(a.name)}</b>${a.notes.length ? ': ' + esc(a.notes.join(' — ')) : ''}${o.pg && a.pages.length ? ` <span class="ref">[${unitOf(b)} ${a.pages.join('، ')}]</span>` : ''}</div>`).join('');
     } else if (s === 'gharib') {
       h += items.slice().sort((a, z) => normAr(a.term).localeCompare(normAr(z.term), 'ar')).map(x => `<div class="itm"><b>${esc(x.term)}</b>: ${esc(x.meaning)}${x.src === 'إيضاح' ? ' <span class="ref">(إيضاح)</span>' : ''}${ref(x)}</div>`).join('');
     }
@@ -1213,8 +1476,9 @@ function buildDoc(b, o) {
 }
 function docText(b, o) {
   const d = document.createElement('div'); d.innerHTML = buildDoc(b, o);
-  d.querySelectorAll('h1,h2,h3,h4,.itm,.qa,.tr,.sumb,.ov,.au,.by,.dt,.what,.note,.bas,.end,li').forEach(e => e.insertAdjacentText('afterend', '\n'));
-  d.querySelectorAll('h2,h3').forEach(e => e.insertAdjacentText('beforebegin', '\n'));
+  d.querySelectorAll('h1,h2,h3,h4,.itm,.qa,.tr,.sumb,.ov,.au,.by,.dt,.what,.note,.bas,.end,li,.kph,.ksh,.ksh2,.sh,.kf,.ksum p').forEach(e => e.insertAdjacentText('afterend', '\n'));
+  d.querySelectorAll('h2,h3,.kph').forEach(e => e.insertAdjacentText('beforebegin', '\n'));
+  d.querySelectorAll('.kn').forEach(e => e.insertAdjacentText('afterend', '. '));
   return d.textContent.replace(/\n{3,}/g, '\n\n').trim();
 }
 function doPrint(html, title) {
@@ -1236,7 +1500,7 @@ function wordDoc(html, title) {
   h3{font-size:16pt;color:#5a2408;background:#f7efe7;border-right:5px solid #8a3b12;padding:2px 8px}h4{font-size:15pt;color:#5a2408;margin:6px 0 2px}
   .cover{text-align:center;page-break-after:always}.bas{font-size:18pt;color:#8a3b12}.au{font-size:16pt}.by{font-size:16pt;margin-top:40px}.dt,.note,.what{font-size:12pt;color:#555}
   .ref{font-size:11pt;color:#777}.n{color:#8a3b12;font-weight:bold}.tg{font-size:11pt;font-weight:bold}.qq{font-weight:bold}.ov{background:#f7efe7;padding:8px}.tr.l1{font-weight:bold;color:#5a2408}.tr.l2{font-weight:bold}
-  .itm,.qa,.sumb{margin-bottom:6px}.end{text-align:center;color:#5a2408;font-size:16pt}`;
+  .itm,.qa,.sumb{margin-bottom:6px}.kph{background:#8a3b12;color:#ffffff;font-size:18pt;font-weight:bold;padding:4px 10px;page-break-before:always}.ksum{background:#f7efe7;padding:6px 10px}.ksh,.ksh2{font-weight:bold;color:#8a3b12}.sh{font-weight:bold;color:#5a2408}.kf{margin-bottom:6px;border-right:3px solid #8a3b12;padding-right:6px}.kn{color:#ffffff;font-weight:bold;padding:0 5px}.end{text-align:center;color:#5a2408;font-size:16pt}`;
   return `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>${esc(title)}</title><style>${css}</style></head><body dir="rtl" lang="ar">${html.replace(/\n/g, '<br>')}</body></html>`;
 }
 const safeName = s => String(s || 'كتاب').replace(/[\\/:*?"<>|]+/g, ' ').trim().slice(0, 80);
@@ -1289,7 +1553,7 @@ const ACT = {
   },
   appApply: () => appApply($('#apIn').value),
   appSkip: () => appApply('', true),
-  appCancel: () => { closeSheet(); const p = getPend(); if (p && p.kind === 'svc' && p.i > 0) toast('حُفظ ما أضفته. تكمل الباقي متى شئت من زر «أكمل عبر Gemini»', 4500); if (p && p.kind !== 'svc') setPend(null); render(); },
+  appCancel: () => { closeSheet(); const p = getPend(); if (p && (p.kind === 'svc' || p.kind === 'shamil') && p.i > 0) toast('حُفظ ما أضفته. تكمل الباقي متى شئت من زر «أكمل عبر Gemini»', 4500); if (p && p.kind !== 'svc' && p.kind !== 'shamil') setPend(null); render(); },
   resume: d => { const b = curB(); if (!ST.key) { toast('أضف مفتاح Gemini أولًا'); return; } closeSheet(); startRun(b, d.s, { resume: true }); },
   stopRun: () => { if (RUN) RUN.ctrl.abort(); },
   bookMenu: () => { const b = curB(); openSheet(`<h3 class="ellip">${esc(b.title)}</h3>
@@ -1315,6 +1579,18 @@ const ACT = {
   delYes: async () => { const b = curB(); if (RUN && RUN.id === b.id) RUN.ctrl.abort(); await DB.del(b.id); await DB.delPrefix(b.id + ':'); BOOKS = BOOKS.filter(x => x.id !== b.id); if (PDFC && PDFC.id === b.id) PDFC = null; closeSheet(); go('home'); toast('حُذف'); },
   copySrc: async () => { const b = curB(); copyText(await DB.getBlob(b.id + ':text') || ''); closeSheet(); },
   filt: d => { VS.f = d.v; render(); },
+  bfilt: d => { VS.f = d.v; document.querySelectorAll('[data-act=bfilt]').forEach(x => { const on = x.dataset.v === d.v; x.classList.toggle('on', on); if (TCOLOR[x.dataset.v]) x.style.color = on ? '' : TCOLOR[x.dataset.v]; }); paintBooklet(); },
+  tab: d => { VS = { tab: d.v }; render(); },
+  ro: d => { VS.ro = d.v; render(); },
+  shamilSheet: () => shamilSheet(curB()),
+  ssh: d => { const a = $('#rA') && $('#rA').value, z = $('#rZ') && $('#rZ').value; SS[d.k] = d.k === 'ps' ? +d.v : d.v; shamilSheet(B(SS.b)); if (a && $('#rA')) { $('#rA').value = a; $('#rZ').value = z; } },
+  shamilGo: async () => {
+    const b = B(SS.b); let a = 1, z = 1;
+    if (paged(b)) { if (!b.pages && b.kind === 'shamela' && !toInt($('#rZ').value)) { toast('أدخل رقم آخر صفحة'); return; } ({ a, z } = readRange(b, '#rA', '#rZ')); b.range = { a, z }; await save(b); }
+    const parts = []; if (paged(b)) for (let i = a; i <= z; i += SS.ps) parts.push({ a: i, b: Math.min(z, i + SS.ps - 1) }); else parts.push({ a: 1, b: 1 });
+    const pend = { kind: 'shamil', b: b.id, a, z, ps: SS.ps, dens: SS.dens, parts, i: 0, cont: false, last: '' };
+    setPend(pend); await appShow(pend);
+  },
   ord: d => { VS.ord = d.v; render(); },
   item: (d, el, e) => { e.stopPropagation(); itemSheet(curB(), d.s, d.i); },
   qaT: (d, el) => { el.classList.toggle('closed'); },
@@ -1332,6 +1608,7 @@ const ACT = {
     try { await makeOverall(b, null, () => {}); await save(b); render(); toast('✓'); } catch (e) { toast(e.message, 4000); }
   },
   exportSheet: d => exportSheet(curB(), d && d.s),
+  exRo: (d, el) => { SS.ro = d.v; el.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === el)); },
   exOrd: (d, el) => { SS.ord = d.v; el.parentNode.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === el)); },
   doPdf: () => { const b = B(SS.b), o = exportOpts(); if (!o.secs.length) { toast('اختر قسمًا واحدًا على الأقل'); return; } ST.aiNote = o.note; saveST(); doPrint(buildDoc(b, o), safeName(b.title)); },
   doWord: () => { const b = B(SS.b), o = exportOpts(); if (!o.secs.length) { toast('اختر قسمًا واحدًا على الأقل'); return; } ST.aiNote = o.note; saveST(); closeSheet(); shareOrDownload(new Blob(['﻿' + wordDoc(buildDoc(b, o), b.title)], { type: 'application/msword' }), safeName(b.title) + '.doc'); },
@@ -1383,7 +1660,7 @@ document.addEventListener('click', e => {
 });
 document.addEventListener('input', e => {
   const k = e.target.dataset && e.target.dataset.inp; if (!k) return;
-  VS.q = e.target.value; if (k === 'gq') paintSearch(); else paintList();
+  VS.q = e.target.value; if (k === 'gq') paintSearch(); else if (k === 'bq') paintBooklet(); else paintList();
 });
 document.addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey && e.target.id === 'askIn') { e.preventDefault(); ACT.askGo(); } });
 $('#fPdf').addEventListener('change', e => onPdf(e.target.files[0]));
