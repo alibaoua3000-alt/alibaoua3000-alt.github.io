@@ -203,6 +203,27 @@ input,select,textarea{font-size:16px}
 .fx{white-space:pre-line;font-family:"Noto Naskh Arabic",serif;font-size:17px;line-height:1.85}
 .rn{color:var(--muted);font-size:14.5px;margin-top:2px}
 
+.tabs{overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:1 0 auto;padding:9px 12px}
+.bio{margin-top:6px;font-family:"Noto Naskh Arabic",serif;font-size:15.5px;line-height:1.8}
+.bio i{font-style:normal;font-size:11.5px;color:#b45309;border:1px solid #b4530955;border-radius:6px;padding:0 5px;margin-inline-end:4px;font-family:"IBM Plex Sans Arabic",sans-serif}
+.mm,.mm ul{list-style:none;margin:0;padding:0}
+.mm ul{padding-inline-start:20px;margin-inline-start:14px;border-inline-start:2px solid var(--line)}
+.mm li{position:relative;padding:4px 0}
+.mm ul>li::before{content:"";position:absolute;inset-inline-start:-20px;top:22px;width:16px;border-top:2px solid var(--line)}
+.mm .nd{display:inline-flex;gap:6px;align-items:center;padding:7px 12px;border-radius:12px;background:var(--card);border:1.5px solid var(--c);font-size:15px;max-width:100%;cursor:pointer;text-align:start;line-height:1.5}
+.mm .nd.l1{font-weight:700;background:color-mix(in srgb,var(--c) 12%,var(--card))}
+.mm .nd.root{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700;font-size:16.5px}
+.mm .nd .ar{font-size:11px;color:var(--c);flex:none}
+.mm .nd .pg{flex:none}
+.mm li.cl>ul{display:none}
+.mm li.cl>.nd .ar{transform:rotate(90deg)}
+.qopt{display:block;width:100%;text-align:start;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);margin-bottom:8px;font-size:16px;font-family:"Noto Naskh Arabic",serif;line-height:1.7}
+.qopt.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,var(--card))}
+.qopt.no{border-color:var(--danger);background:color-mix(in srgb,var(--danger) 12%,var(--card))}
+.qopt b{font-family:"IBM Plex Sans Arabic",sans-serif;color:var(--accent);margin-inline-end:6px}
+
 /* ===== print / PDF ===== */
 #print{display:none}
 @page{size:A4;margin:16mm 15mm 16mm 15mm}
@@ -877,6 +898,7 @@ function render() {
   else if (view.name === 'ask') { const b = B(view.id); if (!b) return go('home'); app.innerHTML = askV(b); }
   else if (view.name === 'search') { app.innerHTML = searchV(); paintSearch(); }
   else if (view.name === 'stars') app.innerHTML = starsV();
+  else if (view.name === 'quiz') { const b = B(view.id); if (!b) return go('home'); app.innerHTML = quizV(b); }
   else if (view.name === 'cards') { const b = B(view.id); if (!b) return go('home'); app.innerHTML = cardsV(b); }
 }
 const topBar = (title, sub, back, right) => `<div class="top">${back ? `<button class="icon-btn" data-act="${back}" aria-label="رجوع">→</button>` : ''}<div class="grow"><h1 class="ellip">${title}</h1>${sub ? `<div class="sub ellip">${sub}</div>` : ''}</div>${right || ''}</div>`;
@@ -928,7 +950,7 @@ function bookV(b) {
   VS.tab = VS.tab || 'fw';
   let body = '';
   if (VS.tab === 'fw') {
-    if (!nf && !np) body = `<div class="card empty"><div style="font-size:38px">📖</div><b style="color:var(--text)">لم تُستخرج فوائد هذا الكتاب بعد</b><ol class="steps"><li>اضغط «✨ استخراج الفوائد والملخص والرجال».</li><li>انسخ التعليمات إلى Gemini، وأرفق الكتاب، وأرسل.</li><li>انسخ رد Gemini والصقه هنا، فتظهر الفوائد هنا مرقّمة ومرتّبة بالأجزاء، ومع كل جزء ملخصه.</li></ol></div>`;
+    if (!nf && !np) body = `<div class="card empty"><div style="font-size:38px">📖</div><b style="color:var(--text)">لم تُستخرج فوائد هذا الكتاب بعد</b><ol class="steps"><li>اضغط «✨ تلخيص الكتاب كاملًا بأمر واحد».</li><li>انسخ الأمر إلى Gemini، وأرفق الكتاب، وأرسل.</li><li>انسخ الكود الذي يكتبه Gemini والصقه هنا، فيتوزّع وحده: الملخص والفوائد هنا، والمشجّر والخريطة الذهنية، والرجال مع التعريف بهم، والآيات والأحاديث، والاختبار.</li></ol></div>`;
     else {
       const cnt = {}; (b.res.fawaid || []).forEach(x => cnt[x.type] = (cnt[x.type] || 0) + 1);
       VS.f = VS.f || 'all';
@@ -939,15 +961,18 @@ function bookV(b) {
       setTimeout(paintBooklet, 0);
     }
   } else if (VS.tab === 'rj') body = rijalHTML(b);
+  else if (VS.tab === 'tr') body = treeTabHTML(b);
+  else if (VS.tab === 'qz') body = quizTabHTML(b);
+  else if (VS.tab === 'ns') body = nususTabHTML(b);
   else body = `<div class="svc-grid">` + SVC_ORDER.map(s => `<button class="svc" data-act="svc" data-s="${s}"><span class="si">${SVC[s].icon}</span><b>${SVC[s].name}</b><small>${SVC[s].sub}</small>${svcStatus(b, s)}</button>`).join('')
     + `<button class="svc wide" data-act="goAsk"><span class="si">🔎</span><span><b>اسأل الكتاب</b><small style="display:block">اسأل عن أي مسألة فيجيبك من الكتاب نفسه مع رقم الصفحة</small></span></button></div>`;
   return topBar(esc(b.title), esc(bookMeta(b)), 'goHome', `<button class="icon-btn" data-act="exportSheet" aria-label="تصدير">📄</button><button class="icon-btn" data-act="bookMenu" aria-label="المزيد">⋯</button>`)
     + `<div class="card">${b.kind === 'url' ? `<div class="hint" style="margin:0;direction:ltr;text-align:left;word-break:break-all">${esc(b.url)}</div>` : `<div class="row" style="justify-content:space-between"><span>النطاق: <b>${r ? `${unitOf(b)} ${r.a} – ${r.z}` : 'لم يُحدّد'}</b>${b.pages ? ` <small style="color:var(--muted)">من ${b.pages}</small>` : ''}</span><button class="btn sm" data-act="${b.kind === 'shamela' ? 'bookInfo' : 'rangeSheet'}">تغيير</button></div>`}
       ${b.kind === 'shamela' ? '<p class="hint">أرقام الصفحات هنا هي ترقيم صفحات الشاملة (الرقم في آخر الرابط).</p>' : ''}
       ${b.kind === 'images' ? `<button class="btn block" style="margin-top:10px" data-act="moreImgs">➕ إضافة صور أخرى لهذا الدرس</button>` : ''}${imgs}
-      <button class="btn primary block cta" style="margin-top:12px" data-act="shamilSheet">✨ ${nf || np ? 'استخراج أجزاء أخرى أو إعادتها' : 'استخراج الفوائد والملخص والرجال'}</button></div>`
+      <button class="btn primary block cta" style="margin-top:12px" data-act="shamilSheet">✨ ${nf || np ? 'تلخيص أجزاء أخرى أو إعادتها' : 'تلخيص الكتاب كاملًا بأمر واحد'}</button></div>`
     + errB
-    + `<div class="tabs"><button class="${VS.tab === 'fw' ? 'on' : ''}" data-act="tab" data-v="fw">📖 الفوائد${nf ? ' ' + nf : ''}</button><button class="${VS.tab === 'rj' ? 'on' : ''}" data-act="tab" data-v="rj">👤 الرجال${nr ? ' ' + nr : ''}</button><button class="${VS.tab === 'more' ? 'on' : ''}" data-act="tab" data-v="more">🧰 خدمات أخرى</button></div>`
+    + `<div class="tabs">${[['fw', '📖 الملخص والفوائد', nf], ['tr', '🌳 المشجّر', (b.res.tree || []).length], ['rj', '👤 الرجال', nr], ['qz', '🎯 الاختبار', (b.res.qa || []).length], ['ns', '📜 الآيات والأحاديث', (b.res.nusus || []).length], ['more', '🧰 المزيد', 0]].map(([k, l, c]) => `<button class="${VS.tab === k ? 'on' : ''}" data-act="tab" data-v="${k}">${l}${c ? ' ' + c : ''}</button>`).join('')}</div>`
     + body;
 }
 async function paintThumbs(b) {
@@ -992,7 +1017,7 @@ function itemHTML(b, s, x) {
 }
 function alamMerged(b) {
   const m = new Map();
-  (b.res.alam || []).forEach(x => { const k = normAr(x.name).replace(/^(الامام|الشيخ|الحافظ|العلامه)\s+/, ''); const o = m.get(k) || { name: x.name, pages: new Set(), notes: [], ids: [] }; if (x.p) o.pages.add(x.p); if (x.note && !o.notes.some(n => normAr(n) === normAr(x.note))) o.notes.push(x.note); o.ids.push(x.id); m.set(k, o); });
+  (b.res.alam || []).forEach(x => { const k = normAr(x.name).replace(/^(الامام|الشيخ|الحافظ|العلامه)\s+/, ''); const o = m.get(k) || { name: x.name, pages: new Set(), notes: [], bios: [], ids: [] }; if (x.p) o.pages.add(x.p); if (x.note && !o.notes.some(n => normAr(n) === normAr(x.note))) o.notes.push(x.note); if (x.bio && !o.bios.length) o.bios.push(x.bio); o.ids.push(x.id); m.set(k, o); });
   return [...m.values()].map(o => Object.assign(o, { pages: [...o.pages].sort((a, z) => a - z) })).sort((a, z) => normAr(a.name).localeCompare(normAr(z.name), 'ar'));
 }
 function paintList() {
@@ -1201,25 +1226,33 @@ async function appApply(txt, skip) {
 /* ================= الاستخراج الشامل: ملخص + فوائد مرقمة + رجال، جزءًا جزءًا ================= */
 const ORD = ['الأول', 'الثاني', 'الثالث', 'الرابع', 'الخامس', 'السادس', 'السابع', 'الثامن', 'التاسع', 'العاشر', 'الحادي عشر', 'الثاني عشر', 'الثالث عشر', 'الرابع عشر', 'الخامس عشر', 'السادس عشر', 'السابع عشر', 'الثامن عشر', 'التاسع عشر', 'العشرون'];
 const partName = i => 'الجزء ' + (ORD[i] || NUM(i + 1));
-const SH_SIZES = { pdf: [25, 50], images: [5, 10], shamela: [10, 20], text: [20, 30], url: [1] };
-const SH_CONT = 'أكمل من حيث توقفت تمامًا، بالشكل نفسه وداخل كتلة كود واحدة، دون أن تعيد شيئًا مما كتبته. وإن كنت أنهيت قسم الفوائد فأكمل قسم @رجال، ثم اختم بسطر @انتهى.';
-const pendLabel = p => p.kind === 'shamil' ? '✨ الفوائد والملخص والرجال' : (SVC[p.s] ? SVC[p.s].icon + ' ' + SVC[p.s].name : '');
+const SH_SIZES = { pdf: [50, 100, 120], images: [10], shamela: [20], text: [30, 60], url: [1] };
+const SH_DEF = { pdf: 100, images: 10, shamela: 20, text: 60, url: 1 };
+const SH_CONT = 'أكمل من حيث توقفت تمامًا، بالشكل نفسه وداخل كتلة كود واحدة، دون أن تعيد شيئًا مما كتبته، وأكمل بقية الأقسام بترتيبها، ثم اختم بسطر @انتهى.';
+const pendLabel = p => p.kind === 'shamil' ? '✨ تلخيص الكتاب كاملًا' : (SVC[p.s] ? SVC[p.s].icon + ' ' + SVC[p.s].name : '');
 function shamilPrompt(b, desc, part, dens) {
   const u = b.kind === 'text' ? 'مقطع' : 'ص';
   const range = paged(b) ? `${b.kind === 'pdf' ? `اعمل على الصفحات من ${part.a} إلى ${part.b} فقط، بحسب ترتيب صفحات الملف (لا بالأرقام المطبوعة عليها).` : `اعمل على ${b.kind === 'text' ? 'المقاطع' : 'الصفحات'} من ${part.a} إلى ${part.b}.`}` : '';
-  const many = dens === 'mid' ? 'نحو فائدتين عن كل صفحة فيها علم' : 'أكبر عدد ممكن: لا تقل عن ثلاث فوائد عن كل صفحة فيها علم، واستخرج كل قول وكل تعريف وكل تقسيم وكل قاعدة دون استثناء، ولا تختصر';
-  return `أنت مساعد علمي دقيق لطالب علم شرعي.
+  const many = dens === 'mid' ? 'نحو فائدتين عن كل صفحة فيها علم' : 'أكبر عدد ممكن، ولا تختصر: كل قول، وكل تعريف، وكل تقسيم، وكل قاعدة، وكل خلاف، وكل فائدة';
+  return `أنت مساعد علمي دقيق لطالب علم شرعي، تعدّ له كتيّبًا كاملًا عن هذا الجزء من الكتاب.
 الكتاب: «${b.title}»${b.author ? ' — ' + b.author : ''}.
 ${desc}
 ${range}
 
-المطلوب ثلاثة أقسام، بهذا الترتيب وبهذا الشكل تمامًا:
+المطلوب سبعة أقسام، بهذا الترتيب وبهذا الشكل تمامًا (كل قسم يبدأ بسطر فيه اسمه بعد @):
 
 @ملخص
-لخّص هذا الجزء وحده تلخيصًا علميًا وافيًا مرتبًا بحسب أبوابه: عنوان كل باب أو موضوع في سطر يبدأ بـ «# »، ثم نقاطه، كل نقطة في سطر يبدأ بـ «- ».
+لخّص هذا الجزء تلخيصًا كاملًا وافيًا لا يفوته باب ولا مسألة، مرتبًا بحسب أبوابه: عنوان كل باب أو موضوع في سطر يبدأ بـ «# »، ثم نقاطه، كل نقطة في سطر يبدأ بـ «- »، واذكر فيها التعريفات والأقسام والأقوال والراجح عند المؤلف.
+
+@تشجير
+شجّر مسائل هذا الجزء تشجيرًا هرميًا يصلح خريطةً ذهنية. كل عقدة في سطر بهذا الشكل: رقم المستوى ثم | ثم عبارة قصيرة (لا تزيد على 12 كلمة) ثم رقم الصفحة، مثل:
+1| كتاب الطهارة [${u} 3]
+2| أقسام المياه [${u} 4]
+3| الماء الطهور [${u} 4]
+المستوى 1 للكتاب أو الباب، و2 للفصل، و3 للمسألة، و4 للأقسام والأقوال والشروط، و5 للتفاصيل والأدلة.
 
 @فوائد
-استخرج الفوائد العلمية في هذا الجزء: ${many}. رتّبها بحسب ورودها في الكتاب، وكل فائدة في سطر واحد بهذا الشكل:
+استخرج الفوائد العلمية: ${many}. رتّبها بحسب ورودها، وكل فائدة في سطر واحد بهذا الشكل:
 [${u} 12] [النوع] نص الفائدة
 والنوع واحد من: ${TYPES.join('، ')}.
 - القول: «قال فلان: ...» كما نسبه المؤلف، ولا تنسب قولًا إلى أحد لم ينسبه المؤلف إليه، وإن لم يسمِّه فاكتب «قال بعض العلماء: ...».
@@ -1229,32 +1262,51 @@ ${range}
 
 @رجال
 كل علم ذُكر في هذا الجزء (صحابي، أو إمام، أو عالم، أو راوٍ، أو مؤلف)، بترتيب وروده، كل واحد في سطر بهذا الشكل:
-[${u} 12] الاسم كما ورد: ما ذكره المؤلف عنه في جملة قصيرة إن ذكر شيئًا
+[${u} 12] الاسم | ما ذكره المؤلف عنه (أو - إن لم يذكر شيئًا) | تعريف موجز به: من هو، وطبقته أو مذهبه، وسنة وفاته
+وفي التعريف لا تذكر إلا ما أنت متيقن منه، وما لم تتيقنه فاتركه.
+
+@نصوص
+كل آية وكل حديث وكل أثر ورد في هذا الجزء، كل واحد في سطر بهذا الشكل:
+[${u} 12] [آية أو حديث أو أثر] النص كما ورد | المرجع
+والمرجع للآية: السورة ورقم الآية إن تيقنتهما. وللحديث والأثر: من رواه وحكمه كما ذكرهما المؤلف فقط، فإن لم يذكر شيئًا فاكتب -.
+
+@اختبار
+ضع أسئلة اختيار من متعدد تغطي أهم مسائل هذا الجزء، نحو سؤال واحد لكل صفحتين، وأجوبتها من الكتاب نفسه. كل سؤال في سطر واحد بهذا الشكل:
+[${u} 12] نص السؤال؟ | أ) ... | ب) ... | ج) ... | د) ... | الجواب: ب
 
 @انتهى
 
 الشروط:
-1. اعتمد على الكتاب وحده، ولا تضف معلومات من خارجه.
+1. اعتمد على الكتاب وحده، ولا تضف معلومات من خارجه، إلا التعريف بالرجال.
 2. لا تخترع أرقام صفحات ولا أقوالًا ولا أسماء كتب ولا تخريجًا ولا حكمًا على حديث.
 3. "${u}" هو رقم ${b.kind === 'text' ? 'المقطع المكتوب بين معقوفين' : b.kind === 'pdf' ? 'الصفحة بحسب ترتيب صفحات الملف' : 'الصفحة'}.
 4. اكتب الرد كله داخل كتلة كود واحدة تبدأ بـ \`\`\` وتنتهي بـ \`\`\`، دون أي كلام قبلها أو بعدها، حتى أنسخه بزر النسخ.
-5. لا تختصر الفوائد لأجل طول الرد؛ فإن انقطع ردك فسأكتب لك «أكمل» فتكمل من حيث توقفت بالشكل نفسه.`;
+5. لا تختصر شيئًا لأجل طول الرد؛ فإن انقطع ردك فسأكتب لك «أكمل» فتكمل من حيث توقفت بالشكل نفسه.`;
 }
+const SEC_RE = [[/ملخص|تلخيص/, 'sum'], [/تشجير|مشجر|شجرة|خريطة/, 'tr'], [/فوائد|فائدة/, 'fw'], [/رجال|أعلام|اعلام/, 'rj'], [/نصوص|آيات|أحاديث|الآيات/, 'ns'], [/اختبار|أسئلة|اسئلة|كويز/, 'qz']];
+const LETTERS = { 'أ': 0, 'ا': 0, 'ب': 1, 'ج': 2, 'د': 3, 'ه': 4, 'هـ': 4 };
 function parseShamil(txt, startSec) {
-  const out = { sum: [], fw: [], rj: [], lead: [], ended: false, last: startSec || '' };
+  const out = { sum: [], tr: [], fw: [], rj: [], ns: [], qz: [], lead: [], ended: false, last: startSec || '' };
   let sec = startSec || '';
   const pageRe = /^\s*[-*•]?\s*(?:[\d٠-٩]+\s*[.)\-–]\s*)?[\[(]\s*(?:ص|صفحة|الصفحة|مقطع|المقطع)?\s*\.?\s*([\d٠-٩]+)(?:\s*[-–]\s*[\d٠-٩]+)?\s*[\])]\s*/;
+  const tailPg = /\s*[\[(]\s*(?:ص|صفحة|مقطع)\s*\.?\s*([\d٠-٩]+)(?:\s*[-–]\s*[\d٠-٩]+)?\s*[\])]\s*$/;
   String(txt || '').replace(/\r/g, '').replace(/```[^\n]*/g, '\n').split('\n').forEach(line => {
     const L = line.replace(/\*\*/g, '').trim(); if (!L) return;
     const h = L.replace(/^[@#\s]+/, '').replace(/[:：]\s*$/, '').trim();
-    if (L.startsWith('@') || (/^#{1,3}\s/.test(L) && /^(الملخص|ملخص|التلخيص|الفوائد|فوائد|الرجال|رجال|الأعلام|أعلام|انتهى)$/.test(h))) {
-      if (/انتهى/.test(h)) out.ended = true;
-      else if (/ملخص|تلخيص/.test(h)) sec = 'sum';
-      else if (/فوائد|فائدة/.test(h)) sec = 'fw';
-      else if (/رجال|أعلام|اعلام/.test(h)) sec = 'rj';
-      return;
+    if (L.startsWith('@') || (/^#{1,3}\s/.test(L) && h.length < 20 && (/انتهى/.test(h) || SEC_RE.some(([re]) => re.test(h)) && !/^#\s/.test(L)))) {
+      if (/انتهى/.test(h)) { out.ended = true; return; }
+      const f = SEC_RE.find(([re]) => re.test(h)); if (f) { sec = f[1]; return; }
+      if (L.startsWith('@')) return;
     }
     if (sec === 'sum') { out.sum.push(L); return; }
+    if (sec === 'tr') {
+      const m = L.match(/^\s*[-*•]?\s*([1-6١-٦])\s*[|｜)\-.:]\s*(.+)$/);
+      if (!m) return;
+      let t = m[2].trim(), pg = null; const tp = t.match(tailPg); if (tp) { pg = toInt(tp[1]); t = t.slice(0, tp.index).trim(); }
+      else { const hp = t.match(pageRe); if (hp) { pg = toInt(hp[1]); t = t.slice(hp[0].length).trim(); } }
+      if (t) out.tr.push({ lvl: Math.min(5, toInt(m[1]) || 1), text: t, p: pg });
+      return;
+    }
     if (sec === 'fw') {
       const m = L.match(pageRe);
       if (m) {
@@ -1271,9 +1323,33 @@ function parseShamil(txt, startSec) {
       const m = L.match(pageRe);
       let rest = (m ? L.slice(m[0].length) : L.replace(/^[-*•\s]*(?:[\d٠-٩]+\s*[.)\-–]\s*)?/, '')).replace(/^[-–]\s*/, '').trim();
       if (!rest) return;
-      const k = rest.search(/[:：]|\s[—–-]\s/);
-      const name = (k > 0 ? rest.slice(0, k) : rest).trim(), note = k > 0 ? rest.slice(k + 1).replace(/^[—–\-\s]+/, '').trim() : '';
-      if (name && name.length <= 80) out.rj.push({ p: m ? toInt(m[1]) : null, name, note });
+      let name, note = '', bio = '';
+      if (rest.includes('|')) { const f = rest.split('|').map(x => x.trim()); name = f[0]; note = f[1] || ''; bio = f.slice(2).join(' ').trim(); }
+      else { const k = rest.search(/[:：]|\s[—–-]\s/); name = (k > 0 ? rest.slice(0, k) : rest).trim(); note = k > 0 ? rest.slice(k + 1).replace(/^[—–\-\s]+/, '').trim() : ''; }
+      if (/^[-–—]+$/.test(note)) note = ''; if (/^[-–—]+$/.test(bio)) bio = '';
+      if (name && name.length <= 80) out.rj.push({ p: m ? toInt(m[1]) : null, name, note, bio });
+      return;
+    }
+    if (sec === 'ns') {
+      const m = L.match(pageRe); if (!m) return;
+      let rest = L.slice(m[0].length), kind = 'حديث';
+      const tm = rest.match(/^[\[(]\s*([^\])]{2,8})\s*[\])]\s*/); if (tm) { kind = /آية|اية/.test(tm[1]) ? 'آية' : /أثر|اثر/.test(tm[1]) ? 'أثر' : 'حديث'; rest = rest.slice(tm[0].length); }
+      const f = rest.split('|'); const text = f[0].trim(); let ref = f.slice(1).join(' ').trim(); if (/^[-–—]+$/.test(ref)) ref = '';
+      if (text) out.ns.push({ p: toInt(m[1]), kind, text, ref });
+      return;
+    }
+    if (sec === 'qz') {
+      const m = L.match(pageRe); const body = m ? L.slice(m[0].length) : L.replace(/^[\d٠-٩]+\s*[.)\-–]\s*/, '');
+      const f = body.split('|').map(x => x.trim()).filter(Boolean); if (f.length < 3) return;
+      const q = f[0]; const opts = []; let ans = null;
+      f.slice(1).forEach(x => {
+        const am = x.match(/^(?:ال)?جواب\s*(?:الصحيح)?\s*[:：]?\s*(.+)$/);
+        if (am) { const v = am[1].trim().replace(/[)\s.]+$/, ''); ans = v; return; }
+        const om = x.match(/^([أابجده]|هـ)\s*[)\-.:]\s*(.+)$/); opts.push(om ? om[2].trim() : x);
+      });
+      let ai = -1;
+      if (ans != null) { const l = ans.charAt(0); if (ans.length <= 2 && LETTERS[l] != null) ai = LETTERS[l]; else { const lm = ans.match(/^([أابجده])\s*[)\-.:]\s*(.*)$/); if (lm) ai = LETTERS[lm[1]]; else ai = opts.findIndex(o => normAr(o) === normAr(ans)); } }
+      if (q && opts.length >= 2 && ai >= 0 && ai < opts.length) out.qz.push({ p: m ? toInt(m[1]) : null, q, opts, ans: ai, a: opts[ai] });
       return;
     }
     if (!sec) { const m = L.match(pageRe); if (m && L.slice(m[0].length).trim()) { sec = 'fw'; out.fw.push({ p: toInt(m[1]), type: 'فائدة', text: L.slice(m[0].length).trim() }); } }
@@ -1283,17 +1359,17 @@ function parseShamil(txt, startSec) {
 }
 function shamilSheet(b) {
   const sizes = SH_SIZES[b.kind] || [50];
-  SS = Object.assign({ b: b.id, k: 'sh', ps: sizes[sizes.length - 1], dens: 'max' }, SS.b === b.id && SS.k === 'sh' ? SS : {});
+  SS = Object.assign({ b: b.id, k: 'sh', ps: SH_DEF[b.kind] || sizes[0], dens: 'max' }, SS.b === b.id && SS.k === 'sh' ? SS : {});
   const rg = b.range || { a: 1, z: b.pages || 1 };
   const n = paged(b) ? Math.ceil((rg.z - rg.a + 1) / SS.ps) : 1;
   const pend = getPend();
   const u = b.kind === 'text' ? 'مقطعًا' : b.kind === 'images' ? 'صور' : 'صفحة';
-  openSheet(`<h3>✨ الفوائد والملخص والرجال</h3>
-    <p class="hint" style="margin-top:-6px">يُقسَّم الكتاب أجزاءً. ولكل جزء: ملخص مستقل، ثم فوائده مرقّمة وملوّنة بحسب أنواعها، ثم الرجال المذكورون فيه. ويعمل مع تطبيق Gemini باشتراكك، دون مفتاح.</p>
+  openSheet(`<h3>✨ تلخيص الكتاب كاملًا</h3>
+    <p class="hint" style="margin-top:-6px">أمر واحد لكل جزء، يرجع منه كود واحد. تلصقه هنا فيوزَّع وحده: <b>الملخص</b>، و<b>المشجّر والخريطة الذهنية</b>، و<b>الفوائد</b> (التعريفات والتقسيمات والأقوال والقواعد والخلاف…)، و<b>الرجال مع التعريف بهم</b>، و<b>الآيات والأحاديث</b>، و<b>الاختبار</b>. ويعمل مع تطبيق Gemini باشتراكك، دون مفتاح.</p>
     ${paged(b) ? `<div class="two"><label class="fld"><span>من ${unitOf(b)}</span><input id="rA" type="number" inputmode="numeric" value="${rg.a}"></label><label class="fld"><span>إلى ${unitOf(b)}</span><input id="rZ" type="number" inputmode="numeric" value="${rg.z}"></label></div>
     ${sizes.length > 1 ? `<div class="set-row"><div class="lab">حجم كل جزء</div><div class="seg">${sizes.map(v => `<button class="${SS.ps === v ? 'on' : ''}" data-act="ssh" data-k="ps" data-v="${v}">${v} ${u}</button>`).join('')}</div></div>` : ''}` : ''}
     <div class="set-row"><div class="lab">عدد الفوائد</div><div class="seg"><button class="${SS.dens === 'max' ? 'on' : ''}" data-act="ssh" data-k="dens" data-v="max">كثيرة جدًا</button><button class="${SS.dens === 'mid' ? 'on' : ''}" data-act="ssh" data-k="dens" data-v="mid">متوسطة</button></div></div>
-    <p class="hint">${n > 1 ? `سيكون عندك <b>${n}</b> أجزاء. تنسخ تعليمات كل جزء إلى Gemini، وتلصق نتيجته هنا، فيرتّبها التطبيق وينقلك إلى الجزء التالي.` : 'تنسخ التعليمات إلى Gemini، وتلصق نتيجته هنا، فيرتّبها التطبيق.'}${(b.parts || []).length ? ' والأجزاء التي سبق استخراجها في هذا النطاق تُستبدل.' : ''}</p>
+    <p class="hint">${n > 1 ? `سيكون عندك <b>${n}</b> أجزاء. وبعد كل لصق ينقلك التطبيق إلى الجزء التالي.` : ''} الرد طويل، فقد يقطعه Gemini؛ فإن انقطع نبّهك التطبيق لتطلب منه «أكمل».${(b.parts || []).length ? ' والأجزاء التي سبق استخراجها في هذا النطاق تُستبدل.' : ''}</p>
     <div class="sheet-actions"><button class="btn primary" data-act="shamilGo">▶ ابدأ</button></div>
     ${pend && pend.kind === 'shamil' && pend.b === b.id ? `<button class="btn block" style="margin-top:10px" data-act="appResume">📱 أكمل من حيث توقفت (${partName(pend.i)} من ${pend.parts.length})</button>` : ''}`);
 }
@@ -1301,24 +1377,24 @@ async function shamilShow(pend, b, note) {
   const part = pend.parts[pend.i], n = pend.parts.length;
   const sub = `<div class="hint" style="margin-top:-6px"><b>${partName(pend.i)}</b>${n > 1 ? ` من ${n}` : ''}${paged(b) ? ` · ${unitOf(b)} ${part.a}–${part.b}` : ''}</div>${n > 1 ? `<div class="bar" style="margin:6px 0 4px"><i style="width:${Math.max(3, Math.round(pend.i / n * 100))}%"></i></div>` : ''}${note || ''}`;
   if (pend.cont) {
-    appStepsSheet({ title: 'تكملة رد Gemini', sub, prompt: SH_CONT, attach: 'اكتب في المحادثة نفسها', code: true, skip: true, skipLabel: '⏭ الرد كامل، انتقل إلى التالي' });
+    appStepsSheet({ title: 'تكملة رد Gemini', sub, prompt: SH_CONT, attach: 'اكتب في المحادثة نفسها', code: true, skip: true, skipLabel: '⏭ الرد كامل، التالي' });
     return;
   }
   const r = await appSource(b, part.a, part.b, pend.i === 0, true);
-  appStepsSheet({ title: 'الفوائد والملخص والرجال', sub, prompt: shamilPrompt(b, r.desc, part, pend.dens), attach: r.attach, files: r.files, code: true, skip: n > 1 });
+  appStepsSheet({ title: 'تلخيص الكتاب كاملًا', sub, prompt: shamilPrompt(b, r.desc, part, pend.dens), attach: r.attach, files: r.files, code: true, skip: n > 1 });
 }
+const SH_KEYS = ['fawaid', 'alam', 'tree', 'qa', 'nusus'];
 async function shamilApply(pend, b, txt, skip) {
   const part = pend.parts[pend.i], n = pend.parts.length;
   let note = '';
   if (!skip) {
     const R = parseShamil(txt, pend.cont ? pend.last : '');
-    if (!R.sum.length && !R.fw.length && !R.rj.length && !R.lead.length) { toast('لم أفهم الرد. انسخه كاملًا بزر النسخ في أعلى صندوق الكود', 4500); return; }
+    if (!['sum', 'tr', 'fw', 'rj', 'ns', 'qz', 'lead'].some(k => R[k].length)) { toast('لم أفهم الرد. انسخه كاملًا بزر النسخ في أعلى صندوق الكود', 4500); return; }
     b.parts = b.parts || [];
     const inPart = x => x.pt != null ? x.pt === part.a : (x.p != null && x.p >= part.a && x.p <= part.b);
     if (!pend.cont) {
       b.parts = b.parts.filter(q => !(q.a <= part.b && q.b >= part.a));
-      b.res.fawaid = (b.res.fawaid || []).filter(x => !inPart(x));
-      b.res.alam = (b.res.alam || []).filter(x => !inPart(x));
+      SH_KEYS.forEach(k => { b.res[k] = (b.res[k] || []).filter(x => !inPart(x)); });
       b.parts.push({ a: part.a, b: part.b, sum: R.sum.join('\n') });
       b.parts.sort((x, y) => x.a - y.a);
     } else {
@@ -1328,22 +1404,25 @@ async function shamilApply(pend, b, txt, skip) {
     }
     const fix = p => { if (p == null) return null; if (paged(b) && part.a > 1 && (p < part.a - 2 || p > part.b + 2) && p >= 1 && p <= part.b - part.a + 1 && b.kind !== 'pdf') return part.a + p - 1; return p; };
     const seen = new Set((b.res.fawaid || []).filter(x => x.pt === part.a).map(x => normAr(x.text)));
-    const fw = R.fw.filter(x => { const k = normAr(x.text); if (seen.has(k)) return false; seen.add(k); return true; }).map(x => ({ id: uid(), p: fix(x.p), type: x.type, sec: '', text: x.text, pt: part.a }));
-    const rj = R.rj.map(x => ({ id: uid(), p: fix(x.p), name: x.name, note: x.note, pt: part.a }));
-    b.res.fawaid = (b.res.fawaid || []).concat(fw);
-    b.res.alam = (b.res.alam || []).concat(rj);
+    const add = (k, arr) => { b.res[k] = (b.res[k] || []).concat(arr); return arr.length; };
+    const nf = add('fawaid', R.fw.filter(x => { const k = normAr(x.text); if (seen.has(k)) return false; seen.add(k); return true; }).map(x => ({ id: uid(), p: fix(x.p), type: x.type, sec: '', text: x.text, pt: part.a })));
+    const nr = add('alam', R.rj.map(x => ({ id: uid(), p: fix(x.p), name: x.name, note: x.note, bio: x.bio, pt: part.a })));
+    const nt = add('tree', R.tr.map(x => ({ id: uid(), p: fix(x.p), lvl: x.lvl, text: x.text, pt: part.a })));
+    const nn = add('nusus', R.ns.map(x => ({ id: uid(), p: fix(x.p), kind: x.kind, text: x.text, ref: x.ref, pt: part.a })));
+    const nq = add('qa', R.qz.map(x => ({ id: uid(), p: fix(x.p), q: x.q, a: x.a, opts: x.opts, ans: x.ans, pt: part.a })));
     await save(b);
     pend.last = R.last;
-    note = `أُضيف ${fw.length} فائدة${rj.length ? ` و${rj.length} علمًا` : ''}${R.sum.length ? ' والملخص' : ''} ✓`;
+    note = [R.sum.length ? 'الملخص' : '', nt ? `${nt} عقدة في المشجّر` : '', nf ? `${nf} فائدة` : '', nr ? `${nr} من الرجال` : '', nn ? `${nn} نصًا` : '', nq ? `${nq} سؤالًا` : ''].filter(Boolean).join('، ');
+    note = note ? 'أُضيف: ' + note + ' ✓' : 'أُضيفت التكملة ✓';
     if (!R.ended) {
       pend.cont = true; setPend(pend); render();
-      await shamilShow(pend, b, `<div class="banner">${note}. لكن رد Gemini لم يصل إلى آخره (لم يكتب @انتهى)، فاطلب منه التكملة. وإن كان الرد كاملًا فاضغط «الرد كامل، انتقل إلى التالي».</div>`);
+      await shamilShow(pend, b, `<div class="banner">${note}<br>لكن رد Gemini لم يصل إلى آخره (لم يكتب @انتهى). اضغط «انسخ وافتح Gemini» ثم الصق في المحادثة نفسها، فيكمل. وإن كان الرد كاملًا فاضغط «الرد كامل، التالي».</div>`);
       return;
     }
   }
   pend.cont = false; pend.last = ''; pend.i++;
-  if (pend.i < n) { setPend(pend); render(); toast(`${note || 'تُخطّي'} — الآن ${partName(pend.i)}`, 3500); await shamilShow(pend, b); return; }
-  setPend(null); closeSheet(); toast(`${note ? note + ' — ' : ''}اكتمل الكتاب ✓`, 4000); go('book', b.id);
+  if (pend.i < n) { setPend(pend); render(); toast(`${note || 'تُخطّي'} — الآن ${partName(pend.i)}`, 4000); await shamilShow(pend, b); return; }
+  setPend(null); closeSheet(); toast(`${note ? note + ' — ' : ''}اكتمل ✓`, 4500); go('book', b.id);
 }
 function bookletModel(b) {
   const fw = (b.res.fawaid || []).slice();
@@ -1384,11 +1463,67 @@ function paintBooklet() {
 }
 function rijalHTML(b) {
   const L = alamMerged(b);
-  if (!L.length) return `<div class="card empty">لم يُستخرج الرجال بعد. اضغط «✨ استخراج الفوائد والملخص والرجال» أعلاه.</div>`;
+  if (!L.length) return `<div class="card empty">لم يُستخرج الرجال بعد. اضغط «✨ تلخيص الكتاب كاملًا بأمر واحد» أعلاه.</div>`;
   VS.ro = VS.ro || 'p';
   const list = VS.ro === 'p' ? L.slice().sort((x, y) => (x.pages[0] ?? 1e9) - (y.pages[0] ?? 1e9)) : L;
   return `<div class="seg" style="margin-bottom:10px"><button class="${VS.ro === 'p' ? 'on' : ''}" data-act="ro" data-v="p">بترتيب ورودهم في الكتاب</button><button class="${VS.ro === 'a' ? 'on' : ''}" data-act="ro" data-v="a">بترتيب حروف المعجم</button></div>`
-    + list.map((o, i) => `<div class="fw" style="--c:var(--accent)" data-act="item" data-s="alam" data-i="${o.ids[0]}"><span class="fn">${i + 1}</span><div class="fb"><b style="font-size:16.5px">${esc(o.name)}</b>${o.notes.length ? `<div class="rn">${esc(o.notes.join(' — '))}</div>` : ''}${o.pages.length ? `<div style="margin-top:4px"><span class="pg">${unitOf(b)} ${o.pages.join('، ')}</span></div>` : ''}</div></div>`).join('');
+    + list.map((o, i) => `<div class="fw" style="--c:var(--accent)" data-act="item" data-s="alam" data-i="${o.ids[0]}"><span class="fn">${i + 1}</span><div class="fb"><b style="font-size:16.5px">${esc(o.name)}</b>${o.notes.length ? `<div class="rn">قال المؤلف: ${esc(o.notes.join(' — '))}</div>` : ''}${o.bios && o.bios.length ? `<div class="bio"><i>تعريف من Gemini</i>${esc(o.bios[0])}</div>` : ''}${o.pages.length ? `<div style="margin-top:4px"><span class="pg">${unitOf(b)} ${o.pages.join('، ')}</span></div>` : ''}</div></div>`).join('');
+}
+
+const LCOL = ['#8a3b12', '#1d4ed8', '#0f766e', '#7c3aed', '#b45309'];
+function treeSorted(b) { return (b.res.tree || []).map((x, i) => [x, i]).sort((x, y) => ((x[0].pt ?? 0) - (y[0].pt ?? 0)) || (x[1] - y[1])).map(x => x[0]); }
+function treeTabHTML(b) {
+  const T = treeSorted(b);
+  if (!T.length) return `<div class="card empty">لا يوجد مشجّر بعد. اضغط «✨ تلخيص الكتاب كاملًا بأمر واحد» أعلاه.</div>`;
+  VS.tm = VS.tm || 'mm';
+  let h = `<div class="row" style="margin-bottom:10px"><div class="seg" style="flex:1"><button class="${VS.tm === 'mm' ? 'on' : ''}" data-act="tm" data-v="mm">🧠 خريطة ذهنية</button><button class="${VS.tm === 'list' ? 'on' : ''}" data-act="tm" data-v="list">🌳 مشجّر</button></div></div>`;
+  if (VS.tm === 'list') {
+    let lastPt = null; const parts = (b.parts || []).slice().sort((x, y) => x.a - y.a);
+    h += '<div class="card">' + T.map(x => { let hd = ''; if (x.pt != null && x.pt !== lastPt) { lastPt = x.pt; const gi = parts.findIndex(q => q.a === x.pt); if (gi >= 0 && parts.length > 1) hd = `<div class="grp-h" style="margin-top:8px">📘 ${partName(gi)}<i></i></div>`; } return hd + `<div class="tree-n l${x.lvl}" style="padding-inline-start:${(x.lvl - 1) * 18}px" data-act="item" data-s="tree" data-i="${x.id}"><span class="dot" style="background:${LCOL[x.lvl - 1]}"></span><span class="t">${esc(x.text)}</span>${x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : ''}</div>`; }).join('') + '</div>'
+      + `<button class="btn block" data-act="copyTree">📋 نسخ المشجّر نصًا</button>`;
+    return h;
+  }
+  // بناء الشجرة
+  const root = { text: b.title, lvl: 0, ch: [] }, st = [root];
+  T.forEach(x => { const n = { x, lvl: x.lvl, ch: [] }; while (st.length > 1 && st[st.length - 1].lvl >= x.lvl) st.pop(); st[st.length - 1].ch.push(n); st.push(n); });
+  const node = (n, depth) => {
+    const has = n.ch.length, c = n.x ? LCOL[n.x.lvl - 1] : 'var(--accent)';
+    const nd = n.x ? `<div class="nd l${n.x.lvl}" style="--c:${c}" data-act="mmT">${has ? '<span class="ar">▼</span>' : ''}<span>${esc(n.x.text)}</span>${n.x.p ? `<span class="pg">${pRef(b, n.x.p)}</span>` : ''}</div>` : `<div class="nd root" data-act="mmT">${esc(n.text)}</div>`;
+    return `<li class="${has && depth >= 2 ? 'cl' : ''}">${nd}${has ? '<ul>' + n.ch.map(k => node(k, depth + 1)).join('') + '</ul>' : ''}</li>`;
+  };
+  return h + `<div class="row" style="margin-bottom:8px"><button class="btn sm" data-act="mmAll" data-v="1">توسيع الكل</button><button class="btn sm" data-act="mmAll" data-v="0">طيّ الكل</button></div><div style="overflow-x:auto;padding-bottom:6px"><ul class="mm">${node(root, 0)}</ul></div><p class="hint">اضغط أي فرع لتفتحه أو تطويه.</p>`;
+}
+function nususTabHTML(b) {
+  const items = b.res.nusus || [];
+  if (!items.length) return `<div class="card empty">لا توجد نصوص بعد.</div>`;
+  let h = '<p class="hint" style="margin:-4px 0 10px">أرقام الآيات من Gemini، والتخريج كما ذكره المؤلف. راجِع قبل النقل.</p>';
+  [['آية', '📖 الآيات'], ['حديث', '📜 الأحاديث'], ['أثر', '🏛 الآثار']].forEach(([k, l]) => { const g = items.filter(x => x.kind === k); if (!g.length) return; h += `<div class="grp-h">${l} <small style="color:var(--muted)">${g.length}</small><i></i></div>` + g.map((x, i) => `<div class="fw" style="--c:var(--accent)" data-act="item" data-s="nusus" data-i="${x.id}"><span class="fn">${i + 1}</span><div class="fb"><div class="fx">${k === 'آية' ? '﴿' + esc(x.text.replace(/^[﴿{(«]+|[﴾})»]+$/g, '')) + '﴾' : esc(x.text)}</div><div class="ft2" style="margin-top:4px">${x.ref ? `<span class="sec-title">${esc(x.ref)}</span>` : ''}${x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : ''}</div></div></div>`).join(''); });
+  return h;
+}
+function quizTabHTML(b) {
+  const all = b.res.qa || [], mcq = all.filter(x => x.opts && x.opts.length >= 2);
+  if (!all.length) return `<div class="card empty">لا توجد أسئلة بعد. اضغط «✨ تلخيص الكتاب كاملًا بأمر واحد» أعلاه.</div>`;
+  const last = b.quizLast ? `<p class="hint">آخر نتيجة: ${b.quizLast.ok} من ${b.quizLast.n}</p>` : '';
+  return `<div class="card"><b style="font-size:17px">🎯 الاختبار</b><p class="hint" style="margin-top:2px">${mcq.length} سؤال اختيار من متعدد${all.length > mcq.length ? ` و${all.length - mcq.length} سؤال مراجعة` : ''}</p>${last}
+    ${mcq.length ? `<div class="row" style="margin-top:10px">${[10, 20].filter(n => n < mcq.length).map(n => `<button class="btn" data-act="quizGo" data-v="${n}">${n} أسئلة</button>`).join('')}<button class="btn primary" data-act="quizGo" data-v="0">كل الأسئلة (${mcq.length})</button></div>` : ''}
+    <button class="btn block" style="margin-top:8px" data-act="cards">🃏 بطاقات الحفظ (سؤال وجواب)</button></div>`
+    + all.map((x, i) => `<div class="it qa closed" data-act="qaT" data-i="${x.id}"><div class="q">${i + 1}. ${esc(x.q)}</div><div class="rv">اضغط لإظهار الجواب</div><div class="a">${esc(x.a)}</div><div class="ft">${x.p ? `<span class="pg">${pRef(b, x.p)}</span>` : ''}</div></div>`).join('');
+}
+function quizV(b) {
+  const Q = VS.qz; const qa = b.res.qa || [];
+  if (!Q) return '';
+  if (Q.i >= Q.ids.length) {
+    const wrong = Q.wrong.length;
+    return topBar('🎯 النتيجة', esc(b.title), 'backQz') + `<div class="card empty"><div style="font-size:44px">${Q.ok / Q.ids.length >= .8 ? '🎉' : Q.ok / Q.ids.length >= .5 ? '👍' : '📚'}</div><b style="color:var(--text);font-size:22px">${Q.ok} من ${Q.ids.length}</b><p>${Math.round(Q.ok / Q.ids.length * 100)}%</p>
+      <div class="row">${wrong ? `<button class="btn primary" data-act="quizWrong">أعد ما أخطأت فيه (${wrong})</button>` : ''}<button class="btn" data-act="backQz">رجوع</button></div></div>`;
+  }
+  const x = qa.find(y => y.id === Q.ids[Q.i]); if (!x) { Q.i++; return quizV(b); }
+  const L = ['أ', 'ب', 'ج', 'د', 'هـ', 'و'];
+  return topBar('🎯 الاختبار', `السؤال ${Q.i + 1} من ${Q.ids.length} · ✓ ${Q.ok}`, 'backQz')
+    + `<div class="bar" style="margin-bottom:12px"><i style="width:${Math.round(Q.i / Q.ids.length * 100)}%"></i></div>
+    <div class="card"><div style="font-size:18px;font-weight:700;line-height:1.7">${esc(x.q)}</div></div>
+    ${x.opts.map((o, k) => `<button class="qopt ${Q.pick != null ? (k === x.ans ? 'ok' : k === Q.pick ? 'no' : '') : ''}" data-act="qPick" data-v="${k}" ${Q.pick != null ? 'disabled' : ''}><b>${L[k]})</b>${esc(o)}</button>`).join('')}
+    ${Q.pick != null ? `<div class="banner ${Q.pick === x.ans ? '' : 'err'}" style="${Q.pick === x.ans ? 'background:color-mix(in srgb,var(--ok) 14%,var(--card));color:var(--text);border-color:transparent' : ''}">${Q.pick === x.ans ? '✓ صحيح' : `✗ الجواب الصحيح: ${L[x.ans]}) ${esc(x.opts[x.ans])}`}${x.p ? ` — ${pRef(b, x.p)}` : ''}</div><button class="btn primary block" data-act="qNext">${Q.i + 1 < Q.ids.length ? 'التالي ←' : 'النتيجة'}</button>` : ''}`;
 }
 
 function itemSheet(b, s, id) {
@@ -1408,7 +1543,7 @@ function exportSheet(b, only) {
   if (!avail.length) { toast('لا توجد نتائج لتصديرها بعد'); return; }
   SS = { b: b.id, ord: 'type', ro: 'p' };
   const lbl = { kutayyib: '📖 الفوائد مرقّمة مع ملخص كل جزء', alam: '👤 الرجال والأعلام', fawaid: '💡 الفوائد مرتبة بالنوع' };
-  const def = s => only ? only === s : (hasK ? ['kutayyib', 'alam'].includes(s) : true);
+  const def = s => only ? only === s : (hasK ? ['kutayyib', 'tree', 'alam', 'nusus', 'qa'].includes(s) : true);
   openSheet(`<h3>📄 تصدير «${esc(b.title)}»</h3>
     <div class="lab hint" style="margin:0 0 4px">الأقسام:</div>
     ${avail.map(s => `<label class="chk"><input type="checkbox" class="exS" value="${s}" ${def(s) ? 'checked' : ''}> ${lbl[s] || SVC[s].icon + ' ' + SVC[s].name}<small>${s === 'kutayyib' ? (b.res.fawaid || []).length : s === 'alam' ? alamMerged(b).length : (b.res[s] || []).length}</small></label>`).join('')}
@@ -1457,15 +1592,16 @@ function buildDoc(b, o) {
       if (o.ord === 'type') { let n = 0; TYPES.forEach(t => { const g = items.filter(x => x.type === t); if (!g.length) return; h += `<h3 style="border-color:${TCOLOR[t]}">${TPLURAL[t]}</h3>` + g.map(x => `<div class="itm"><span class="n">${NUM(++n)}.</span>${esc(x.text)}${ref(x)}</div>`).join(''); }); }
       else { let lastSec = ''; h += items.map((x, i) => { let s2 = ''; if (x.sec && normAr(x.sec) !== normAr(lastSec)) { lastSec = x.sec; s2 = `<h3>${esc(x.sec)}</h3>`; } return s2 + `<div class="itm"><span class="n">${NUM(i + 1)}.</span><span class="tg" style="color:${TCOLOR[x.type]}">${x.type}</span>${esc(x.text)}${ref(x)}</div>`; }).join(''); }
     } else if (s === 'tree') {
-      h += items.map(x => `<div class="tr l${x.lvl}" style="padding-inline-start:${(x.lvl - 1) * 7}mm">${x.lvl > 1 ? ['', '◆ ', '● ', '○ ', '– '][x.lvl - 1] : ''}${esc(x.text)}${ref(x)}</div>`).join('');
+      h += (o.star ? items : treeSorted(b)).map(x => `<div class="tr l${x.lvl}" style="padding-inline-start:${(x.lvl - 1) * 7}mm">${x.lvl > 1 ? ['', '◆ ', '● ', '○ ', '– '][x.lvl - 1] : ''}${esc(x.text)}${ref(x)}</div>`).join('');
     } else if (s === 'qa') {
-      h += items.map((x, i) => `<div class="qa"><div class="qq">${NUM(i + 1)}. ${esc(x.q)}</div><div class="an">${esc(x.a)}${ref(x)}</div></div>`).join('');
+      const L = ['أ', 'ب', 'ج', 'د', 'هـ', 'و'];
+      h += items.map((x, i) => `<div class="qa"><div class="qq">${NUM(i + 1)}. ${esc(x.q)}</div>${x.opts && x.opts.length ? `<div class="an">${x.opts.map((o, k) => `${L[k]}) ${esc(o)}`).join('   ')}</div><div class="an"><b>الجواب:</b> ${L[x.ans]}) ${esc(x.a)}${ref(x)}</div>` : `<div class="an">${esc(x.a)}${ref(x)}</div>`}</div>`).join('');
     } else if (s === 'nusus') {
       [['آية', 'الآيات'], ['حديث', 'الأحاديث'], ['أثر', 'الآثار']].forEach(([k, l]) => { const g = items.filter(x => x.kind === k); if (!g.length) return; h += `<h3>${l}</h3>` + g.map((x, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span>${k === 'آية' ? '﴿' + esc(x.text.replace(/^[﴿{(«]+|[﴾})»]+$/g, '')) + '﴾' : esc(x.text)}${x.ref ? ` <span class="ref">(${esc(x.ref)})</span>` : ''}${ref(x)}</div>`).join(''); });
     } else if (s === 'alam') {
       const src = o.star ? { res: { alam: items } } : b;
       let AL = alamMerged(Object.assign({}, b, src)); if (o.ro !== 'a') AL = AL.sort((x, y) => (x.pages[0] ?? 1e9) - (y.pages[0] ?? 1e9));
-      h += AL.map((a, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span><b>${esc(a.name)}</b>${a.notes.length ? ': ' + esc(a.notes.join(' — ')) : ''}${o.pg && a.pages.length ? ` <span class="ref">[${unitOf(b)} ${a.pages.join('، ')}]</span>` : ''}</div>`).join('');
+      h += AL.map((a, i) => `<div class="itm"><span class="n">${NUM(i + 1)}.</span><b>${esc(a.name)}</b>${a.notes.length ? ': ' + esc(a.notes.join(' — ')) : ''}${a.bios && a.bios.length ? `<br><span style="color:#555">${esc(a.bios[0])}</span>` : ''}${o.pg && a.pages.length ? ` <span class="ref">[${unitOf(b)} ${a.pages.join('، ')}]</span>` : ''}</div>`).join('');
     } else if (s === 'gharib') {
       h += items.slice().sort((a, z) => normAr(a.term).localeCompare(normAr(z.term), 'ar')).map(x => `<div class="itm"><b>${esc(x.term)}</b>: ${esc(x.meaning)}${x.src === 'إيضاح' ? ' <span class="ref">(إيضاح)</span>' : ''}${ref(x)}</div>`).join('');
     }
@@ -1511,7 +1647,7 @@ const ACT = {
   sheetNo: closeSheet,
   goHome: () => go('home'),
   backBook: () => go('book', view.id),
-  backQa: () => go('svc', view.id, 'qa'),
+  backQa: () => { const id = view.id; go('book', id); VS.tab = 'qz'; render(); },
   open: d => go('book', d.id),
   openRes: d => go('svc', d.id, d.s),
   goSearch: () => go('search'),
@@ -1581,6 +1717,15 @@ const ACT = {
   filt: d => { VS.f = d.v; render(); },
   bfilt: d => { VS.f = d.v; document.querySelectorAll('[data-act=bfilt]').forEach(x => { const on = x.dataset.v === d.v; x.classList.toggle('on', on); if (TCOLOR[x.dataset.v]) x.style.color = on ? '' : TCOLOR[x.dataset.v]; }); paintBooklet(); },
   tab: d => { VS = { tab: d.v }; render(); },
+  tm: d => { VS.tm = d.v; render(); },
+  mmT: (d, el) => { const li = el.parentNode; if (li.querySelector('ul')) li.classList.toggle('cl'); },
+  mmAll: d => document.querySelectorAll('.mm li').forEach(li => { if (li.querySelector('ul')) li.classList.toggle('cl', d.v === '0' && li.parentNode.closest('li') != null); }),
+  copyTree: () => { const b = curB(); copyText(treeSorted(b).map(x => '\t'.repeat(x.lvl - 1) + '- ' + x.text + (x.p ? ` (${pRef(b, x.p)})` : '')).join('\n')); },
+  quizGo: d => { const b = curB(); const ids = (b.res.qa || []).filter(x => x.opts && x.opts.length >= 2).map(x => x.id).sort(() => Math.random() - .5); const n = +d.v; go('quiz', b.id); VS.qz = { ids: n ? ids.slice(0, n) : ids, i: 0, ok: 0, wrong: [], pick: null }; render(); },
+  qPick: async d => { const b = curB(), Q = VS.qz; if (Q.pick != null) return; const x = b.res.qa.find(y => y.id === Q.ids[Q.i]); Q.pick = +d.v; if (Q.pick === x.ans) Q.ok++; else Q.wrong.push(x.id); render(); },
+  qNext: async () => { const b = curB(), Q = VS.qz; Q.i++; Q.pick = null; if (Q.i >= Q.ids.length) { b.quizLast = { ok: Q.ok, n: Q.ids.length, t: Date.now() }; await save(b); } render(); window.scrollTo(0, 0); },
+  quizWrong: () => { const Q = VS.qz; VS.qz = { ids: Q.wrong.slice(), i: 0, ok: 0, wrong: [], pick: null }; render(); },
+  backQz: () => { const id = view.id; go('book', id); VS.tab = 'qz'; render(); },
   ro: d => { VS.ro = d.v; render(); },
   shamilSheet: () => shamilSheet(curB()),
   ssh: d => { const a = $('#rA') && $('#rA').value, z = $('#rZ') && $('#rZ').value; SS[d.k] = d.k === 'ps' ? +d.v : d.v; shamilSheet(B(SS.b)); if (a && $('#rA')) { $('#rA').value = a; $('#rZ').value = z; } },
